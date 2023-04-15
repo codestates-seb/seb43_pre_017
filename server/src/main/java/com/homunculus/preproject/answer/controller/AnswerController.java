@@ -68,4 +68,12 @@ public class AnswerController {
                 HttpStatus.OK);
     }
 
+    @DeleteMapping(ANSWER_DEFAULT_URL + "/{articleId}" + ANSWER_DEFAULT_URL_DETAIL + "/{answerId}")
+    public ResponseEntity deleteAnswer(@PathVariable("articleId") @Positive Long articleId,
+                                       @PathVariable("answerId") @Positive Long answerId) {
+
+        answerService.deleteAnswer(articleId, answerId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

@@ -20,4 +20,8 @@ public class AnswerService {
     public Page<Answer> findAnswers(Integer page, Integer size) {
         return null;
     }
+
+    public void deleteAnswer(Long articleId, Long answerId) {
+
+    }
 }
