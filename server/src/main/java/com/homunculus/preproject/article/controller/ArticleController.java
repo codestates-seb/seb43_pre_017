@@ -33,13 +33,13 @@ public class ArticleController {
     public ResponseEntity postArticle(@Valid @RequestBody ArticleDto.Post articleDtoPost) {
         Article article = articleService.createArticle(mapper.articlePostDtoToArticle(articleDtoPost));
 
-        URI location = UriCreator.createUri(ARTICLE_DEFAULT_URL, article.getArticleId());
+        ArticleResponseDto responseDto = mapper.articleToArticleResponseDto(article);
 
-        return new ResponseEntity<>(location, HttpStatus.CREATED);
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
-    @PatchMapping(ARTICLE_DEFAULT_URL + "/{article-id}")
-    public ResponseEntity patchArticle(@PathVariable("article-id") @Positive Long articleId,
+    @PatchMapping(ARTICLE_DEFAULT_URL + "/{articleId}")
+    public ResponseEntity patchArticle(@PathVariable("articleId") @Positive Long articleId,
                                        @Valid @RequestBody ArticleDto.Patch articleDtoPatch) {
         articleDtoPatch.setArticleId(articleId);
         Article article = articleService.updateArticle(mapper.articlePatchDtoToArticle(articleDtoPatch));

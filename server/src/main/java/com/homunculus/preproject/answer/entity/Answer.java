@@ -1,4 +1,4 @@
-package com.homunculus.preproject.article.entity;
+package com.homunculus.preproject.answer.entity;
 
 import com.homunculus.preproject.audit.Auditable;
 import lombok.Getter;
@@ -11,10 +11,10 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Article extends Auditable {
+public class Answer extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long articleId;
+    private Long answerId;
 
     @Column(nullable = false)
     private String title;
@@ -22,21 +22,19 @@ public class Article extends Auditable {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private Long viewCount;
-
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
-    private ArticleStatus articleStatus = ArticleStatus.ARTICLE_REGISTRY;
+    private AnswerStatus answerStatus = AnswerStatus.ANSWER_REGISTRY;
 
-    public enum ArticleStatus {
-        ARTICLE_REGISTRY("등록상태"),
-        ARTICLE_DELETE("삭제상태");
+    public enum AnswerStatus {
+        ANSWER_REGISTRY("등록상태"),
+        ANSWER_DELETE("삭제상태");
 
-        private @Getter String status;
+        @Getter
+        private String status;
 
-        ArticleStatus(String status) {
+        AnswerStatus(String status) {
             this.status = status;
         }
     }

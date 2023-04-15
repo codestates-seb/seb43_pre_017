@@ -1,4 +1,4 @@
-package com.homunculus.preproject.article.dto;
+package com.homunculus.preproject.answer.dto;
 
 import com.homunculus.preproject.validator.NotSpace;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import org.springframework.lang.Nullable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public class ArticleDto {
+public class AnswerDto {
 
     @Getter
     @Setter
@@ -26,7 +26,7 @@ public class ArticleDto {
     @Setter
     @NoArgsConstructor
     public static class Patch {
-        private Long articleId;
+        private Long answerId;
 
         @Nullable
         private String title;
@@ -34,5 +34,4 @@ public class ArticleDto {
         @Nullable
         private String content;
     }
-
 }
