@@ -28,12 +28,11 @@ public class Article extends Auditable {
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
-    private ArticleStatus articleStatus = ArticleStatus.ARTICLE_1;
+    private ArticleStatus articleStatus = ArticleStatus.ARTICLE_REGISTRY;
 
     public enum ArticleStatus {
-        ARTICLE_1("1"),
-        ARTICLE_2("2"),
-        ARTICLE_3("3");
+        ARTICLE_REGISTRY("등록상태"),
+        ARTICLE_DELETE("삭제상태");
 
         private @Getter String status;
 
