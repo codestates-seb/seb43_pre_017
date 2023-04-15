@@ -16,4 +16,8 @@ public class AnswerService {
     public Answer updateAnswer(Answer answer, Long articleId) {
         return null;
     }
+
+    public Page<Answer> findAnswers(Integer page, Integer size) {
+        return null;
+    }
 }
