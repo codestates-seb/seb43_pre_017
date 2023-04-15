@@ -41,4 +41,17 @@ public class AnswerController {
         AnswerResponseDto responseDto = mapper.answerToAnswerResponseDto(createdAnswer);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
+
+    @PatchMapping(ANSWER_DEFAULT_URL + "/{articleId}" + ANSWER_DEFAULT_URL_DETAIL + "/{answerId}")
+    public ResponseEntity patchAnswer(@PathVariable("articleId") @Positive Long articleId,
+                                      @PathVariable("answerId") @Positive Long answerId,
+                                      @Valid @RequestBody AnswerDto.Patch answerDtoPatch) {
+        answerDtoPatch.setAnswerId(answerId);
+        Answer answer = mapper.answerPatchDtoToAnswer(answerDtoPatch);
+        Answer updatedAnswer = answerService.updateAnswer(answer, articleId);
+
+        AnswerResponseDto responseDto = mapper.answerToAnswerResponseDto(updatedAnswer);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
 }

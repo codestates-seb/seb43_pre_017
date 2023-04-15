@@ -12,4 +12,8 @@ public class AnswerService {
     public Answer createAnswer(Answer answer, Long articleId) {
         return null;
     }
+
+    public Answer updateAnswer(Answer answer, Long articleId) {
+        return null;
+    }
 }
