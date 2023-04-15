@@ -38,8 +38,8 @@ public class ArticleController {
         return new ResponseEntity<>(location, HttpStatus.CREATED);
     }
 
-    @PatchMapping(ARTICLE_DEFAULT_URL + "/{article-id}")
-    public ResponseEntity patchArticle(@PathVariable("article-id") @Positive Long articleId,
+    @PatchMapping(ARTICLE_DEFAULT_URL + "/{articleId}")
+    public ResponseEntity patchArticle(@PathVariable("articleId") @Positive Long articleId,
                                        @Valid @RequestBody ArticleDto.Patch articleDtoPatch) {
         articleDtoPatch.setArticleId(articleId);
         Article article = articleService.updateArticle(mapper.articlePatchDtoToArticle(articleDtoPatch));
