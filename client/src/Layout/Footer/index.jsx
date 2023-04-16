@@ -8,6 +8,11 @@ import StyledFoorter, {
   StyledProducts,
   StyledCompnay,
   StyledNetwork,
+  StyledSns,
+  StyledSnsContainer,
+  StyledLicenseContainer,
+  StyledEtcContainer,
+  StyledLicense,
 } from "./style";
 
 /** 2023/04/12 - 푸터를 감싸는 컴포넌트 - by 1-blue */
@@ -63,6 +68,22 @@ const Footer = () => (
         <StyledLi>Data</StyledLi>
       </StyledUl>
     </StyledNetwork>
+    <StyledEtcContainer>
+      <StyledSnsContainer>
+        <StyledSns>Blog</StyledSns>
+        <StyledSns>FaceBook</StyledSns>
+        <StyledSns>Twitter</StyledSns>
+        <StyledSns>Linkedln</StyledSns>
+        <StyledSns>Instargram</StyledSns>
+      </StyledSnsContainer>
+      <StyledLicenseContainer>
+        <StyledLicense>
+          Site design / logo © 2022 Stack Exchange Inc; user
+        </StyledLicense>
+        <StyledLicense>contributions licensed under CC BY-SA.</StyledLicense>
+        <StyledLicense>rev 2023.4.14.43390</StyledLicense>
+      </StyledLicenseContainer>
+    </StyledEtcContainer>
   </StyledFoorter>
 );
 

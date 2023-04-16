@@ -62,9 +62,39 @@ export const StyledCompnay = styled.div`
 `;
 /** 2023/04/16 - 푸터 네트워크카테고리 스타일 - by JHH0906 */
 export const StyledNetwork = styled.div`
-  width: 30%;
+  width: 20%;
   display: flex;
   flex-direction: column;
   margin-top: 32px;
+`;
+/** 2023/04/16 - 푸터 기타카테고리컨테이너 스타일 - by JHH0906 */
+export const StyledEtcContainer = styled.div`
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 32px;
+`;
+/** 2023/04/16 - 푸터 SNS카테고리 스타일 - by JHH0906 */
+export const StyledSnsContainer = styled.div`
+  width: 100%;
+  display: flex;
+`;
+/** 2023/04/16 - 푸터 SNS 스타일 - by JHH0906 */
+export const StyledSns = styled.div`
+  font-size: 12px;
+  color: ${({ theme }) => theme.colors.gray400};
+  display: flex;
+  padding-left: 20px;
+`;
+/** 2023/04/16 - 푸터 라이센스카테고리 스타일 - by JHH0906 */
+export const StyledLicenseContainer = styled.div`
+  width: 100%;
+  margin-left: 20px;
+  padding-top: 200px;
+`;
+/** 2023/04/16 - 푸터 라이센스 스타일 - by JHH0906 */
+export const StyledLicense = styled.div`
+  font-size: 12px;
+  color: ${({ theme }) => theme.colors.gray400};
 `;
 export default StyledFoorter;
