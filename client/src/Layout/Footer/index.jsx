@@ -6,6 +6,7 @@ import StyledFoorter, {
   StyledUl,
   StyledLi,
   StyledProducts,
+  StyledCompnay,
 } from "./style";
 
 /** 2023/04/12 - 푸터를 감싸는 컴포넌트 - by 1-blue */
@@ -33,6 +34,20 @@ const Footer = () => (
         <StyledLi>Talent</StyledLi>
       </StyledUl>
     </StyledProducts>
+    <StyledCompnay>
+      <StyledTitle>COMPANY</StyledTitle>
+      <StyledUl>
+        <StyledLi>About</StyledLi>
+        <StyledLi>Press</StyledLi>
+        <StyledLi>Work Here</StyledLi>
+        <StyledLi>Legal</StyledLi>
+        <StyledLi>Privacy Policy</StyledLi>
+        <StyledLi>Terms of Service</StyledLi>
+        <StyledLi>Contact US</StyledLi>
+        <StyledLi>Cookie Settings</StyledLi>
+        <StyledLi>Cookie Policy</StyledLi>
+      </StyledUl>
+    </StyledCompnay>
   </StyledFoorter>
 );
 

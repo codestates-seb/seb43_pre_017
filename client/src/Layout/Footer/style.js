@@ -47,10 +47,17 @@ export const StyledLi = styled.li`
 `;
 /** 2023/04/16 - 푸터 프로덕트카테고리 스타일 - by JHH0906 */
 export const StyledProducts = styled.div`
+  width: 10%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 32px;
+`;
+/** 2023/04/16 - 푸터 컴퍼니카테고리 스타일 - by JHH0906 */
+export const StyledCompnay = styled.div`
   width: 15%;
   display: flex;
   flex-direction: column;
-  margin-left: 8px;
   margin-top: 32px;
+  margin-left: 32px;
 `;
 export default StyledFoorter;
