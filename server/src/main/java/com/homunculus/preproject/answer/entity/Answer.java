@@ -1,5 +1,6 @@
 package com.homunculus.preproject.answer.entity;
 
+import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.audit.Auditable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,10 @@ public class Answer extends Auditable {
 
     @Column(nullable = false)
     private String content;
+
+    @ManyToOne
+    @JoinColumn(name = "ARTICLE_ID")
+    private Article article;
 
 
     @Enumerated(value = EnumType.STRING)

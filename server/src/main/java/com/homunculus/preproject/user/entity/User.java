@@ -1,5 +1,6 @@
 package com.homunculus.preproject.user.entity;
 
+import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.audit.Auditable;
 import com.homunculus.preproject.popularity.entity.Popularity;
 import lombok.Getter;
@@ -35,6 +36,8 @@ public class User extends Auditable {
     @OneToMany(mappedBy = "user")
     private List<Popularity> popularities = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<Article> articles = new ArrayList<>();
 
 
     public enum UserStatus {

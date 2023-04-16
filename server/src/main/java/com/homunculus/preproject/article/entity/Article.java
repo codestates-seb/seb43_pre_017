@@ -1,12 +1,16 @@
 package com.homunculus.preproject.article.entity;
 
+import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.audit.Auditable;
 import com.homunculus.preproject.popularity.entity.Popularity;
+import com.homunculus.preproject.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,6 +32,13 @@ public class Article extends Auditable {
 
     @OneToOne
     private Popularity popularity;
+
+    @ManyToOne
+    @JoinColumn(name = "USER_ID")
+    private User user;
+
+    @OneToMany(mappedBy = "article")
+    private List<Answer> answers = new ArrayList<>();
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
