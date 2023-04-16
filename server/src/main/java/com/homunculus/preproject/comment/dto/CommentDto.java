@@ -10,17 +10,11 @@ public class CommentDto {
     @Getter
     public static class Post {
         @NotBlank
-        private String title;
-
-        @NotBlank
         private String content;
     }
 
     @Getter
     public static class Patch {
-        @NotSpace
-        private String title;
-
         @NotSpace
         private String content;
     }

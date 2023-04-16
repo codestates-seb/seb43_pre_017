@@ -1,5 +1,7 @@
 package com.homunculus.preproject.comment.dto;
 
 public class CommentResponseDto {
-    // todo : 미연님 !!!
+    private Long commendId;
+    private String content;
+
 }

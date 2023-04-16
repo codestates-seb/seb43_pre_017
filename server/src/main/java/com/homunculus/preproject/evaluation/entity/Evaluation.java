@@ -25,7 +25,8 @@ public class Evaluation {
     @JoinColumn(name = "ANSWER_ID")
     private Answer answer;
 
-
+    @Enumerated(value = EnumType.STRING)
+    @Column(length = 20, nullable = false)
     private EvaluationStatus evaluationStatus = EvaluationStatus.EVALUATION_NOTHING;
 
     public enum EvaluationStatus {
