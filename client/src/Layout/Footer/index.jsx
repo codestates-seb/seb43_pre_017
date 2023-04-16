@@ -7,6 +7,7 @@ import StyledFoorter, {
   StyledLi,
   StyledProducts,
   StyledCompnay,
+  StyledNetwork,
 } from "./style";
 
 /** 2023/04/12 - 푸터를 감싸는 컴포넌트 - by 1-blue */
@@ -48,6 +49,20 @@ const Footer = () => (
         <StyledLi>Cookie Policy</StyledLi>
       </StyledUl>
     </StyledCompnay>
+    <StyledNetwork>
+      <StyledTitle>STACK EXCHANGE NETWORK</StyledTitle>
+      <StyledUl>
+        <StyledLi>Technology</StyledLi>
+        <StyledLi>Culture & recreation</StyledLi>
+        <StyledLi>Life & arts</StyledLi>
+        <StyledLi>Science</StyledLi>
+        <StyledLi>Professional</StyledLi>
+        <StyledLi>Business</StyledLi>
+        <StyledLi></StyledLi>
+        <StyledLi>API</StyledLi>
+        <StyledLi>Data</StyledLi>
+      </StyledUl>
+    </StyledNetwork>
   </StyledFoorter>
 );
 

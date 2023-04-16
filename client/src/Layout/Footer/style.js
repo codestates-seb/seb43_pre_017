@@ -60,4 +60,11 @@ export const StyledCompnay = styled.div`
   margin-top: 32px;
   margin-left: 32px;
 `;
+/** 2023/04/16 - 푸터 네트워크카테고리 스타일 - by JHH0906 */
+export const StyledNetwork = styled.div`
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 32px;
+`;
 export default StyledFoorter;
