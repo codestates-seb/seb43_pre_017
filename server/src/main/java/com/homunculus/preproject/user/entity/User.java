@@ -29,6 +29,9 @@ public class User extends Auditable {
     @Column(length = 100, nullable = false)
     private String name;
 
+    @Column(length = 50)
+    private String password;
+
     @Column(length = 13, nullable = false, unique = true)
     private String phone;
 
@@ -39,13 +42,13 @@ public class User extends Auditable {
     private List<Article> articles = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Evaluation> evaluations = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
     private List<Answer> answers = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Evaluation> evaluations = new ArrayList<>();
 
 
     @Enumerated(value = EnumType.STRING)
