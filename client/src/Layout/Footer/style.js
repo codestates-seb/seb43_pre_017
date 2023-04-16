@@ -24,7 +24,6 @@ export const StyledStackoverflow = styled.div`
   width: 15%;
   display: flex;
   flex-direction: column;
-  float: left;
   margin-left: 8px;
   margin-top: 32px;
 `;
@@ -45,5 +44,13 @@ export const StyledUl = styled.ul`
 /** 2023/04/16 - 푸터 스택오버플로우카테고리Li 스타일 - by JHH0906 */
 export const StyledLi = styled.li`
   padding-top: 12px;
+`;
+/** 2023/04/16 - 푸터 프로덕트카테고리 스타일 - by JHH0906 */
+export const StyledProducts = styled.div`
+  width: 15%;
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px;
+  margin-top: 32px;
 `;
 export default StyledFoorter;
