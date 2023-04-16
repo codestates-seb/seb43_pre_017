@@ -1,11 +1,14 @@
 package com.homunculus.preproject.user.entity;
 
 import com.homunculus.preproject.audit.Auditable;
+import com.homunculus.preproject.popularity.entity.Popularity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,6 +31,11 @@ public class User extends Auditable {
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
     private UserStatus userStatus = UserStatus.USER_ACTIVE;
+
+    @OneToMany(mappedBy = "user")
+    private List<Popularity> popularities = new ArrayList<>();
+
+
 
     public enum UserStatus {
         USER_ACTIVE("활동중"),

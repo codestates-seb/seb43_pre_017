@@ -1,6 +1,7 @@
 package com.homunculus.preproject.article.entity;
 
 import com.homunculus.preproject.audit.Auditable;
+import com.homunculus.preproject.popularity.entity.Popularity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,6 +26,8 @@ public class Article extends Auditable {
     @Column(nullable = false)
     private Long viewCount;
 
+    @OneToOne
+    private Popularity popularity;
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
