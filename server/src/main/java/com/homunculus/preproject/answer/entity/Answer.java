@@ -23,14 +23,24 @@ public class Answer extends Auditable {
     private Long answerId;
 
     @Column(nullable = false)
-    private String title;
+    private String content;
 
     @Column(nullable = false)
-    private String content;
+    private Integer evaluationScore = 0;
+
+    @Column(nullable = false)
+    private Boolean accepted = false;
 
     @ManyToOne
     @JoinColumn(name = "ARTICLE_ID")
     private Article article;
+
+    @ManyToOne
+    @JoinColumn(name = "USER_ID")
+    private User user;
+
+    @OneToMany(mappedBy = "answer")
+    private List<Comment> comments = new ArrayList<>();
 
     @OneToOne
     private Evaluation evaluation;
