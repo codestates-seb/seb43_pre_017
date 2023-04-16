@@ -2,6 +2,7 @@ package com.homunculus.preproject.user.entity;
 
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.audit.Auditable;
+import com.homunculus.preproject.evaluation.entity.Evaluation;
 import com.homunculus.preproject.popularity.entity.Popularity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,16 +30,19 @@ public class User extends Auditable {
     @Column(length = 13, nullable = false, unique = true)
     private String phone;
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(length = 20, nullable = false)
-    private UserStatus userStatus = UserStatus.USER_ACTIVE;
-
     @OneToMany(mappedBy = "user")
     private List<Popularity> popularities = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Article> articles = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<Evaluation> evaluations = new ArrayList<>();
+
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(length = 20, nullable = false)
+    private UserStatus userStatus = UserStatus.USER_ACTIVE;
 
     public enum UserStatus {
         USER_ACTIVE("활동중"),

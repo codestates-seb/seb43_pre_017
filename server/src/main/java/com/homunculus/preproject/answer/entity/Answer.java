@@ -2,11 +2,16 @@ package com.homunculus.preproject.answer.entity;
 
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.audit.Auditable;
+import com.homunculus.preproject.comment.entity.Comment;
+import com.homunculus.preproject.evaluation.entity.Evaluation;
+import com.homunculus.preproject.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,6 +32,8 @@ public class Answer extends Auditable {
     @JoinColumn(name = "ARTICLE_ID")
     private Article article;
 
+    @OneToOne
+    private Evaluation evaluation;
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
