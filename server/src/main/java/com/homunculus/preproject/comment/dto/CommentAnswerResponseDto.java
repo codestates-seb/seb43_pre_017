@@ -1,6 +1,6 @@
 package com.homunculus.preproject.comment.dto;
 
-public class CommentResponseDto {
+public class CommentAnswerResponseDto {
     private Long commendId;
     private String content;
 

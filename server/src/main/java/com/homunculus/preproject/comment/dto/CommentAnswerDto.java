@@ -7,7 +7,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
-public class CommentDto {
+public class CommentAnswerDto {
 
     @Getter
     @Setter
@@ -22,6 +22,7 @@ public class CommentDto {
     @NoArgsConstructor
     public static class Patch {
         @NotSpace
+        private Long commentId;
         private String content;
     }
 }
