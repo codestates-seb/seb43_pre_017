@@ -1,13 +1,20 @@
 package com.homunculus.preproject.article.dto;
 
-import com.homunculus.preproject.audit.Auditable;
-import com.homunculus.preproject.user.entity.User;
+import com.homunculus.preproject.article.entity.Article;
+import com.homunculus.preproject.response.details.AnswerResponseDetails;
+import com.homunculus.preproject.response.details.ArticleResponseDetails;
+import com.homunculus.preproject.response.details.CommentArticleResponseDetails;
+import com.homunculus.preproject.response.details.UserResponseDetails;
 
-public class ArticleResponseDto extends Auditable {
-    private Long articleId;
-    private String title;
-    private String content;
-    private Long viewCount;
-    // private List<Answer> answers;  fixme : Answer 추가 후 수정해야함
-    private User user;
+import java.util.List;
+
+public class ArticleResponseDto {
+    private String message;
+    private ArticleResponseDetails article;
+    private UserResponseDetails user;
+    private List<CommentArticleResponseDetails> comments;
+    private List<AnswerResponseDetails> answers;
+
+    private Article.ArticleStatus status;
+    public String getStatus() { return status.getStatus(); }
 }
