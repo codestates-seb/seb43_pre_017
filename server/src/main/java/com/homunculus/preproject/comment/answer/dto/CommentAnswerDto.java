@@ -1,4 +1,4 @@
-package com.homunculus.preproject.comment.dto;
+package com.homunculus.preproject.comment.answer.dto;
 
 import com.homunculus.preproject.validator.NotSpace;
 import lombok.Getter;

@@ -1,8 +1,8 @@
-package com.homunculus.preproject.comment.mapper;
+package com.homunculus.preproject.comment.answer.mapper;
 
-import com.homunculus.preproject.comment.dto.CommentAnswerDto;
-import com.homunculus.preproject.comment.dto.CommentAnswerResponseDto;
-import com.homunculus.preproject.comment.entity.CommentAnswer;
+import com.homunculus.preproject.comment.answer.dto.CommentAnswerDto;
+import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
+import com.homunculus.preproject.comment.answer.dto.CommentAnswerResponseDto;
 import org.mapstruct.Mapper;
 
 import java.util.List;

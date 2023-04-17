@@ -2,7 +2,7 @@ package com.homunculus.preproject.answer.entity;
 
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.audit.Auditable;
-import com.homunculus.preproject.comment.entity.CommentAnswer;
+import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import com.homunculus.preproject.evaluation.entity.Evaluation;
 import com.homunculus.preproject.user.entity.User;
 import lombok.Getter;

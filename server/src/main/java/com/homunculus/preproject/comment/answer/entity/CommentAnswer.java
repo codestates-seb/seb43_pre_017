@@ -1,4 +1,4 @@
-package com.homunculus.preproject.comment.entity;
+package com.homunculus.preproject.comment.answer.entity;
 
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.audit.Auditable;

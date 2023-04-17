@@ -1,7 +1,6 @@
-package com.homunculus.preproject.comment.service;
+package com.homunculus.preproject.comment.answer.service;
 
-import com.homunculus.preproject.answer.entity.Answer;
-import com.homunculus.preproject.comment.entity.CommentAnswer;
+import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +19,6 @@ public class CommentAnswerService {
     public void deleteCommentAnswer(Long answerId, Long commentId) {
     }
 
-    public Page<CommentAnswer> findCommentsAnswer(Integer page, Integer size) {return null;
+    public Page<CommentAnswer> findCommentAnswers(Integer page, Integer size) {return null;
     }
 }

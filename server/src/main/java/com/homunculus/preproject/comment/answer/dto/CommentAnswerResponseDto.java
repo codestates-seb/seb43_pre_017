@@ -1,4 +1,4 @@
-package com.homunculus.preproject.comment.dto;
+package com.homunculus.preproject.comment.answer.dto;
 
 public class CommentAnswerResponseDto {
     private Long commendId;
