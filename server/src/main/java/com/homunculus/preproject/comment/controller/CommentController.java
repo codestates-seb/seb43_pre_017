@@ -20,13 +20,19 @@ import javax.validation.constraints.Positive;
 @RequestMapping("/api")
 @Validated
 public class CommentController {
+    private static final String COMMENT_DEFAULT_URL = "/api/article";
+    private static final String COMMENT_DEFAULT_URL_DETAIL = "/comment";
+    private static final String COMMENT_DEFAULT_URL_2 = "/api/answer";
+
+
 
     private final CommentService commentService;
     private final CommentMapper mapper;
 
-    @PostMapping("/answer/{answer-id}/comment")
+    @PostMapping(COMMENT_DEFAULT_URL_2 + "{answerId}" + COMMENT_DEFAULT_URL_DETAIL)
+            // ("/answer/{answerId}/comment")
     public ResponseEntity postComment(@Valid @RequestBody CommentDto.Post commentDtoPost,
-                                      @PathVariable("answer-id") @Positive Long answerId) {
+                                      @PathVariable("answerId") @Positive Long answerId) {
         Comment comment = commentService.createComment(mapper.commentPostDtoToComment(commentDtoPost), answerId);
 
         CommentResponseDto responseDto = mapper.commentToCommentResponseDto(comment);
@@ -34,5 +40,13 @@ public class CommentController {
     }
 
     // todo : 미연님 !!!!
+    @PatchMapping(COMMENT_DEFAULT_URL_2 + "{answerId}" + COMMENT_DEFAULT_URL_DETAIL + "{commentId")
+    public ResponseEntity patchComment(@Valid @RequestBody CommentDto.Patch commentDtoPatch,
+                                       @PathVariable("answerId") @Positive Long answerId,
+                                       @PathVariable("commentId") @Positive Long commentId) {
+        // fixme: Patch 작업중
+        //commentDtoPatch.
+        return null;
+    }
 
 }
