@@ -49,5 +49,12 @@ public class CommentAnswerController {
         CommentAnswerResponseDto responseDto = mapper.commentAnswerToCommentAnswerResponseDto(updatedCommentAnswer);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
+    @DeleteMapping(COMMENT_DEFAULT_URL + "/{answerId}" + COMMENT_DEFAULT_URL_DETAIL + "/{commentId}")
+    public ResponseEntity deleteCommentAnswer(@PathVariable("answerId") @Positive Long answerId,
+                                              @PathVariable("commentId") @Positive Long commentId) {
+        commentAnswerService.deleteAnswerComment(answerId, commentId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
 }

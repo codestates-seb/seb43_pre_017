@@ -13,4 +13,7 @@ public class CommentAnswerService {
     public CommentAnswer updateCommentAnswer(CommentAnswer comment, Long commentId) {
         return null;
     }
+
+    public void deleteAnswerComment(Long answerId, Long commentId) {
+    }
 }
