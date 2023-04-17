@@ -70,7 +70,7 @@ public class CommentAnswerController {
     @DeleteMapping(COMMENT_DEFAULT_URL + "/{answerId}" + COMMENT_DEFAULT_URL_DETAIL + "/{commentId}")
     public ResponseEntity deleteCommentAnswer(@PathVariable("answerId") @Positive Long answerId,
                                               @PathVariable("commentId") @Positive Long commentId) {
-        commentAnswerService.deleteAnswerComment(answerId, commentId);
+        commentAnswerService.deleteCommentAnswer(answerId, commentId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
