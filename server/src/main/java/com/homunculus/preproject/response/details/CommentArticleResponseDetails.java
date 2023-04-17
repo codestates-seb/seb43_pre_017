@@ -1,4 +1,4 @@
-package com.homunculus.preproject.response;
+package com.homunculus.preproject.response.details;
 
 public class CommentArticleResponseDetails {
     private Long id;
