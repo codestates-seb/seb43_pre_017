@@ -31,7 +31,6 @@ public class CommentAnswerController {
     private final CommentAnswerMapper mapper;
 
     @PostMapping(COMMENT_DEFAULT_URL + "/{answerId}" + COMMENT_DEFAULT_URL_DETAIL)
-            // ("/answer/{answerId}/comment")
     public ResponseEntity postCommentAnswer(@Valid @RequestBody CommentAnswerDto.Post commentAnswerDtoPost,
                                       @PathVariable("answerId") @Positive Long answerId) {
         CommentAnswer commentAnswer = commentAnswerService.createCommentAnswer(mapper.commentAnswerPostDtoToCommentAnswer(commentAnswerDtoPost), answerId);
@@ -40,12 +39,12 @@ public class CommentAnswerController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
-    // todo : 미연님 !!!!
     @PatchMapping(COMMENT_DEFAULT_URL + "/{answerId}" + COMMENT_DEFAULT_URL_DETAIL + "/{commentId}")
     public ResponseEntity patchCommentAnswer(@Valid @RequestBody CommentAnswerDto.Patch commentAnswerDtoPatch,
                                        @PathVariable("answerId") @Positive Long answerId,
                                        @PathVariable("commentId") @Positive Long commentId) {
         commentAnswerDtoPatch.setCommentId(commentId);
+        commentAnswerDtoPatch.setAnswerId(answerId);
         CommentAnswer commentAnswer = mapper.commentAnswerPatchDtoToCommentAnswer(commentAnswerDtoPatch);
         CommentAnswer updatedCommentAnswer = commentAnswerService.updateCommentAnswer(commentAnswer, answerId);
 
@@ -54,17 +53,16 @@ public class CommentAnswerController {
     }
 
     @GetMapping(COMMENT_DEFAULT_URL + "/{answerId}" + COMMENT_DEFAULT_URL_DETAIL)
-    public ResponseEntity getAllcommentAnswers(@PathVariable("answerId") @Positive Long answerId,
+    public ResponseEntity getAllCommentAnswers(@PathVariable("answerId") @Positive Long answerId,
                                         @RequestParam("page") @Positive Integer page,
                                         @RequestParam("size") @Positive Integer size) {
-        Page<CommentAnswer> pageCommentAnswers = commentAnswerService.findCommentAnswers(page - 1, size);
+        Page<CommentAnswer> pageCommentAnswers = commentAnswerService.findCommentAnswers(answerId,page - 1, size);
         List<CommentAnswer> commentAnswers = pageCommentAnswers.getContent();
 
         return new ResponseEntity<>(
                 new MultiResponseDto<>(mapper.commentsAnswerToCommentAnswerResponseDtos(commentAnswers), pageCommentAnswers),
                 HttpStatus.OK);
     }
-
 
     @DeleteMapping(COMMENT_DEFAULT_URL + "/{answerId}" + COMMENT_DEFAULT_URL_DETAIL + "/{commentId}")
     public ResponseEntity deleteCommentAnswer(@PathVariable("answerId") @Positive Long answerId,
@@ -73,5 +71,4 @@ public class CommentAnswerController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }

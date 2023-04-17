@@ -1,4 +1,4 @@
-package com.homunculus.preproject.comment.answer.dto;
+package com.homunculus.preproject.comment.article.dto;
 
 import com.homunculus.preproject.validator.NotSpace;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
-public class CommentAnswerDto {
+public class CommentArticleDto {
 
     @Getter
     @Setter
@@ -15,6 +15,7 @@ public class CommentAnswerDto {
     public static class Post {
         @NotBlank
         private String content;
+        private Long articleId;
     }
 
     @Getter

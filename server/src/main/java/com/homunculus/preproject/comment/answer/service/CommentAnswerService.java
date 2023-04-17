@@ -19,6 +19,6 @@ public class CommentAnswerService {
     public void deleteCommentAnswer(Long answerId, Long commentId) {
     }
 
-    public Page<CommentAnswer> findCommentAnswers(Integer page, Integer size) {return null;
+    public Page<CommentAnswer> findCommentAnswers(Long answerId, Integer page, Integer size) {return null;
     }
 }
