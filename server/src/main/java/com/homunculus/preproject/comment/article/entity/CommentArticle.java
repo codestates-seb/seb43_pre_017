@@ -1,6 +1,7 @@
 package com.homunculus.preproject.comment.article.entity;
 
 import com.homunculus.preproject.answer.entity.Answer;
+import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.audit.Auditable;
 import com.homunculus.preproject.user.entity.User;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-public class CommentAnswer extends Auditable {
+public class CommentArticle extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
@@ -26,20 +27,20 @@ public class CommentAnswer extends Auditable {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "ANSWER_ID")
-    private Answer answer;
+    @JoinColumn(name = "ARTICLE_ID")
+    private Article article;
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
-    private CommentStatus commentStatus = CommentStatus.COMMENT_ANSWER_REGISTRY;
+    private CommentArticleStatus commentArticleStatus = CommentArticleStatus.COMMENT_ARTICLE_REGISTRY;
 
-    public enum CommentStatus {
-        COMMENT_ANSWER_REGISTRY("등록상태"),
-        COMMENT_ANSWER_DELETE("삭제상태");
+    public enum CommentArticleStatus {
+        COMMENT_ARTICLE_REGISTRY("등록상태"),
+        COMMENT_ARTICLE_DELETE("삭제상태");
 
         private @Getter String status;
 
-        CommentStatus(String status) {
+        CommentArticleStatus(String status) {
             this.status = status;
         }
     }

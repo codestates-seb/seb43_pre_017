@@ -2,6 +2,7 @@ package com.homunculus.preproject.article.entity;
 
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.audit.Auditable;
+import com.homunculus.preproject.comment.article.entity.CommentArticle;
 import com.homunculus.preproject.evaluation.article.entity.EvaluationArticle;
 import com.homunculus.preproject.popularity.entity.Popularity;
 import com.homunculus.preproject.user.entity.User;
@@ -43,6 +44,9 @@ public class Article extends Auditable {
 
     @OneToMany(mappedBy = "article")
     private List<EvaluationArticle> evaluationArticles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "article")
+    private List<CommentArticle> commentArticles = new ArrayList<>();
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)

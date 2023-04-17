@@ -31,15 +31,15 @@ public class CommentAnswer extends Auditable {
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
-    private CommentStatus commentStatus = CommentStatus.COMMENT_ANSWER_REGISTRY;
+    private CommentAnswerStatus commentAnswerStatus = CommentAnswerStatus.COMMENT_ANSWER_REGISTRY;
 
-    public enum CommentStatus {
+    public enum CommentAnswerStatus {
         COMMENT_ANSWER_REGISTRY("등록상태"),
         COMMENT_ANSWER_DELETE("삭제상태");
 
         private @Getter String status;
 
-        CommentStatus(String status) {
+        CommentAnswerStatus(String status) {
             this.status = status;
         }
     }

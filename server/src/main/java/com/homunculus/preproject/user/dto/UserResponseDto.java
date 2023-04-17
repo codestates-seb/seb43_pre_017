@@ -14,8 +14,8 @@ public class UserResponseDto extends Auditable {
     private String message;
     private UserResponseDetails user;
 
-    private User.UserStatus userStatus;
-    public String getUserStatus() {
-        return userStatus.getStatus();
+    private User.UserStatus status;
+    public String getStatus() {
+        return status.getStatus();
     }
 }
