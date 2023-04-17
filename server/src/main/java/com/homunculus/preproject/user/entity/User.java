@@ -4,7 +4,7 @@ import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.audit.Auditable;
 import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
-import com.homunculus.preproject.evaluation.entity.Evaluation;
+import com.homunculus.preproject.evaluation.answer.entity.EvaluationAnswer;
 import com.homunculus.preproject.popularity.entity.Popularity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,10 +45,10 @@ public class User extends Auditable {
     private List<Answer> answers = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<CommentAnswer> comments = new ArrayList<>();
+    private List<CommentAnswer> commentAnswers = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Evaluation> evaluations = new ArrayList<>();
+    private List<EvaluationAnswer> evaluationAnswers = new ArrayList<>();
 
 
     @Enumerated(value = EnumType.STRING)
@@ -56,9 +56,9 @@ public class User extends Auditable {
     private UserStatus userStatus = UserStatus.USER_ACTIVE;
 
     public enum UserStatus {
-        USER_ACTIVE("활동중"),
-        USER_SLEEP("휴면 상태"),
-        USER_QUIT("탈퇴 상태");
+        USER_ACTIVE("활동상태"),
+        USER_SLEEP("휴면상태"),
+        USER_QUIT("탈퇴상태");
 
         private @Getter String status;
 

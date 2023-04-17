@@ -1,7 +1,15 @@
 package com.homunculus.preproject.comment.answer.dto;
 
-public class CommentAnswerResponseDto {
-    private Long commendId;
-    private String content;
+import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
+import com.homunculus.preproject.response.details.CommentAnswerResponseDetails;
 
+import java.util.List;
+
+public class CommentAnswerResponseDto {
+    private String message;
+    private Integer messageCount;
+    List<CommentAnswerResponseDetails> comments;
+
+    private CommentAnswer.CommentAnswerStatus status;
+    public String getStatus() { return status.getStatus(); }
 }

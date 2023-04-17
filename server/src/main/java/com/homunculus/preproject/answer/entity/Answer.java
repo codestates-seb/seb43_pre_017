@@ -3,7 +3,8 @@ package com.homunculus.preproject.answer.entity;
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.audit.Auditable;
 import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
-import com.homunculus.preproject.evaluation.entity.Evaluation;
+import com.homunculus.preproject.evaluation.answer.Evaluation;
+import com.homunculus.preproject.evaluation.answer.entity.EvaluationAnswer;
 import com.homunculus.preproject.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,10 +41,10 @@ public class Answer extends Auditable {
     private User user;
 
     @OneToMany(mappedBy = "answer")
-    private List<CommentAnswer> comments = new ArrayList<>();
+    private List<CommentAnswer> commentAnswers = new ArrayList<>();
 
     @OneToOne
-    private Evaluation evaluation;
+    private EvaluationAnswer evaluationAnswer;
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)

@@ -1,8 +1,7 @@
-package com.homunculus.preproject.comment.article.entity;
+package com.homunculus.preproject.evaluation.article.entity;
 
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.article.entity.Article;
-import com.homunculus.preproject.audit.Auditable;
 import com.homunculus.preproject.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,17 +9,14 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
-@Getter
-@Setter
 @Entity
-public class CommentArticle extends Auditable {
+@Setter
+@Getter
+@NoArgsConstructor
+public class EvaluationArticle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
-
-    @Column
-    private String content;
+    private Long evaluationId;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
@@ -32,15 +28,16 @@ public class CommentArticle extends Auditable {
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
-    private CommentArticleStatus commentArticleStatus = CommentArticleStatus.COMMENT_ARTICLE_REGISTRY;
+    private EvaluationArticleStatus evaluationAnswerStatus = EvaluationArticleStatus.EVALUATION_ARTICLE_NOTHING;
 
-    public enum CommentArticleStatus {
-        COMMENT_ARTICLE_REGISTRY("등록상태"),
-        COMMENT_ARTICLE_DELETE("삭제상태");
+    public enum EvaluationArticleStatus {
+        EVALUATION_ARTICLE_NOTHING("0"),
+        EVALUATION_ARTICLE_LIKE("+1"),
+        EVALUATION_ARTICLE_DISLIKE("-1");
 
-        private @Getter String status;
+        private final @Getter String status;
 
-        CommentArticleStatus(String status) {
+        EvaluationArticleStatus(String status) {
             this.status = status;
         }
     }

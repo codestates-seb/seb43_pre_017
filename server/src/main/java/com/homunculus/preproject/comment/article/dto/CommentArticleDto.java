@@ -13,9 +13,8 @@ public class CommentArticleDto {
     @Setter
     @NoArgsConstructor
     public static class Post {
-        @NotBlank
-        private String content;
         private Long articleId;
+        private String content;
     }
 
     @Getter
