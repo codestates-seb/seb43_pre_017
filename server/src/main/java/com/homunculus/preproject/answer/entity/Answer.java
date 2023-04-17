@@ -1,11 +1,17 @@
 package com.homunculus.preproject.answer.entity;
 
+import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.audit.Auditable;
+import com.homunculus.preproject.comment.entity.Comment;
+import com.homunculus.preproject.evaluation.entity.Evaluation;
+import com.homunculus.preproject.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,11 +23,27 @@ public class Answer extends Auditable {
     private Long answerId;
 
     @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false)
+    private Integer evaluationScore = 0;
+
+    @Column(nullable = false)
+    private Boolean accepted = false;
+
+    @ManyToOne
+    @JoinColumn(name = "ARTICLE_ID")
+    private Article article;
+
+    @ManyToOne
+    @JoinColumn(name = "USER_ID")
+    private User user;
+
+    @OneToMany(mappedBy = "answer")
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToOne
+    private Evaluation evaluation;
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
