@@ -1,4 +1,4 @@
-package com.homunculus.preproject.evaluation.entity;
+package com.homunculus.preproject.evaluation.answer.entity;
 
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.user.entity.User;
@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @Getter
 @NoArgsConstructor
-public class Evaluation {
+public class EvaluationAnswer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long evaluationId;
@@ -27,16 +27,16 @@ public class Evaluation {
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
-    private EvaluationStatus evaluationStatus = EvaluationStatus.EVALUATION_NOTHING;
+    private EvaluationAnswerStatus evaluationAnswerStatus = EvaluationAnswerStatus.EVALUATION_ANSWER_NOTHING;
 
-    public enum EvaluationStatus {
-        EVALUATION_NOTHING("0"),
-        EVALUATION_LIKE("+1"),
-        EVALUATION_DISLIKE("-1");
+    public enum EvaluationAnswerStatus {
+        EVALUATION_ANSWER_NOTHING("0"),
+        EVALUATION_ANSWER_LIKE("+1"),
+        EVALUATION_ANSWER_DISLIKE("-1");
 
         private final @Getter String status;
 
-        EvaluationStatus(String status) {
+        EvaluationAnswerStatus(String status) {
             this.status = status;
         }
     }
