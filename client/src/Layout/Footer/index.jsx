@@ -50,7 +50,7 @@ const Footer = () => (
         <StyledLi>Privacy Policy</StyledLi>
         <StyledLi>Terms of Service</StyledLi>
         <StyledLi>Contact US</StyledLi>
-        <StyledLi>Cookie Settings</StyledLi>
+        <StyledLi className="break-m">Cookie Settings</StyledLi>
         <StyledLi>Cookie Policy</StyledLi>
       </StyledUl>
     </StyledCompnay>

@@ -6,17 +6,42 @@ const StyledFoorter = styled.footer`
   height: 320px;
   background-color: ${({ theme }) => theme.colors.zinc800};
   display: flex;
+  @media (max-width: 980px) {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 0;
+    padding-left: 16px;
+  }
+  @media (max-width: 610px) {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 0;
+    padding-left: 16px;
+  }
 `;
 /** 2023/04/16 - 푸터 스택오버플로우로고 스타일 - by JHH0906 */
 export const StyledLogo = styled.div`
   width: 10%;
   height: 100%;
-  margin-left: 4px;
+
   > img {
     width: 60px;
     float: right;
-    margin-top: 6px;
     margin-right: 8px;
+  }
+  @media (max-width: 980px) {
+    > img {
+      float: left;
+    }
+  }
+  @media (max-width: 610px) {
+    > img {
+      display: none;
+    }
   }
 `;
 /** 2023/04/16 - 푸터 스택오버플로우카테고리 스타일 - by JHH0906 */
@@ -24,26 +49,45 @@ export const StyledStackoverflow = styled.div`
   width: 15%;
   display: flex;
   flex-direction: column;
-  margin-left: 8px;
   margin-top: 32px;
+  @media (max-width: 980px) {
+    width: 100%;
+    margin-top: 20px;
+  }
 `;
 /** 2023/04/16 - 푸터 스택오버플로우카테고리Title 스타일 - by JHH0906 */
 export const StyledTitle = styled.div`
   color: ${({ theme }) => theme.colors.stone300};
   font-size: 14px;
   font-weight: 700;
+  @media (max-width: 980px) {
+    width: 100%;
+    padding-left: 8px;
+  }
 `;
 /** 2023/04/16 - 푸터 스택오버플로우카테고리Ul 스타일 - by JHH0906 */
 export const StyledUl = styled.ul`
-  float: left;
   margin-top: 12px;
   color: ${({ theme }) => theme.colors.gray400};
   font-size: 14px;
   font-weight: 500;
+  @media (max-width: 980px) {
+    display: flex;
+    margin-top: 0;
+  }
+  @media (max-width: 720px) {
+    display: flex;
+    flex-wrap: wrap;
+  }
 `;
 /** 2023/04/16 - 푸터 스택오버플로우카테고리Li 스타일 - by JHH0906 */
 export const StyledLi = styled.li`
   padding-top: 12px;
+  @media (max-width: 980px) {
+    float: left;
+    margin-top: 0;
+    padding-left: 8px;
+  }
 `;
 /** 2023/04/16 - 푸터 프로덕트카테고리 스타일 - by JHH0906 */
 export const StyledProducts = styled.div`
@@ -51,6 +95,9 @@ export const StyledProducts = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 32px;
+  @media (max-width: 980px) {
+    width: 100%;
+  }
 `;
 /** 2023/04/16 - 푸터 컴퍼니카테고리 스타일 - by JHH0906 */
 export const StyledCompnay = styled.div`
@@ -58,7 +105,9 @@ export const StyledCompnay = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 32px;
-  margin-left: 32px;
+  @media (max-width: 980px) {
+    width: 100%;
+  }
 `;
 /** 2023/04/16 - 푸터 네트워크카테고리 스타일 - by JHH0906 */
 export const StyledNetwork = styled.div`
@@ -66,13 +115,20 @@ export const StyledNetwork = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 32px;
+
+  @media (max-width: 980px) {
+    width: 100%;
+  }
 `;
 /** 2023/04/16 - 푸터 기타카테고리컨테이너 스타일 - by JHH0906 */
 export const StyledEtcContainer = styled.div`
-  width: 25%;
+  width: 30%;
   display: flex;
   flex-direction: column;
   margin-top: 32px;
+  @media (max-width: 980px) {
+    width: 100%;
+  }
 `;
 /** 2023/04/16 - 푸터 SNS카테고리 스타일 - by JHH0906 */
 export const StyledSnsContainer = styled.div`
@@ -84,17 +140,32 @@ export const StyledSns = styled.div`
   font-size: 12px;
   color: ${({ theme }) => theme.colors.gray400};
   display: flex;
-  padding-left: 20px;
+  margin-left: 8px;
 `;
 /** 2023/04/16 - 푸터 라이센스카테고리 스타일 - by JHH0906 */
 export const StyledLicenseContainer = styled.div`
-  width: 100%;
-  margin-left: 20px;
+  height: 30%;
+  margin-left: 8px;
   padding-top: 200px;
+  @media (max-width: 980px) {
+    padding-top: 8px;
+    padding-bottom: 20px;
+    display: flex;
+  }
+  @media (max-width: 600px) {
+    display: inline;
+  }
 `;
 /** 2023/04/16 - 푸터 라이센스 스타일 - by JHH0906 */
 export const StyledLicense = styled.div`
   font-size: 12px;
   color: ${({ theme }) => theme.colors.gray400};
+  @media (max-width: 980px) {
+    padding-top: 8px;
+    display: flex;
+  }
+  @media (max-width: 600px) {
+    display: inline;
+  }
 `;
 export default StyledFoorter;
