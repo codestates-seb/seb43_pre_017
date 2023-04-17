@@ -15,7 +15,7 @@ public class CommentAnswerDto {
     @Setter
     @NoArgsConstructor
     public static class Post {
-        @NotNull
+        private Long answerId;
         private String content;
     }
 

@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 public class CommentAnswerService {
 
 
-    public CommentAnswer createCommentAnswer(CommentAnswer comment, Long answerId) {
+    public CommentAnswer createCommentAnswer(CommentAnswer comment) {
         return null;
     }
 
-    public CommentAnswer updateCommentAnswer(CommentAnswer comment, Long commentId) {
+    public CommentAnswer updateCommentAnswer(CommentAnswer comment) {
         return null;
     }
 

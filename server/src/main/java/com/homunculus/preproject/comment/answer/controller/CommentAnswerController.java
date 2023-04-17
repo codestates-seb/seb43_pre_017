@@ -33,7 +33,8 @@ public class CommentAnswerController {
     @PostMapping(COMMENT_DEFAULT_URL + "/{answerId}" + COMMENT_DEFAULT_URL_DETAIL)
     public ResponseEntity postCommentAnswer(@Valid @RequestBody CommentAnswerDto.Post commentAnswerDtoPost,
                                       @PathVariable("answerId") @Positive Long answerId) {
-        CommentAnswer commentAnswer = commentAnswerService.createCommentAnswer(mapper.commentAnswerPostDtoToCommentAnswer(commentAnswerDtoPost), answerId);
+        commentAnswerDtoPost.setAnswerId(answerId);
+        CommentAnswer commentAnswer = commentAnswerService.createCommentAnswer(mapper.commentAnswerPostDtoToCommentAnswer(commentAnswerDtoPost));
 
         CommentAnswerResponseDto responseDto = mapper.commentAnswerToCommentAnswerResponseDto(commentAnswer);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
@@ -46,7 +47,7 @@ public class CommentAnswerController {
         commentAnswerDtoPatch.setCommentId(commentId);
         commentAnswerDtoPatch.setAnswerId(answerId);
         CommentAnswer commentAnswer = mapper.commentAnswerPatchDtoToCommentAnswer(commentAnswerDtoPatch);
-        CommentAnswer updatedCommentAnswer = commentAnswerService.updateCommentAnswer(commentAnswer, answerId);
+        CommentAnswer updatedCommentAnswer = commentAnswerService.updateCommentAnswer(commentAnswer);
 
         CommentAnswerResponseDto responseDto = mapper.commentAnswerToCommentAnswerResponseDto(updatedCommentAnswer);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
