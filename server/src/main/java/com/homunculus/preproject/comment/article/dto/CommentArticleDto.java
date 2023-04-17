@@ -1,21 +1,21 @@
 package com.homunculus.preproject.comment.article.dto;
 
-import com.homunculus.preproject.validator.NotSpace;
 import lombok.Getter;
+import org.springframework.lang.Nullable;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class CommentArticleDto {
 
     @Getter
     public static class Post {
-        @NotBlank
+        @NotNull
         private String content;
     }
 
     @Getter
     public static class Patch {
-        @NotSpace
+        @Nullable
         private String content;
     }
 }
