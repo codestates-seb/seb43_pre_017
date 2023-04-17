@@ -3,7 +3,7 @@ package com.homunculus.preproject.user.entity;
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.audit.Auditable;
-import com.homunculus.preproject.comment.entity.Comment;
+import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import com.homunculus.preproject.evaluation.entity.Evaluation;
 import com.homunculus.preproject.popularity.entity.Popularity;
 import lombok.Getter;
@@ -45,7 +45,7 @@ public class User extends Auditable {
     private List<Answer> answers = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Comment> comments = new ArrayList<>();
+    private List<CommentAnswer> commentAnswers = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Evaluation> evaluations = new ArrayList<>();

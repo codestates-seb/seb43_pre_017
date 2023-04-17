@@ -1,11 +1,11 @@
-package com.homunculus.preproject.comment.dto;
+package com.homunculus.preproject.comment.article.dto;
 
 import com.homunculus.preproject.validator.NotSpace;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 
-public class CommentDto {
+public class CommentArticleDto {
 
     @Getter
     public static class Post {

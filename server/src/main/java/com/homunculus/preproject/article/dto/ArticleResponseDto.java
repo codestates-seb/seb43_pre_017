@@ -8,6 +8,7 @@ import com.homunculus.preproject.response.details.UserResponseDetails;
 import java.util.List;
 
 public class ArticleResponseDto {
+    private String message;
     private ArticleResponseDetails article;
     private UserResponseDetails user;
     private List<CommentArticleResponseDetails> comments;
