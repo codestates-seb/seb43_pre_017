@@ -7,6 +7,6 @@ import java.util.List;
 
 public class AnswerResponseDto {
     private String message;
-    private Integer answersCount;    // todo : FE 와 상의 필요
+    private Integer messageCount;    // todo : FE 와 상의 필요
     private List<AnswerResponseDetails> answers;
 }

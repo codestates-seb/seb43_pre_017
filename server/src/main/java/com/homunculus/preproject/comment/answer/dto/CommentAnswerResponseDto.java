@@ -1,7 +1,11 @@
 package com.homunculus.preproject.comment.answer.dto;
 
-public class CommentAnswerResponseDto {
-    private Long commendId;
-    private String content;
+import com.homunculus.preproject.response.details.CommentAnswerResponseDetails;
 
+import java.util.List;
+
+public class CommentAnswerResponseDto {
+    private String message;
+    private Integer messageCount;
+    List<CommentAnswerResponseDetails> comments;
 }
