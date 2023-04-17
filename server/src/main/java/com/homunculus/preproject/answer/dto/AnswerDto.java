@@ -16,9 +16,6 @@ public class AnswerDto {
     @NoArgsConstructor
     public static class Post {
         @NotNull
-        private String title;
-
-        @NotNull
         private String content;
     }
 
@@ -27,9 +24,6 @@ public class AnswerDto {
     @NoArgsConstructor
     public static class Patch {
         private Long answerId;
-
-        @Nullable
-        private String title;
 
         @Nullable
         private String content;

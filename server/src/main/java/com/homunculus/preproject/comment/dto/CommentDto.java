@@ -14,9 +14,6 @@ public class CommentDto {
     @NoArgsConstructor
     public static class Post {
         @NotBlank
-        private String title;
-
-        @NotBlank
         private String content;
     }
 
@@ -24,9 +21,6 @@ public class CommentDto {
     @Setter
     @NoArgsConstructor
     public static class Patch {
-        @NotSpace
-        private String title;
-
         @NotSpace
         private String content;
     }
