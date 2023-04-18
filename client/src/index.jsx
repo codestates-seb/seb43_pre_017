@@ -16,7 +16,7 @@ import Layout from "./Layout";
 
 // component
 import Home from "./pages/Home";
-import Login from "./pages/Home/Login";
+import Login from "./pages/Login";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -34,7 +34,7 @@ root.render(
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/Login" element={<Login />} />
+              <Route path="/login" element={<Login />} />
             </Routes>
           </Layout>
         </BrowserRouter>
