@@ -8,8 +8,11 @@ import Footer from "./Footer";
 const Layout = ({ children }) => (
   <>
     <Header />
-    <SideBar />
-    <Main>{children}</Main>
+
+    <Main>
+      <SideBar />
+      {children}
+    </Main>
     <Footer />
   </>
 );

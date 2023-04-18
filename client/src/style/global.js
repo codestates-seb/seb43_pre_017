@@ -8,8 +8,23 @@ export const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
   html {
-    font-size: 16px;
+    font-size: 14px;
+  }
+
+  a {
+    color: black;
+    text-decoration: none;
+  }
+  button {
+    padding: 0;
+    border: 0;
+    background-color: transparent;
   }
 
   /* 모바일에서는 14px */
+  @media ${({ theme }) => theme.mediaSize.sm} {
+    html {
+      font-size: 16px;
+    }
+  }
 `;
