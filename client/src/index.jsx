@@ -34,7 +34,7 @@ root.render(
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
+              <Route path="/Login" element={<Login />} />
             </Routes>
           </Layout>
         </BrowserRouter>

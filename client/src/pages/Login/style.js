@@ -7,7 +7,6 @@ const StyledLogin = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #f1f2f4;
   cursor: pointer;
 `;
 /** 2023/04/18 - 로그인 컨테이너 - by JHH0906 */

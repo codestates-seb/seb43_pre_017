@@ -9,7 +9,7 @@ import StyledSideBar, { StyledLink } from "./style";
 /** 2023/04/12 - SideBar 컴포넌트 - by 1-blue */
 const SideBar = () => {
   const { pathname } = useLocation();
-
+  if (window.location.pathname === "/Login") return null;
   return (
     <StyledSideBar>
       <>
