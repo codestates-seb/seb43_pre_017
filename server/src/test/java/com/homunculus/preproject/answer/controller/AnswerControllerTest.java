@@ -33,6 +33,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -134,7 +135,8 @@ class AnswerControllerTest {
                         )
                 ));
     }
-/*
+
+    /*
     @Test
     void patchAnswer() {
         // given
@@ -216,13 +218,14 @@ class AnswerControllerTest {
     @Test
     void getAllAnswers() {
     }
-
+*/
     @Test
     @DisplayName("AnswerDelete 테스트")
-    void deleteAnswer() {
+    void deleteAnswer() throws Exception {
         // given
         final Long articleId = 1L;
-        final String responseContent = "지워야하는 응답";
+        final Long answerId = 1L;
+        final String responseContent = "답변을 삭제했습니다.";
 
         AnswerSimpleResponseDto responseDto = new AnswerSimpleResponseDto();
         responseDto.setMessage(responseContent);
@@ -230,38 +233,23 @@ class AnswerControllerTest {
         doNothing().when(answerService).deleteAnswer(anyLong(), anyLong());
 
         // when
-        given(mapper.answerToAnswerSimpleResponseDto(any())).willReturn(responseDto);
 
         ResultActions actions =
                 mockMvc.perform(
-                        post("/api/article/{articleId}/answer",articleId)
-                                .accept(MediaType.APPLICATION_JSON)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(content)
+                        delete("/api/article/{articleId}/answer/{answerId}", articleId, answerId)
                 );
 
         // then
         actions
-                .andExpect(status().isCreated())
-//                .andExpect(header().string("Authorization", is(startsWith("bearer "))))     // todo : Security 적용 시 토큰 추가해야함
+                .andExpect(status().isNoContent())
                 .andExpect(jsonPath("$.message").value(responseContent))
-//                .andExpect(jsonPath("$.messageCount").value(1))
-//                .andExpect(jsonPath("$.answers[0].id").value(answerId1))
-//                .andExpect(jsonPath("$.answers[0].content").value(answerContent1))
-//                .andExpect(jsonPath("$.answers[1].id").value(answerId2))
-//                .andExpect(jsonPath("$.answers[1].content").value(answerContent2))
-//                .andExpect(jsonPath("$.status").value("등록상태"))
                 .andDo(document(
-                        "post-answer",
+                        "delete-answer",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         pathParameters(
-                                parameterWithName("articleId").description("질문글 식별자")
-                        ),
-                        requestFields(
-                                List.of(
-                                        fieldWithPath("content").type(JsonFieldType.STRING).description("컨텐츠 내용")
-                                )
+                                parameterWithName("articleId").description("질문글 식별자"),
+                                parameterWithName("answerId").description("답변글 식별자")
                         ),
                         responseFields(
                                 List.of(
@@ -270,6 +258,4 @@ class AnswerControllerTest {
                         )
                 ));
     }
-
- */
 }
