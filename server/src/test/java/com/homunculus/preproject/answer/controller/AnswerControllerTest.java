@@ -39,8 +39,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AnswerController.class)
@@ -173,34 +172,22 @@ class AnswerControllerTest {
     @DisplayName("Answer 조회 테스트")
     void getAllAnswers() throws Exception {
         // given
-        final LocalDateTime timeStamp = LocalDateTime.now();
+        final LocalDateTime timeStamp = LocalDateTime.of(2023,4,19,21,0,0);
 
         final String answerMessage = "답변글 조회를 완료했습니다.";
-        final String commentMessage = "코멘트 조회를 완료했습니다.";
         final Long articleId = 1L;
-
         final Long answerId1 = 1L;          final String answerContent1 = "무언가1";
-        final Long commentAnswerId1_1 = 1L;   final String commentAnswerContent1_1 = "코멘트1-1";
-        final Long commentAnswerId1_2 = 2L;   final String commentAnswerContent1_2 = "코멘트1-2";
-
         final Long answerId2 = 2L;          final String answerContent2 = "무언가2";
-        final Long commentAnswerId2_1 = 1L;   final String commentAnswerContent2_1 = "코멘트2-1";
-        final Long commentAnswerId2_2 = 2L;   final String commentAnswerContent2_2 = "코멘트2-2";
 
         AnswerResponseDto responseDto = new AnswerResponseDto();
         {
             responseDto.setMessage(answerMessage);
             responseDto.setArticleId(articleId);
 
-            List<AnswerResponseDetails> answers = new ArrayList<>();
-            answers.add(createDummyAnswerResponseDetails(
-                    timeStamp, commentMessage, answerId1, answerContent1,
-                    commentAnswerId1_1, commentAnswerContent1_1,
-                    commentAnswerId1_2, commentAnswerContent1_2));
-            answers.add(createDummyAnswerResponseDetails(
-                    timeStamp, commentMessage, answerId2, answerContent2,
-                    commentAnswerId2_1, commentAnswerContent2_1,
-                    commentAnswerId2_2, commentAnswerContent2_2));
+            List<AnswerResponseDto.Answers> answers = new ArrayList<>();
+            answers.add(createDummyAnswers(timeStamp, answerId1, answerContent1));
+            answers.add(createDummyAnswers(timeStamp, answerId2, answerContent2));
+
             responseDto.setMessageCount(answers.size());
             responseDto.setAnswers(answers);
             responseDto.setStatus(Answer.AnswerStatus.ANSWER_REGISTRY);
@@ -238,76 +225,49 @@ class AnswerControllerTest {
         actions
                 .andExpect(jsonPath("$.status").value(responseDto.getStatus()))
                 .andDo(document(
-                        "post-answer",
+                        "getAll-answers",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         pathParameters(
                                 parameterWithName("articleId").description("질문글 식별자")
                         ),
+                        requestParameters(
+                                parameterWithName("page").description("페이지 번호"),
+                                parameterWithName("size").description("페이지 크기")
+                        ),
                         responseFields(
                                 List.of(
-                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지"),
+                                        fieldWithPath("messageCount").type(JsonFieldType.NUMBER).description("답변글 갯수"),
+                                        fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
+                                        fieldWithPath("answers").type(JsonFieldType.ARRAY).description("답변글 묶음"),
+                                        fieldWithPath("answers[0].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
+                                        fieldWithPath("answers[0].content").type(JsonFieldType.STRING).description("답변글 내용"),
+                                        fieldWithPath("answers[0].createdAt").type(JsonFieldType.STRING).description("답변글 생성시간"),
+                                        fieldWithPath("answers[0].updatedAt").type(JsonFieldType.STRING).description("답변글 수정시간"),
+                                        fieldWithPath("answers[0].status").type(JsonFieldType.STRING).description("답변글 상태(등록상태, 삭제상태"),
+                                        fieldWithPath("status").type(JsonFieldType.STRING).description("질문글 상태(등록상태, 삭제상태)")
                                 )
                         )
                 ));
     }
-    private void expectAnswers(List<AnswerResponseDetails> answerResponseDetailsList, Integer index, ResultActions actions) throws Exception {
+
+    private static AnswerResponseDto.Answers createDummyAnswers(LocalDateTime timeStamp, Long answerId, String answerContent) {
+        AnswerResponseDto.Answers answers = new AnswerResponseDto.Answers();
+        answers.setId(answerId);
+        answers.setContent(answerContent);
+        answers.setCreatedAt(timeStamp);
+        answers.setUpdatedAt(timeStamp);
+        answers.setStatus(Answer.AnswerStatus.ANSWER_REGISTRY);
+
+        return answers;
+    }
+
+    private void expectAnswers(List<AnswerResponseDto.Answers> answerResponseDetailsList, Integer index, ResultActions actions) throws Exception {
         actions
                 .andExpect(jsonPath("$.answers[" + index + "].id").value(answerResponseDetailsList.get(index).getId()))
                 .andExpect(jsonPath("$.answers[" + index + "].content").value(answerResponseDetailsList.get(index).getContent()))
-                .andExpect(jsonPath("$.answers[" + index + "].message").value(answerResponseDetailsList.get(index).getMessage()))
-                .andExpect(jsonPath("$.answers[" + index + "].messageCount").value(answerResponseDetailsList.get(index).getMessageCount()));
-
-        actions
-                .andExpect(jsonPath("$.answers[" + index + "].comments[0].id").value(answerResponseDetailsList.get(index).getComments().get(0).getId()))
-                .andExpect(jsonPath("$.answers[" + index + "].comments[0].content").value(answerResponseDetailsList.get(index).getComments().get(0).getContent()))
-                .andExpect(jsonPath("$.answers[" + index + "].comments[0].createdAt").value(answerResponseDetailsList.get(index).getComments().get(0).getCreatedAt()))
-                .andExpect(jsonPath("$.answers[" + index + "].comments[0].updatedAt").value(answerResponseDetailsList.get(index).getComments().get(0).getUpdatedAt()))
-                .andExpect(jsonPath("$.answers[" + index + "].comments[0].status").value(answerResponseDetailsList.get(index).getComments().get(0).getStatus()));
-
-        actions
-                .andExpect(jsonPath("$.answers[" + index + "].comments[1].id").value(answerResponseDetailsList.get(index).getComments().get(1).getId()))
-                .andExpect(jsonPath("$.answers[" + index + "].comments[1].content").value(answerResponseDetailsList.get(index).getComments().get(1).getContent()))
-                .andExpect(jsonPath("$.answers[" + index + "].comments[1].createdAt").value(answerResponseDetailsList.get(index).getComments().get(1).getCreatedAt()))
-                .andExpect(jsonPath("$.answers[" + index + "].comments[1].updatedAt").value(answerResponseDetailsList.get(index).getComments().get(1).getUpdatedAt()))
-                .andExpect(jsonPath("$.answers[" + index + "].comments[1].status").value(answerResponseDetailsList.get(index).getComments().get(1).getStatus()));
-
-        actions
-                .andExpect(jsonPath("$.answers[" + index + "].createdAt").value(answerResponseDetailsList.get(index).getCreatedAt()))
-                .andExpect(jsonPath("$.answers[" + index + "].updatedAt").value(answerResponseDetailsList.get(index).getUpdatedAt()))
                 .andExpect(jsonPath("$.answers[" + index + "].status").value(answerResponseDetailsList.get(index).getStatus()));
-    }
-    private static AnswerResponseDetails createDummyAnswerResponseDetails(LocalDateTime timeStamp,
-                                                                          String commentMessage, Long answerId, String answerContent,
-                                                                          Long commentAnswerId1_1, String commentAnswerContent1_1,
-                                                                          Long commentAnswerId2_1, String commentAnswerContent2_1) {
-        AnswerResponseDetails answerResponseDetails = new AnswerResponseDetails();
-        answerResponseDetails.setId(answerId);
-        answerResponseDetails.setContent(answerContent);
-        answerResponseDetails.setMessage(commentMessage);
-
-        List<CommentAnswerResponseDetails> comments = new ArrayList<>();
-        comments.add(createDummyCommentAnswerResponseDetails(timeStamp, commentAnswerId1_1, commentAnswerContent1_1));
-        comments.add(createDummyCommentAnswerResponseDetails(timeStamp, commentAnswerId2_1, commentAnswerContent2_1));
-        answerResponseDetails.setMessageCount(comments.size());
-        answerResponseDetails.setComments(comments);
-        answerResponseDetails.setCreatedAt(timeStamp);
-        answerResponseDetails.setUpdatedAt(timeStamp);
-        answerResponseDetails.setStatus(Answer.AnswerStatus.ANSWER_REGISTRY);
-
-        return answerResponseDetails;
-    }
-
-    private static CommentAnswerResponseDetails createDummyCommentAnswerResponseDetails(LocalDateTime timeStamp,
-                                                                                        Long commentAnswerId, String commentAnswerContent) {
-        CommentAnswerResponseDetails commentAnswerResponseDetails = new CommentAnswerResponseDetails();
-        commentAnswerResponseDetails.setId(commentAnswerId);
-        commentAnswerResponseDetails.setContent(commentAnswerContent);
-        commentAnswerResponseDetails.setCreatedAt(timeStamp);
-        commentAnswerResponseDetails.setUpdatedAt(timeStamp);
-        commentAnswerResponseDetails.setStatus(CommentAnswer.CommentAnswerStatus.COMMENT_ANSWER_REGISTRY);
-
-        return commentAnswerResponseDetails;
     }
 
     @Test

@@ -1,0 +1,38 @@
+= Clone StackOverFlow 애플리케이션
+:sectnums:
+:toc: left
+:toclevels: 4
+:toc-title: Table of Contents
+:source-highlighter: prettify
+
+Homunculus <https://github.com/codestates-seb/seb43_pre_017>
+
+v1.0.0, 2023.04.19
+
+***
+== AnswerController
+=== 답변 등록
+.curl-request
+include::{snippets}/post-answer/curl-request.adoc[]
+
+.path-parameters
+include::{snippets}/post-answer/path-parameters.adoc[]
+
+.http-request
+include::{snippets}/post-answer/http-request.adoc[]
+
+.request-body.adoc
+include::{snippets}/post-answer/request-body.adoc[]
+
+.request-fields
+include::{snippets}/post-answer/request-fields.adoc[]
+
+.http-response
+include::{snippets}/post-answer/http-response.adoc[]
+
+.response-body
+include::{snippets}/post-answer/response-body.adoc[]
+
+.response-headers
+include::{snippets}/post-answer/response-headers.adoc[]
+

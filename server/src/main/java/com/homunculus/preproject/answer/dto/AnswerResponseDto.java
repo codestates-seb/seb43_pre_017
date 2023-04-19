@@ -22,6 +22,9 @@ public class AnswerResponseDto {
         return status.getStatus();
     }
 
+    @Setter
+    @Getter
+    @NoArgsConstructor
     public static class Answers {
         private Long id;
         private String content;
