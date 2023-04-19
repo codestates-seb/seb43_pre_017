@@ -57,7 +57,7 @@ public class AnswerController {
     public ResponseEntity postAnswer (@PathVariable("articleId") @Positive Long articleId,
                                       @Valid @RequestBody AnswerDto.Post answerDtoPost) {
         Answer answer = mapper.answerPostDtoToAnswer(answerDtoPost);
-        Answer createdAnswer = answerService.createAnswer(answer, articleId);
+        answerService.createAnswer(answer, articleId);
 
         AnswerSimpleResponseDto responseDto = createAnswerSimpleResponseDto(AnswerSingleResponseMessages.ANSWER_MESSAGE_POST);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
@@ -69,10 +69,12 @@ public class AnswerController {
                                       @Valid @RequestBody AnswerDto.Patch answerDtoPatch) {
         answerDtoPatch.setAnswerId(answerId);
         Answer answer = mapper.answerPatchDtoToAnswer(answerDtoPatch);
-        Answer updatedAnswer = answerService.updateAnswer(answer, articleId);
+        answerService.updateAnswer(answer, articleId);
 
-        AnswerResponseDto responseDto = mapper.answerToAnswerResponseDto(updatedAnswer);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return new ResponseEntity<>(
+                createAnswerSimpleResponseDto(AnswerSingleResponseMessages.ANSWER_MESSAGE_PATCH),
+                HttpStatus.OK
+        );
     }
 
     @GetMapping(ANSWER_DEFAULT_URL + "/{articleId}" + ANSWER_ALL_MAPPING_URL_DETAIL)
@@ -93,6 +95,9 @@ public class AnswerController {
 
         answerService.deleteAnswer(articleId, answerId);
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(
+                createAnswerSimpleResponseDto(AnswerSingleResponseMessages.ANSWER_MESSAGE_DELETE),
+                HttpStatus.NO_CONTENT
+        );
     }
 }
