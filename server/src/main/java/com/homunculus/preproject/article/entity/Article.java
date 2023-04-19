@@ -4,7 +4,6 @@ import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.audit.Auditable;
 import com.homunculus.preproject.comment.article.entity.CommentArticle;
 import com.homunculus.preproject.evaluation.article.entity.EvaluationArticle;
-import com.homunculus.preproject.popularity.entity.Popularity;
 import com.homunculus.preproject.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,9 +31,6 @@ public class Article extends Auditable {
     @Column(nullable = false)
     private Long viewCount;
 
-    @OneToOne
-    private Popularity popularity;
-
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
@@ -56,7 +52,7 @@ public class Article extends Auditable {
         ARTICLE_REGISTRY("등록상태"),
         ARTICLE_DELETE("삭제상태");
 
-        private @Getter String status;
+        private final @Getter String status;
 
         ArticleStatus(String status) {
             this.status = status;
