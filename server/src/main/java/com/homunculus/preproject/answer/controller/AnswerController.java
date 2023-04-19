@@ -86,8 +86,12 @@ public class AnswerController {
         Page<Answer> pageAnswers = answerService.findAnswers(articleId, page - 1, size);
         List<Answer> answers = pageAnswers.getContent();
 
+        AnswerResponseDto responseDto = mapper.answersToAnswerResponseDto(answers);
+        responseDto.setMessage("답변글 조회를 완료했습니다.");
+        responseDto.setMessageCount(responseDto.getAnswers().size());
+
         return new ResponseEntity<>(
-                mapper.answersToAnswerResponseDtos(answers),
+                responseDto,
                 HttpStatus.OK);
     }
 

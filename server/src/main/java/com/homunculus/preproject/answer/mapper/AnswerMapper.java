@@ -12,8 +12,7 @@ import java.util.List;
 public interface AnswerMapper {
     Answer answerPostDtoToAnswer(AnswerDto.Post answerPostDto);
     Answer answerPatchDtoToAnswer(AnswerDto.Patch answerPatchDto);
-    AnswerResponseDto answerToAnswerResponseDto(Answer answer);
-    List<AnswerResponseDto> answersToAnswerResponseDtos(List<Answer> answers);
-
-    AnswerSimpleResponseDto answerToAnswerSimpleResponseDto(Answer answer);
+    default AnswerResponseDto answersToAnswerResponseDto(List<Answer> answers) {
+        return null;
+    }
 }

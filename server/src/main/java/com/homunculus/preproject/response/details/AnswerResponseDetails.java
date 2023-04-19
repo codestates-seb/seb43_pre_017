@@ -14,6 +14,8 @@ import java.util.List;
 public class AnswerResponseDetails {
     private Long id;
     private String content;
+    private String message;
+    private Integer messageCount;
     private List<CommentAnswerResponseDetails> comments;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;    // todo : 필드명 주의
