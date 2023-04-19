@@ -33,8 +33,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -64,12 +63,9 @@ class AnswerControllerTest {
         final String postContent = "아무거나 집어넣은 내용";
         final String responseContent = "답변을 등록했습니다.";
         final Long articleId = 1L;
-//        final Integer messageCount = 2;
-//        final Long answerId1 = 1L;      final String answerContent1 = "무언가1";
-//        final Long answerId2 = 2L;      final String answerContent2 = "무언가2";
-//
 
         AnswerDto.Post post = new AnswerDto.Post();
+        post.setArticleId(articleId);
         post.setContent(postContent);
         String content = gson.toJson(post);
         given(mapper.answerPostDtoToAnswer(any())).willReturn(new Answer());
@@ -77,22 +73,7 @@ class AnswerControllerTest {
         AnswerSimpleResponseDto responseDto = new AnswerSimpleResponseDto();
         responseDto.setMessage(responseContent);
 
-//        List<AnswerResponseDetails> answers = new ArrayList<>();
-//        AnswerResponseDetails answerResponseDetails1 = new AnswerResponseDetails();
-//        answerResponseDetails1.setId(answerId1);
-//        answerResponseDetails1.setContent(answerContent1);
-//        answers.add(answerResponseDetails1);
-//
-//        AnswerResponseDetails answerResponseDetails2 = new AnswerResponseDetails();
-//        answerResponseDetails2.setId(answerId2);
-//        answerResponseDetails2.setContent(answerContent2);
-//        answers.add(answerResponseDetails2);
-//
-//        responseDto.setAnswers(answers);
-//        responseDto.setStatus(Answer.AnswerStatus.ANSWER_REGISTRY);
-//        responseDto.setMessageCount(messageCount);
-
-        given(answerService.createAnswer(any(), anyLong())).willReturn(new Answer());
+        given(answerService.createAnswer(any())).willReturn(new Answer());
 
         // when
         given(mapper.answerToAnswerSimpleResponseDto(any())).willReturn(responseDto);
@@ -110,12 +91,6 @@ class AnswerControllerTest {
                 .andExpect(status().isCreated())
 //                .andExpect(header().string("Authorization", is(startsWith("bearer "))))     // todo : Security 적용 시 토큰 추가해야함
                 .andExpect(jsonPath("$.message").value(responseContent))
-//                .andExpect(jsonPath("$.messageCount").value(1))
-//                .andExpect(jsonPath("$.answers[0].id").value(answerId1))
-//                .andExpect(jsonPath("$.answers[0].content").value(answerContent1))
-//                .andExpect(jsonPath("$.answers[1].id").value(answerId2))
-//                .andExpect(jsonPath("$.answers[1].content").value(answerContent2))
-//                .andExpect(jsonPath("$.status").value("등록상태"))
                 .andDo(document(
                         "post-answer",
                         getRequestPreProcessor(),
@@ -136,49 +111,31 @@ class AnswerControllerTest {
                 ));
     }
 
-    /*
     @Test
-    void patchAnswer() {
+    @DisplayName("Answer 수정 테스트")
+    void patchAnswer() throws Exception {
         // given
-        final String postContent = "아무거나 집어넣은 내용";
-        final String responseContent = "아무거나 집어넣어서 나온 응답";
+        final String patchContent = "아무거나 집어넣은 내용";
+        final String responseContent = "답변을 수정했습니다.";
         final Long articleId = 1L;
-//        final Integer messageCount = 2;
-//        final Long answerId1 = 1L;      final String answerContent1 = "무언가1";
-//        final Long answerId2 = 2L;      final String answerContent2 = "무언가2";
-//
+        final Long answerId = 1L;
 
-        AnswerDto.Post post = new AnswerDto.Post();
-        post.setContent(postContent);
-        String content = gson.toJson(post);
-        given(mapper.answerPostDtoToAnswer(any())).willReturn(new Answer());
+        AnswerDto.Patch patch = new AnswerDto.Patch();
+        patch.setContent(patchContent);
+        String content = gson.toJson(patch);
+
+        given(mapper.answerPatchDtoToAnswer(any())).willReturn(new Answer());
 
         AnswerSimpleResponseDto responseDto = new AnswerSimpleResponseDto();
         responseDto.setMessage(responseContent);
 
-//        List<AnswerResponseDetails> answers = new ArrayList<>();
-//        AnswerResponseDetails answerResponseDetails1 = new AnswerResponseDetails();
-//        answerResponseDetails1.setId(answerId1);
-//        answerResponseDetails1.setContent(answerContent1);
-//        answers.add(answerResponseDetails1);
-//
-//        AnswerResponseDetails answerResponseDetails2 = new AnswerResponseDetails();
-//        answerResponseDetails2.setId(answerId2);
-//        answerResponseDetails2.setContent(answerContent2);
-//        answers.add(answerResponseDetails2);
-//
-//        responseDto.setAnswers(answers);
-//        responseDto.setStatus(Answer.AnswerStatus.ANSWER_REGISTRY);
-//        responseDto.setMessageCount(messageCount);
-
-        given(answerService.createAnswer(any(), anyLong())).willReturn(new Answer());
+        given(answerService.updateAnswer(any())).willReturn(new Answer());
 
         // when
-        given(mapper.answerToAnswerSimpleResponseDto(any())).willReturn(responseDto);
 
         ResultActions actions =
                 mockMvc.perform(
-                        post("/api/article/{articleId}/answer",articleId)
+                        patch("/api/article/{articleId}/answer/{answerId}", articleId, answerId)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(content)
@@ -186,21 +143,15 @@ class AnswerControllerTest {
 
         // then
         actions
-                .andExpect(status().isCreated())
-//                .andExpect(header().string("Authorization", is(startsWith("bearer "))))     // todo : Security 적용 시 토큰 추가해야함
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(responseContent))
-//                .andExpect(jsonPath("$.messageCount").value(1))
-//                .andExpect(jsonPath("$.answers[0].id").value(answerId1))
-//                .andExpect(jsonPath("$.answers[0].content").value(answerContent1))
-//                .andExpect(jsonPath("$.answers[1].id").value(answerId2))
-//                .andExpect(jsonPath("$.answers[1].content").value(answerContent2))
-//                .andExpect(jsonPath("$.status").value("등록상태"))
                 .andDo(document(
-                        "post-answer",
+                        "patch-answer",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         pathParameters(
-                                parameterWithName("articleId").description("질문글 식별자")
+                                parameterWithName("articleId").description("질문글 식별자"),
+                                parameterWithName("answerId").description("답변글 식별자")
                         ),
                         requestFields(
                                 List.of(
@@ -215,12 +166,91 @@ class AnswerControllerTest {
                 ));
     }
 
+//    @Test
+//    @DisplayName("Answer 조회 테스트")
+//    void getAllAnswers() {
+//        // given
+//        final String postContent = "아무거나 집어넣은 내용";
+//        final String responseContent = "아무거나 집어넣어서 나온 응답";
+//        final Long articleId = 1L;
+////        final Integer messageCount = 2;
+////        final Long answerId1 = 1L;      final String answerContent1 = "무언가1";
+////        final Long answerId2 = 2L;      final String answerContent2 = "무언가2";
+////
+//
+//        AnswerDto.Post post = new AnswerDto.Post();
+//        post.setContent(postContent);
+//        String content = gson.toJson(post);
+//        given(mapper.answerPostDtoToAnswer(any())).willReturn(new Answer());
+//
+//        AnswerSimpleResponseDto responseDto = new AnswerSimpleResponseDto();
+//        responseDto.setMessage(responseContent);
+//
+////        List<AnswerResponseDetails> answers = new ArrayList<>();
+////        AnswerResponseDetails answerResponseDetails1 = new AnswerResponseDetails();
+////        answerResponseDetails1.setId(answerId1);
+////        answerResponseDetails1.setContent(answerContent1);
+////        answers.add(answerResponseDetails1);
+////
+////        AnswerResponseDetails answerResponseDetails2 = new AnswerResponseDetails();
+////        answerResponseDetails2.setId(answerId2);
+////        answerResponseDetails2.setContent(answerContent2);
+////        answers.add(answerResponseDetails2);
+////
+////        responseDto.setAnswers(answers);
+////        responseDto.setStatus(Answer.AnswerStatus.ANSWER_REGISTRY);
+////        responseDto.setMessageCount(messageCount);
+//
+//        given(answerService.createAnswer(any(), anyLong())).willReturn(new Answer());
+//
+//        // when
+//        given(mapper.answerToAnswerSimpleResponseDto(any())).willReturn(responseDto);
+//
+//        ResultActions actions =
+//                mockMvc.perform(
+//                        post("/api/article/{articleId}/answer",articleId)
+//                                .accept(MediaType.APPLICATION_JSON)
+//                                .contentType(MediaType.APPLICATION_JSON)
+//                                .content(content)
+//                );
+//
+//        // then
+//        actions
+//                .andExpect(status().isCreated())
+////                .andExpect(header().string("Authorization", is(startsWith("bearer "))))     // todo : Security 적용 시 토큰 추가해야함
+//                .andExpect(jsonPath("$.message").value(responseContent))
+////                .andExpect(jsonPath("$.messageCount").value(1))
+////                .andExpect(jsonPath("$.answers[0].id").value(answerId1))
+////                .andExpect(jsonPath("$.answers[0].content").value(answerContent1))
+////                .andExpect(jsonPath("$.answers[1].id").value(answerId2))
+////                .andExpect(jsonPath("$.answers[1].content").value(answerContent2))
+////                .andExpect(jsonPath("$.status").value("등록상태"))
+//                .andDo(document(
+//                        "post-answer",
+//                        getRequestPreProcessor(),
+//                        getResponsePreProcessor(),
+//                        pathParameters(
+//                                parameterWithName("articleId").description("질문글 식별자")
+//                        ),
+//                        requestFields(
+//                                List.of(
+//                                        fieldWithPath("content").type(JsonFieldType.STRING).description("컨텐츠 내용")
+//                                )
+//                        ),
+//                        responseFields(
+//                                List.of(
+//                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
+//                                )
+//                        )
+//                ));
+//    }
+//
     @Test
     void getAllAnswers() {
     }
-*/
+
     @Test
-    @DisplayName("AnswerDelete 테스트")
+    @DisplayName("Answer 삭제 테스트")
     void deleteAnswer() throws Exception {
         // given
         final Long articleId = 1L;

@@ -56,8 +56,9 @@ public class AnswerController {
     @PostMapping(ANSWER_DEFAULT_URL + "/{articleId}" + ANSWER_DEFAULT_URL_DETAIL)
     public ResponseEntity postAnswer (@PathVariable("articleId") @Positive Long articleId,
                                       @Valid @RequestBody AnswerDto.Post answerDtoPost) {
+        answerDtoPost.setArticleId(articleId);
         Answer answer = mapper.answerPostDtoToAnswer(answerDtoPost);
-        answerService.createAnswer(answer, articleId);
+        answerService.createAnswer(answer);
 
         AnswerSimpleResponseDto responseDto = createAnswerSimpleResponseDto(AnswerSingleResponseMessages.ANSWER_MESSAGE_POST);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
@@ -67,9 +68,10 @@ public class AnswerController {
     public ResponseEntity patchAnswer(@PathVariable("articleId") @Positive Long articleId,
                                       @PathVariable("answerId") @Positive Long answerId,
                                       @Valid @RequestBody AnswerDto.Patch answerDtoPatch) {
+        answerDtoPatch.setArticleId(articleId);
         answerDtoPatch.setAnswerId(answerId);
         Answer answer = mapper.answerPatchDtoToAnswer(answerDtoPatch);
-        answerService.updateAnswer(answer, articleId);
+        answerService.updateAnswer(answer);
 
         return new ResponseEntity<>(
                 createAnswerSimpleResponseDto(AnswerSingleResponseMessages.ANSWER_MESSAGE_PATCH),
@@ -81,7 +83,7 @@ public class AnswerController {
     public ResponseEntity getAllAnswers(@PathVariable("articleId") @Positive Long articleId,
                                         @RequestParam("page") @Positive Integer page,
                                         @RequestParam("size") @Positive Integer size) {
-        Page<Answer> pageAnswers = answerService.findAnswers(page - 1, size);
+        Page<Answer> pageAnswers = answerService.findAnswers(articleId, page - 1, size);
         List<Answer> answers = pageAnswers.getContent();
 
         return new ResponseEntity<>(

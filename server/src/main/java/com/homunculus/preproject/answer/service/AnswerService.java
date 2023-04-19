@@ -9,19 +9,17 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AnswerService {
 
-    public Answer createAnswer(Answer answer, Long articleId) {
+    public Answer createAnswer(Answer answer) {
         return null;
     }
 
-    public Answer updateAnswer(Answer answer, Long articleId) {
+    public Answer updateAnswer(Answer answer) {
         return null;
     }
 
-    public Page<Answer> findAnswers(Integer page, Integer size) {
+    public Page<Answer> findAnswers(Long articleId, Integer page, Integer size) {
         return null;
     }
 
-    public void deleteAnswer(Long articleId, Long answerId) {
-
-    }
+    public void deleteAnswer(Long articleId, Long answerId) {   }
 }

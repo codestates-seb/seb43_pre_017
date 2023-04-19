@@ -15,6 +15,8 @@ public class AnswerDto {
     @Setter
     @NoArgsConstructor
     public static class Post {
+        private Long articleId;
+
         @NotNull
         private String content;
     }
@@ -23,6 +25,7 @@ public class AnswerDto {
     @Setter
     @NoArgsConstructor
     public static class Patch {
+        private Long articleId;
         private Long answerId;
 
         @Nullable
