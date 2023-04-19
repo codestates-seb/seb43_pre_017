@@ -2,11 +2,10 @@ package com.homunculus.preproject.answer.controller;
 
 import com.homunculus.preproject.answer.dto.AnswerDto;
 import com.homunculus.preproject.answer.dto.AnswerResponseDto;
+import com.homunculus.preproject.answer.dto.AnswerSimpleResponseDto;
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.answer.mapper.AnswerMapper;
 import com.homunculus.preproject.answer.service.AnswerService;
-import com.homunculus.preproject.article.entity.Article;
-import com.homunculus.preproject.dto.MultiResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -40,7 +38,8 @@ public class AnswerController {
         Answer answer = mapper.answerPostDtoToAnswer(answerDtoPost);
         Answer createdAnswer = answerService.createAnswer(answer, articleId);
 
-        AnswerResponseDto responseDto = mapper.answerToAnswerResponseDto(createdAnswer);
+        AnswerSimpleResponseDto responseDto = new AnswerSimpleResponseDto();
+        responseDto.setMessage("답변을 등록했습니다.");
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
@@ -64,7 +63,7 @@ public class AnswerController {
         List<Answer> answers = pageAnswers.getContent();
 
         return new ResponseEntity<>(
-                new MultiResponseDto<>(mapper.answersToAnswerResponseDtos(answers), pageAnswers),
+                mapper.answersToAnswerResponseDtos(answers),
                 HttpStatus.OK);
     }
 

@@ -5,8 +5,6 @@ import com.homunculus.preproject.article.dto.ArticleResponseDto;
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.article.mapper.ArticleMapper;
 import com.homunculus.preproject.article.service.ArticleService;
-import com.homunculus.preproject.dto.MultiResponseDto;
-import com.homunculus.preproject.utils.UriCreator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -63,7 +60,7 @@ public class ArticleController {
         List<Article> articles = pageArticles.getContent();
 
         return new ResponseEntity<>(
-                new MultiResponseDto<>(mapper.articlesToArticleResponseDtos(articles), pageArticles),
+                mapper.articlesToArticleResponseDtos(articles),
                 HttpStatus.OK);
     }
 
