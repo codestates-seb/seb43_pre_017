@@ -2,11 +2,11 @@ package com.homunculus.preproject.answer.controller;
 
 import com.homunculus.preproject.answer.dto.AnswerDto;
 import com.homunculus.preproject.answer.dto.AnswerResponseDto;
+import com.homunculus.preproject.answer.dto.AnswerSimpleResponseDto;
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.answer.mapper.AnswerMapper;
 import com.homunculus.preproject.answer.service.AnswerService;
-import com.homunculus.preproject.article.entity.Article;
-import com.homunculus.preproject.dto.MultiResponseDto;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -34,13 +33,34 @@ public class AnswerController {
     private final AnswerMapper mapper;
 
 
+    private enum AnswerSingleResponseMessages {
+        ANSWER_MESSAGE_POST("답변을 등록했습니다."),
+        ANSWER_MESSAGE_PATCH("답변을 수정했습니다."),
+        ANSWER_MESSAGE_DELETE("답변을 삭제했습니다.");
+
+        @Getter
+        private final String message;
+
+        AnswerSingleResponseMessages(String message) {
+            this.message = message;
+        }
+    }
+
+    public static AnswerSimpleResponseDto createAnswerSimpleResponseDto(AnswerSingleResponseMessages answerSingleResponseMessages) {
+        AnswerSimpleResponseDto responseDto = new AnswerSimpleResponseDto();
+        responseDto.setMessage(answerSingleResponseMessages.getMessage());
+
+        return responseDto;
+    }
+
     @PostMapping(ANSWER_DEFAULT_URL + "/{articleId}" + ANSWER_DEFAULT_URL_DETAIL)
     public ResponseEntity postAnswer (@PathVariable("articleId") @Positive Long articleId,
                                       @Valid @RequestBody AnswerDto.Post answerDtoPost) {
+        answerDtoPost.setArticleId(articleId);
         Answer answer = mapper.answerPostDtoToAnswer(answerDtoPost);
-        Answer createdAnswer = answerService.createAnswer(answer, articleId);
+        answerService.createAnswer(answer);
 
-        AnswerResponseDto responseDto = mapper.answerToAnswerResponseDto(createdAnswer);
+        AnswerSimpleResponseDto responseDto = createAnswerSimpleResponseDto(AnswerSingleResponseMessages.ANSWER_MESSAGE_POST);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
@@ -48,23 +68,30 @@ public class AnswerController {
     public ResponseEntity patchAnswer(@PathVariable("articleId") @Positive Long articleId,
                                       @PathVariable("answerId") @Positive Long answerId,
                                       @Valid @RequestBody AnswerDto.Patch answerDtoPatch) {
+        answerDtoPatch.setArticleId(articleId);
         answerDtoPatch.setAnswerId(answerId);
         Answer answer = mapper.answerPatchDtoToAnswer(answerDtoPatch);
-        Answer updatedAnswer = answerService.updateAnswer(answer, articleId);
+        answerService.updateAnswer(answer);
 
-        AnswerResponseDto responseDto = mapper.answerToAnswerResponseDto(updatedAnswer);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return new ResponseEntity<>(
+                createAnswerSimpleResponseDto(AnswerSingleResponseMessages.ANSWER_MESSAGE_PATCH),
+                HttpStatus.OK
+        );
     }
 
     @GetMapping(ANSWER_DEFAULT_URL + "/{articleId}" + ANSWER_ALL_MAPPING_URL_DETAIL)
     public ResponseEntity getAllAnswers(@PathVariable("articleId") @Positive Long articleId,
                                         @RequestParam("page") @Positive Integer page,
                                         @RequestParam("size") @Positive Integer size) {
-        Page<Answer> pageAnswers = answerService.findAnswers(page - 1, size);
+        Page<Answer> pageAnswers = answerService.findAnswers(articleId, page - 1, size);
         List<Answer> answers = pageAnswers.getContent();
 
+        AnswerResponseDto responseDto = mapper.answersToAnswerResponseDto(answers);
+        responseDto.setMessage("답변글 조회를 완료했습니다.");
+        responseDto.setMessageCount(responseDto.getAnswers().size());
+
         return new ResponseEntity<>(
-                new MultiResponseDto<>(mapper.answersToAnswerResponseDtos(answers), pageAnswers),
+                responseDto,
                 HttpStatus.OK);
     }
 
@@ -74,6 +101,9 @@ public class AnswerController {
 
         answerService.deleteAnswer(articleId, answerId);
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(
+                createAnswerSimpleResponseDto(AnswerSingleResponseMessages.ANSWER_MESSAGE_DELETE),
+                HttpStatus.NO_CONTENT
+        );
     }
 }

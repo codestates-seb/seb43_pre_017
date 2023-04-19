@@ -1,6 +1,5 @@
 package com.homunculus.preproject.user.controller;
 
-import com.homunculus.preproject.dto.MultiResponseDto;
 import com.homunculus.preproject.user.dto.UserDto;
 import com.homunculus.preproject.user.dto.UserResponseDto;
 import com.homunculus.preproject.user.entity.User;
@@ -63,7 +62,7 @@ public class UserController {
         List<User> users = pageUsers.getContent();
 
         return new ResponseEntity<>(
-                new MultiResponseDto<>(mapper.usersToUserResponseDtos(users), pageUsers),
+                mapper.usersToUserResponseDtos(users),
                 HttpStatus.OK);
     }
 

@@ -6,7 +6,6 @@ import com.homunculus.preproject.comment.answer.dto.CommentAnswerResponseDto;
 import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import com.homunculus.preproject.comment.answer.mapper.CommentAnswerMapper;
 import com.homunculus.preproject.comment.answer.service.CommentAnswerService;
-import com.homunculus.preproject.dto.MultiResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -61,7 +60,7 @@ public class CommentAnswerController {
         List<CommentAnswer> commentAnswers = pageCommentAnswers.getContent();
 
         return new ResponseEntity<>(
-                new MultiResponseDto<>(mapper.commentsAnswerToCommentAnswerResponseDtos(commentAnswers), pageCommentAnswers),
+                mapper.commentsAnswerToCommentAnswerResponseDtos(commentAnswers),
                 HttpStatus.OK);
     }
 

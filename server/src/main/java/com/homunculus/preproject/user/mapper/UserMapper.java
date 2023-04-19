@@ -11,6 +11,8 @@ import java.util.List;
 public interface UserMapper {
     User userPostDtoToUser(UserDto.Post userDtoPost);
     User userPatchDtoToUser(UserDto.Patch userDtoPatch);
-    UserResponseDto userToUserResponseDto(User user);
+    default UserResponseDto userToUserResponseDto(User user) {
+        return null;
+    }
     List<UserResponseDto> usersToUserResponseDtos(List<User> users);
 }

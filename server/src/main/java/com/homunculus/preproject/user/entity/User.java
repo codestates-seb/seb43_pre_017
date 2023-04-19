@@ -5,7 +5,6 @@ import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.audit.Auditable;
 import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import com.homunculus.preproject.evaluation.answer.entity.EvaluationAnswer;
-import com.homunculus.preproject.popularity.entity.Popularity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,9 +35,6 @@ public class User extends Auditable {
     private String phone;
 
     @OneToMany(mappedBy = "user")
-    private List<Popularity> popularities = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
     private List<Article> articles = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
@@ -60,7 +56,7 @@ public class User extends Auditable {
         USER_SLEEP("휴면상태"),
         USER_QUIT("탈퇴상태");
 
-        private @Getter String status;
+        private final @Getter String status;
 
         UserStatus(String status) {
             this.status = status;
