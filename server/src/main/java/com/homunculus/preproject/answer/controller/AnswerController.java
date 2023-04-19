@@ -6,6 +6,7 @@ import com.homunculus.preproject.answer.dto.AnswerSimpleResponseDto;
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.answer.mapper.AnswerMapper;
 import com.homunculus.preproject.answer.service.AnswerService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -32,14 +33,33 @@ public class AnswerController {
     private final AnswerMapper mapper;
 
 
+    private enum AnswerSingleResponseMessages {
+        ANSWER_MESSAGE_POST("답변을 등록했습니다."),
+        ANSWER_MESSAGE_PATCH("답변을 수정했습니다."),
+        ANSWER_MESSAGE_DELETE("답변을 삭제했습니다.");
+
+        @Getter
+        private final String message;
+
+        AnswerSingleResponseMessages(String message) {
+            this.message = message;
+        }
+    }
+
+    public static AnswerSimpleResponseDto createAnswerSimpleResponseDto(AnswerSingleResponseMessages answerSingleResponseMessages) {
+        AnswerSimpleResponseDto responseDto = new AnswerSimpleResponseDto();
+        responseDto.setMessage(answerSingleResponseMessages.getMessage());
+
+        return responseDto;
+    }
+
     @PostMapping(ANSWER_DEFAULT_URL + "/{articleId}" + ANSWER_DEFAULT_URL_DETAIL)
     public ResponseEntity postAnswer (@PathVariable("articleId") @Positive Long articleId,
                                       @Valid @RequestBody AnswerDto.Post answerDtoPost) {
         Answer answer = mapper.answerPostDtoToAnswer(answerDtoPost);
         Answer createdAnswer = answerService.createAnswer(answer, articleId);
 
-        AnswerSimpleResponseDto responseDto = new AnswerSimpleResponseDto();
-        responseDto.setMessage("답변을 등록했습니다.");
+        AnswerSimpleResponseDto responseDto = createAnswerSimpleResponseDto(AnswerSingleResponseMessages.ANSWER_MESSAGE_POST);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
