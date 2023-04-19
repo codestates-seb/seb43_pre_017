@@ -8,11 +8,27 @@ const StyledLogin = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  .passwordError {
+    width: 240px;
+    font-size: 12px;
+    display: flex;
+    position: absolute;
+    margin-top: 90px;
+    color: red;
+  }
+  .emailError {
+    width: 240px;
+    font-size: 12px;
+    display: flex;
+    position: absolute;
+    margin-bottom: 66px;
+    color: red;
+  }
 `;
 /** 2023/04/18 - 로그인 컨테이너 - by JHH0906 */
 export const StyledLoginContainer = styled.div`
   width: 280px;
-  height: 240px;
+  height: 260px;
   display: flex;
   flex-direction: column;
   background: white;
@@ -75,7 +91,7 @@ export const StyledLoginInput = styled.input`
   border-radius: 4px;
   border: 1px solid ${({ theme }) => theme.colors.gray300};
   background: white;
-  margin-bottom: 20px;
+  margin-bottom: 28px;
   cursor: pointer;
 `;
 
