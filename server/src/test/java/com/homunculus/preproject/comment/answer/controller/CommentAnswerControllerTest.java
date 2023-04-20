@@ -9,6 +9,7 @@ import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.answer.mapper.AnswerMapper;
 import com.homunculus.preproject.answer.service.AnswerService;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerDto;
+import com.homunculus.preproject.comment.answer.dto.CommentAnswerResponseDto;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerSimpleResponseDto;
 import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import com.homunculus.preproject.comment.answer.mapper.CommentAnswerMapper;
@@ -116,7 +117,7 @@ class CommentAnswerControllerTest {
     }
 
     @Test
-    @DisplayName("Answer 수정 테스트")
+    @DisplayName("CommentAnswer 수정 테스트")
     void patchCommentAnswer() throws Exception {
         // given
         final String patchContent = "수정할 댓글 내용";
@@ -170,36 +171,39 @@ class CommentAnswerControllerTest {
                         )
                 ));
     }
-/*
+
     @Test
-    @DisplayName("Answer 조회 테스트")
-    void getAllAnswers() throws Exception {
+    @DisplayName("CommentAnswer 조회 테스트")
+    void getAllCommentAnswers() throws Exception {
         // given
         final LocalDateTime timeStamp = LocalDateTime.of(2023,4,19,21,0,0);
 
         final String answerMessage = "답변글 조회를 완료했습니다.";
-        final Long articleId = 1L;
-        final Long answerId1 = 1L;          final String answerContent1 = "답변글 내용1";
-        final Long answerId2 = 2L;          final String answerContent2 = "답변글 내용2";
+        final Long answerId = 1L;
+        final Long commentId1 = 1L;     final String commentContent1 = "댓글 내용1";
+        final Long userId1 = 1L;        final String userName1 = "유저1";
 
-        AnswerResponseDto responseDto = new AnswerResponseDto();
+        final Long commentId2 = 2L;     final String commentContent2 = "댓글 내용2";
+        final Long userId2 = 2L;        final String userName2 = "유저2";
+
+        CommentAnswerResponseDto responseDto = new CommentAnswerResponseDto();
         {
             responseDto.setMessage(answerMessage);
-            responseDto.setArticleId(articleId);
+            responseDto.setAnswerId(answerId);
 
-            List<AnswerResponseDto.Answers> answers = new ArrayList<>();
-            answers.add(createDummyAnswers(timeStamp, answerId1, answerContent1));
-            answers.add(createDummyAnswers(timeStamp, answerId2, answerContent2));
+            List<CommentAnswerResponseDto.Comments> comments = new ArrayList<>();
+            comments.add(createDummyComments(timeStamp, commentId1, commentContent1, userId1, userName1));
+            comments.add(createDummyComments(timeStamp, commentId2, commentContent2, userId2, userName2));
 
-            responseDto.setMessageCount(answers.size());
-            responseDto.setAnswers(answers);
+            responseDto.setMessageCount(comments.size());
+            responseDto.setComments(comments);
         }
 
-        Page<Answer> answers = new PageImpl<>(List.of(new Answer(), new Answer()));
-        given(answerService.findAnswers(anyLong(), anyInt(), anyInt())).willReturn(answers);
+        Page<CommentAnswer> commentAnswers = new PageImpl<>(List.of(new CommentAnswer(), new CommentAnswer()));
+        given(commentAnswerService.findCommentAnswers(anyLong(), anyInt(), anyInt())).willReturn(commentAnswers);
 
         // when
-        given(mapper.answersToAnswerResponseDto(any())).willReturn(responseDto);
+        given(mapper.commentAnswersToCommentAnswerResponseDto(any())).willReturn(responseDto);
 
         String page = "1";
         String size = "10";
@@ -209,7 +213,7 @@ class CommentAnswerControllerTest {
 
         ResultActions actions =
                 mockMvc.perform(
-                        get("/api/article/{articleId}/answers", articleId)
+                        get("/api/answer/{answerId}/comments", answerId)
                                 .params(queryParams)
                                 .accept(MediaType.APPLICATION_JSON)
                 );
@@ -219,18 +223,13 @@ class CommentAnswerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(responseDto.getMessage()))
                 .andExpect(jsonPath("$.messageCount").value(responseDto.getMessageCount()))
-                .andExpect(jsonPath("$.articleId").value(responseDto.getArticleId()));
-
-        expectAnswers(responseDto.getAnswers(), 0, actions);
-        expectAnswers(responseDto.getAnswers(), 1, actions);
-
-        actions
+                .andExpect(jsonPath("$.answerId").value(responseDto.getAnswerId()))
                 .andDo(document(
-                        "getAll-answers",
+                        "getAll-commentAnswers",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         pathParameters(
-                                parameterWithName("articleId").description("질문글 식별자")
+                                parameterWithName("answerId").description("답변글 식별자")
                         ),
                         requestParameters(
                                 parameterWithName("page").description("페이지 번호"),
@@ -239,65 +238,67 @@ class CommentAnswerControllerTest {
                         responseFields(
                                 List.of(
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지"),
-                                        fieldWithPath("messageCount").type(JsonFieldType.NUMBER).description("답변글 개수"),
-                                        fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
-                                        fieldWithPath("answers").type(JsonFieldType.ARRAY).description("답변글 목록"),
-                                        fieldWithPath("answers[0].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
-                                        fieldWithPath("answers[0].content").type(JsonFieldType.STRING).description("답변글 내용"),
-                                        fieldWithPath("answers[0].createdAt").type(JsonFieldType.STRING).description("답변글 생성시간"),
-                                        fieldWithPath("answers[0].updatedAt").type(JsonFieldType.STRING).description("답변글 수정시간")
+                                        fieldWithPath("messageCount").type(JsonFieldType.NUMBER).description("댓글 개수"),
+                                        fieldWithPath("answerId").type(JsonFieldType.NUMBER).description("답변글 식별자"),
+                                        fieldWithPath("comments").type(JsonFieldType.ARRAY).description("답변글의 댓글 목록"),
+                                        fieldWithPath("comments[0].id").type(JsonFieldType.NUMBER).description("댓글 식별자"),
+                                        fieldWithPath("comments[0].content").type(JsonFieldType.STRING).description("댓글 내용"),
+                                        fieldWithPath("comments[0].user").type(JsonFieldType.OBJECT).description("댓글 작성한 유저"),
+                                        fieldWithPath("comments[0].user.id").type(JsonFieldType.NUMBER).description("유저의 식별자"),
+                                        fieldWithPath("comments[0].user.name").type(JsonFieldType.STRING).description("유저의 이름"),
+                                        fieldWithPath("comments[0].createdAt").type(JsonFieldType.STRING).description("댓글 생성시간"),
+                                        fieldWithPath("comments[0].updatedAt").type(JsonFieldType.STRING).description("댓글 수정시간")
                                 )
                         )
                 ));
     }
 
-    private static AnswerResponseDto.Answers createDummyAnswers(LocalDateTime timeStamp, Long answerId, String answerContent) {
-        AnswerResponseDto.Answers answers = new AnswerResponseDto.Answers();
-        answers.setId(answerId);
-        answers.setContent(answerContent);
-        answers.setCreatedAt(timeStamp);
-        answers.setUpdatedAt(timeStamp);
+    private static CommentAnswerResponseDto.Comments createDummyComments(
+                   LocalDateTime timeStamp, Long commentId, String commentContent, Long userId, String userName) {
+        CommentAnswerResponseDto.Comments comments = new CommentAnswerResponseDto.Comments();
+        comments.setId(commentId);
+        comments.setContent(commentContent);
+        comments.setCreatedAt(timeStamp);
+        comments.setUpdatedAt(timeStamp);
 
-        return answers;
-    }
+        CommentAnswerResponseDto.Comments.User user = new CommentAnswerResponseDto.Comments.User();
+        user.setId(userId);
+        user.setName(userName);
+        comments.setUser(user);
 
-    private void expectAnswers(List<AnswerResponseDto.Answers> answerResponseDetailsList, Integer index, ResultActions actions) throws Exception {
-        actions
-                .andExpect(jsonPath("$.answers[" + index + "].id").value(answerResponseDetailsList.get(index).getId()))
-                .andExpect(jsonPath("$.answers[" + index + "].content").value(answerResponseDetailsList.get(index).getContent()));
+        return comments;
     }
 
     @Test
-    @DisplayName("Answer 삭제 테스트")
-    void deleteAnswer() throws Exception {
+    @DisplayName("CommentAnswer 삭제 테스트")
+    void deleteCommentAnswer() throws Exception {
         // given
-        final Long articleId = 1L;
         final Long answerId = 1L;
-        final String responseContent = "답변을 삭제했습니다.";
+        final Long commentId = 1L;
+        final String responseContent = "댓글을 삭제했습니다.";
 
-        AnswerSimpleResponseDto responseDto = new AnswerSimpleResponseDto();
+        CommentAnswerSimpleResponseDto responseDto = new CommentAnswerSimpleResponseDto();
         responseDto.setMessage(responseContent);
 
-        doNothing().when(answerService).deleteAnswer(anyLong(), anyLong());
+        doNothing().when(commentAnswerService).deleteCommentAnswer(anyLong(), anyLong());
 
         // when
-
         ResultActions actions =
                 mockMvc.perform(
-                        delete("/api/article/{articleId}/answer/{answerId}", articleId, answerId)
+                        delete("/api/answer/{answerId}/comment/{commentId}", answerId, commentId)
                 );
 
         // then
         actions
                 .andExpect(status().isNoContent())
-                .andExpect(jsonPath("$.message").value(responseContent))
+                .andExpect(jsonPath("$.message").value(responseDto.getMessage()))
                 .andDo(document(
-                        "delete-answer",
+                        "delete-commentAnswer",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         pathParameters(
-                                parameterWithName("articleId").description("질문글 식별자"),
-                                parameterWithName("answerId").description("답변글 식별자")
+                                parameterWithName("answerId").description("답변글 식별자"),
+                                parameterWithName("commentId").description("댓글 식별자")
                         ),
                         responseFields(
                                 List.of(
@@ -306,6 +307,4 @@ class CommentAnswerControllerTest {
                         )
                 ));
     }
-
- */
 }

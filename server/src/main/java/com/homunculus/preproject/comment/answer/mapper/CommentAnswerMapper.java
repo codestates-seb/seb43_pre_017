@@ -11,7 +11,7 @@ import java.util.List;
 public interface CommentAnswerMapper {
     CommentAnswer commentAnswerPostDtoToCommentAnswer(CommentAnswerDto.Post commentDtoPost);
     CommentAnswer commentAnswerPatchDtoToCommentAnswer(CommentAnswerDto.Patch commentDtoPatch);
-    default CommentAnswerResponseDto commentsAnswerToCommentAnswerResponseDto(List<CommentAnswer> commentAnswers) {
+    default CommentAnswerResponseDto commentAnswersToCommentAnswerResponseDto(List<CommentAnswer> commentAnswers) {
 
         return null;
     }

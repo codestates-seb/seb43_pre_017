@@ -176,12 +176,12 @@ class ArticleControllerTest {
         final String articleMessage = "질문글 조회를 완료했습니다.";
 
         final Long articleId1 = 1L;
-        final Integer answerCount1 = 5;
+        final Integer commentCount1 = 99;              final Integer answerCount1 = 5;
         final String articleTitle1 = "질문글 제목1";     final String articleContent1 = "질문글 내용1";
         final Long userId1 = 1L;        final String userName1 = "유저1";
 
         final Long articleId2 = 2L;
-        final Integer answerCount2 = 9;
+        final Integer commentCount2 = 20;              final Integer answerCount2 = 9;
         final String articleTitle2 = "질문글 제목2";     final String articleContent2 = "질문글 내용2";
         final Long userId2 = 3L;        final String userName2 = "유저2";
 
@@ -192,11 +192,11 @@ class ArticleControllerTest {
             List<ArticleResponseDto.Articles> articles = new ArrayList<>();
             articles.add(createDummyArticles(timeStamp,
                     articleId1, articleTitle1, articleContent1,
-                    userId1, userName1, answerCount1
+                    userId1, userName1, commentCount1, answerCount1
             ));
             articles.add(createDummyArticles(timeStamp,
                     articleId2, articleTitle2, articleContent2,
-                    userId2, userName2, answerCount2
+                    userId2, userName2, commentCount2, answerCount2
             ));
             responseDto.setMessageCount(articles.size());
             responseDto.setArticles(articles);
@@ -250,10 +250,11 @@ class ArticleControllerTest {
                                         fieldWithPath("articles[0].createdAt").type(JsonFieldType.STRING).description("질문글 생성시간"),
                                         fieldWithPath("articles[0].updatedAt").type(JsonFieldType.STRING).description("질문글 수정시간"),
                                         fieldWithPath("articles[0].user").type(JsonFieldType.OBJECT).description("질문글 등록한 유저의 정보"),
-                                        fieldWithPath("articles[0].user.id").type(JsonFieldType.NUMBER).description("질문글 등록한 유저의 식별번호"),
-                                        fieldWithPath("articles[0].user.name").type(JsonFieldType.STRING).description("질문글 등록한 유저의 이름"),
-                                        fieldWithPath("articles[0].answerCount").type(JsonFieldType.NUMBER).description("질문에 대한 답변글 개수"),
-                                        fieldWithPath("articles[0].status").type(JsonFieldType.STRING).description("질문글의 상태(등록상태, 삭제상태")
+                                        fieldWithPath("articles[0].user.id").type(JsonFieldType.NUMBER).description("유저의 식별번호"),
+                                        fieldWithPath("articles[0].user.name").type(JsonFieldType.STRING).description("유저의 이름"),
+                                        fieldWithPath("articles[0].count").type(JsonFieldType.OBJECT).description("질문에 대한 개수 목록"),
+                                        fieldWithPath("articles[0].count.comments").type(JsonFieldType.NUMBER).description("댓글 개수"),
+                                        fieldWithPath("articles[0].count.answers").type(JsonFieldType.NUMBER).description("답변글 개수")
                                 )
                         )
                 ));
@@ -262,7 +263,7 @@ class ArticleControllerTest {
     private static ArticleResponseDto.Articles createDummyArticles(LocalDateTime timeStamp,
                                                             Long articleId, String articleTitle, String articleContent,
                                                             Long userId, String userName,
-                                                            Integer answerCount) {
+                                                            Integer commentCount, Integer answerCount) {
         ArticleResponseDto.Articles articles = new ArticleResponseDto.Articles();
         articles.setId(articleId);
         articles.setTitle(articleTitle);
@@ -275,8 +276,10 @@ class ArticleControllerTest {
         user.setName(userName);
         articles.setUser(user);
 
-        articles.setAnswerCount(answerCount);
-        articles.setStatus(Article.ArticleStatus.ARTICLE_REGISTRY);
+        ArticleResponseDto.Articles.Count count = new ArticleResponseDto.Articles.Count();
+        count.setComments(commentCount);
+        count.setAnswers(answerCount);
+        articles.setCount(count);
 
         return articles;
     }
@@ -288,8 +291,8 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.articles[" + index + "].content").value(articles.get(index).getContent()))
                 .andExpect(jsonPath("$.articles[" + index + "].user.id").value(articles.get(index).getUser().getId()))
                 .andExpect(jsonPath("$.articles[" + index + "].user.name").value(articles.get(index).getUser().getName()))
-                .andExpect(jsonPath("$.articles[" + index + "].answerCount").value(articles.get(index).getAnswerCount()))
-                .andExpect(jsonPath("$.articles[" + index + "].status").value(articles.get(index).getStatus()));
+                .andExpect(jsonPath("$.articles[" + index + "].count.comments").value(articles.get(index).getCount().getComments()))
+                .andExpect(jsonPath("$.articles[" + index + "].count.answers").value(articles.get(index).getCount().getAnswers()));
     }
 
     @Test

@@ -25,6 +25,7 @@ import java.util.List;
 public class CommentAnswerController {
     private static final String COMMENT_ANSWER_DEFAULT_URL = "/api/answer";
     private static final String COMMENT_ANSWER_DEFAULT_URL_DETAIL = "/comment";
+    private static final String COMMENT_ANSWER_ALL_MAPPING_URL = "/comments";
 
     private final CommentAnswerService commentAnswerService;
     private final CommentAnswerMapper mapper;
@@ -74,14 +75,14 @@ public class CommentAnswerController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping(COMMENT_ANSWER_DEFAULT_URL + "/{answerId}" + COMMENT_ANSWER_DEFAULT_URL_DETAIL)
+    @GetMapping(COMMENT_ANSWER_DEFAULT_URL + "/{answerId}" + COMMENT_ANSWER_ALL_MAPPING_URL)
     public ResponseEntity getAllCommentAnswers(@PathVariable("answerId") @Positive Long answerId,
                                         @RequestParam("page") @Positive Integer page,
                                         @RequestParam("size") @Positive Integer size) {
         Page<CommentAnswer> pageCommentAnswers = commentAnswerService.findCommentAnswers(answerId,page - 1, size);
         List<CommentAnswer> commentAnswers = pageCommentAnswers.getContent();
 
-        CommentAnswerResponseDto responseDto = mapper.commentsAnswerToCommentAnswerResponseDto(commentAnswers);
+        CommentAnswerResponseDto responseDto = mapper.commentAnswersToCommentAnswerResponseDto(commentAnswers);
         responseDto.setMessage("댓글 조회가 완료되었습니다.");
         responseDto.setMessageCount(commentAnswers.size());
         return new ResponseEntity<>(responseDto, HttpStatus.OK);

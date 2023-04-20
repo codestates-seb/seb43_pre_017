@@ -1,6 +1,5 @@
 package com.homunculus.preproject.article.dto;
 
-import com.homunculus.preproject.article.entity.Article;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,10 +26,15 @@ public class ArticleResponseDto {
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
         private User user;
-        private Integer answerCount;    // todo: 이 질문글에 달린 답변글 갯수 카운팅을 매퍼에서 구현해야함
+        private Count count;
 
-        private Article.ArticleStatus status;
-        public String getStatus() { return status.getStatus(); }
+        @Getter
+        @Setter
+        @NoArgsConstructor
+        public static class Count {
+            private Integer comments;    // todo: 이 질문글에 달린 댓글 갯수 카운팅을 매퍼에서 구현해야함
+            private Integer answers;    // todo: 이 질문글에 달린 답변글 갯수 카운팅을 매퍼에서 구현해야함
+        }
     }
 
     @Getter

@@ -13,13 +13,28 @@ import java.util.List;
 public class CommentAnswerResponseDto {
     private String message;
     private Integer messageCount;
+
+    private Long answerId;
     private List<Comments> comments;
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
     public static class Comments {
         private Long id;
         private String content;
+        private User user;
 
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
+
+        @Getter
+        @Setter
+        @NoArgsConstructor
+        public static class User {
+            private Long id;
+            private String name;
+        }
     }
+
 }
