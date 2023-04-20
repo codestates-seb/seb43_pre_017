@@ -32,9 +32,9 @@ public class ArticleController {
     private final ArticleMapper mapper;
 
     private enum ArticleSimpleResponseMessages {
-        ARTICLE_MESSAGE_POST("답변을 등록했습니다."),
-        ARTICLE_MESSAGE_PATCH("답변을 수정했습니다."),
-        ARTICLE_MESSAGE_DELETE("답변을 삭제했습니다.");
+        ARTICLE_MESSAGE_POST("질문을 등록했습니다."),
+        ARTICLE_MESSAGE_PATCH("질문을 수정했습니다."),
+        ARTICLE_MESSAGE_DELETE("질문을 삭제했습니다.");
 
         @Getter
         private final String message;

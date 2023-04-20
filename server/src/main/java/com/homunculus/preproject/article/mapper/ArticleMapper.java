@@ -12,6 +12,10 @@ import java.util.List;
 public interface ArticleMapper {
     Article articlePostDtoToArticle(ArticleDto.Post articleDtoPost);
     Article articlePatchDtoToArticle(ArticleDto.Patch articleDtoPatch);
-    ArticleResponseDto articleToArticleResponseDto(Article article);
-    ArticleResponseDto articlesToArticleResponseDto(List<Article> articles);
+    default ArticleResponseDto articleToArticleResponseDto(Article article) {
+        return null;
+    }
+    default ArticleResponseDto articlesToArticleResponseDto(List<Article> articles) {
+        return null;
+    }
 }

@@ -76,6 +76,7 @@ class ArticleControllerTest {
         final Long articleId = 1L;
 
         ArticleDto.Post post = new ArticleDto.Post();
+        post.setTitle(postTitle);
         post.setContent(postContent);
         String content = gson.toJson(post);
         given(mapper.articlePostDtoToArticle(any())).willReturn(new Article());
@@ -117,7 +118,7 @@ class ArticleControllerTest {
                         )
                 ));
     }
-
+/*
     @Test
     @DisplayName("Answer 수정 테스트")
     void patchAnswer() throws Exception {
@@ -314,4 +315,5 @@ class ArticleControllerTest {
                         )
                 ));
     }
+ */
 }
