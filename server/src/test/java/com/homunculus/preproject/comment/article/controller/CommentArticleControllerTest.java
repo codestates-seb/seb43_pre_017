@@ -2,6 +2,7 @@ package com.homunculus.preproject.comment.article.controller;
 
 import com.google.gson.Gson;
 import com.homunculus.preproject.comment.article.dto.CommentArticleDto;
+import com.homunculus.preproject.comment.article.dto.CommentArticleResponseDto;
 import com.homunculus.preproject.comment.article.dto.CommentArticleSimpleResponseDto;
 import com.homunculus.preproject.comment.article.entity.CommentArticle;
 import com.homunculus.preproject.comment.article.mapper.CommentArticleMapper;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
@@ -162,27 +164,27 @@ class CommentArticleControllerTest {
                         )
                 ));
     }
-/*
+
     @Test
-    @DisplayName("CommentAnswer 조회 테스트")
-    void getAllCommentAnswers() throws Exception {
+    @DisplayName("CommentArticle 조회 테스트")
+    void getAllCommentArticles() throws Exception {
         // given
         final LocalDateTime timeStamp = LocalDateTime.of(2023,4,19,21,0,0);
 
-        final String answerMessage = "답변글 조회를 완료했습니다.";
-        final Long answerId = 1L;
+        final String message = "댓글들 조회를 완료했습니다.";
+        final Long articleId = 1L;
         final Long commentId1 = 1L;     final String commentContent1 = "댓글 내용1";
         final Long userId1 = 1L;        final String userName1 = "유저1";
 
         final Long commentId2 = 2L;     final String commentContent2 = "댓글 내용2";
         final Long userId2 = 2L;        final String userName2 = "유저2";
 
-        CommentAnswerResponseDto responseDto = new CommentAnswerResponseDto();
+        CommentArticleResponseDto responseDto = new CommentArticleResponseDto();
         {
-            responseDto.setMessage(answerMessage);
-            responseDto.setAnswerId(answerId);
+            responseDto.setMessage(message);
+            responseDto.setArticleId(articleId);
 
-            List<CommentAnswerResponseDto.Comments> comments = new ArrayList<>();
+            List<CommentArticleResponseDto.Comments> comments = new ArrayList<>();
             comments.add(createDummyComments(timeStamp, commentId1, commentContent1, userId1, userName1));
             comments.add(createDummyComments(timeStamp, commentId2, commentContent2, userId2, userName2));
 
@@ -190,11 +192,11 @@ class CommentArticleControllerTest {
             responseDto.setComments(comments);
         }
 
-        Page<CommentAnswer> commentAnswers = new PageImpl<>(List.of(new CommentAnswer(), new CommentAnswer()));
-        given(commentAnswerService.findCommentAnswers(anyLong(), anyInt(), anyInt())).willReturn(commentAnswers);
+        Page<CommentArticle> commentArticlePage = new PageImpl<>(List.of(new CommentArticle(), new CommentArticle()));
+        given(commentArticleService.findCommentArticles(anyLong(), anyInt(), anyInt())).willReturn(commentArticlePage);
 
         // when
-        given(mapper.commentAnswersToCommentAnswerResponseDto(any())).willReturn(responseDto);
+        given(mapper.commentArticlesToCommentArticleResponseDto(any())).willReturn(responseDto);
 
         String page = "1";
         String size = "10";
@@ -204,7 +206,7 @@ class CommentArticleControllerTest {
 
         ResultActions actions =
                 mockMvc.perform(
-                        get("/api/answer/{answerId}/comments", answerId)
+                        get("/api/article/{articleId}/comments", articleId)
                                 .params(queryParams)
                                 .accept(MediaType.APPLICATION_JSON)
                 );
@@ -214,13 +216,21 @@ class CommentArticleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(responseDto.getMessage()))
                 .andExpect(jsonPath("$.messageCount").value(responseDto.getMessageCount()))
-                .andExpect(jsonPath("$.answerId").value(responseDto.getAnswerId()))
+                .andExpect(jsonPath("$.articleId").value(responseDto.getArticleId()))
+                .andExpect(jsonPath("$.comments[0].id").value(responseDto.getComments().get(0).getId()))
+                .andExpect(jsonPath("$.comments[0].content").value(responseDto.getComments().get(0).getContent()))
+                .andExpect(jsonPath("$.comments[0].user.id").value(responseDto.getComments().get(0).getUser().getId()))
+                .andExpect(jsonPath("$.comments[0].user.name").value(responseDto.getComments().get(0).getUser().getName()))
+                .andExpect(jsonPath("$.comments[1].id").value(responseDto.getComments().get(1).getId()))
+                .andExpect(jsonPath("$.comments[1].content").value(responseDto.getComments().get(1).getContent()))
+                .andExpect(jsonPath("$.comments[1].user.id").value(responseDto.getComments().get(1).getUser().getId()))
+                .andExpect(jsonPath("$.comments[1].user.name").value(responseDto.getComments().get(1).getUser().getName()))
                 .andDo(document(
-                        "getAll-commentAnswers",
+                        "getAll-commentArticles",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         pathParameters(
-                                parameterWithName("answerId").description("답변글 식별자")
+                                parameterWithName("articleId").description("질문글 식별자")
                         ),
                         requestParameters(
                                 parameterWithName("page").description("페이지 번호"),
@@ -230,7 +240,7 @@ class CommentArticleControllerTest {
                                 List.of(
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지"),
                                         fieldWithPath("messageCount").type(JsonFieldType.NUMBER).description("댓글 개수"),
-                                        fieldWithPath("answerId").type(JsonFieldType.NUMBER).description("답변글 식별자"),
+                                        fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
                                         fieldWithPath("comments").type(JsonFieldType.ARRAY).description("답변글의 댓글 목록"),
                                         fieldWithPath("comments[0].id").type(JsonFieldType.NUMBER).description("댓글 식별자"),
                                         fieldWithPath("comments[0].content").type(JsonFieldType.STRING).description("댓글 내용"),
@@ -244,22 +254,22 @@ class CommentArticleControllerTest {
                 ));
     }
 
-    private static CommentAnswerResponseDto.Comments createDummyComments(
+    private static CommentArticleResponseDto.Comments createDummyComments(
                    LocalDateTime timeStamp, Long commentId, String commentContent, Long userId, String userName) {
-        CommentAnswerResponseDto.Comments comments = new CommentAnswerResponseDto.Comments();
+        CommentArticleResponseDto.Comments comments = new CommentArticleResponseDto.Comments();
         comments.setId(commentId);
         comments.setContent(commentContent);
         comments.setCreatedAt(timeStamp);
         comments.setUpdatedAt(timeStamp);
 
-        CommentAnswerResponseDto.Comments.User user = new CommentAnswerResponseDto.Comments.User();
+        CommentArticleResponseDto.Comments.User user = new CommentArticleResponseDto.Comments.User();
         user.setId(userId);
         user.setName(userName);
         comments.setUser(user);
 
         return comments;
     }
-
+/*
     @Test
     @DisplayName("CommentAnswer 삭제 테스트")
     void deleteCommentAnswer() throws Exception {

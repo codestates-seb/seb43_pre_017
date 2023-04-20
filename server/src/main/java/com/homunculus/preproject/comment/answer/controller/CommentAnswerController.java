@@ -83,7 +83,7 @@ public class CommentAnswerController {
         List<CommentAnswer> commentAnswers = pageCommentAnswers.getContent();
 
         CommentAnswerResponseDto responseDto = mapper.commentAnswersToCommentAnswerResponseDto(commentAnswers);
-        responseDto.setMessage("댓글 조회가 완료되었습니다.");
+        responseDto.setMessage("댓글들 조회를 완료했습니다.");
         responseDto.setMessageCount(commentAnswers.size());
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }

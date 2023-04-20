@@ -171,7 +171,7 @@ class CommentAnswerControllerTest {
         // given
         final LocalDateTime timeStamp = LocalDateTime.of(2023,4,19,21,0,0);
 
-        final String answerMessage = "답변글 조회를 완료했습니다.";
+        final String message = "댓글들 조회를 완료했습니다.";
         final Long answerId = 1L;
         final Long commentId1 = 1L;     final String commentContent1 = "댓글 내용1";
         final Long userId1 = 1L;        final String userName1 = "유저1";
@@ -181,7 +181,7 @@ class CommentAnswerControllerTest {
 
         CommentAnswerResponseDto responseDto = new CommentAnswerResponseDto();
         {
-            responseDto.setMessage(answerMessage);
+            responseDto.setMessage(message);
             responseDto.setAnswerId(answerId);
 
             List<CommentAnswerResponseDto.Comments> comments = new ArrayList<>();
@@ -217,6 +217,14 @@ class CommentAnswerControllerTest {
                 .andExpect(jsonPath("$.message").value(responseDto.getMessage()))
                 .andExpect(jsonPath("$.messageCount").value(responseDto.getMessageCount()))
                 .andExpect(jsonPath("$.answerId").value(responseDto.getAnswerId()))
+                .andExpect(jsonPath("$.comments[0].id").value(responseDto.getComments().get(0).getId()))
+                .andExpect(jsonPath("$.comments[0].content").value(responseDto.getComments().get(0).getContent()))
+                .andExpect(jsonPath("$.comments[0].user.id").value(responseDto.getComments().get(0).getUser().getId()))
+                .andExpect(jsonPath("$.comments[0].user.name").value(responseDto.getComments().get(0).getUser().getName()))
+                .andExpect(jsonPath("$.comments[1].id").value(responseDto.getComments().get(1).getId()))
+                .andExpect(jsonPath("$.comments[1].content").value(responseDto.getComments().get(1).getContent()))
+                .andExpect(jsonPath("$.comments[1].user.id").value(responseDto.getComments().get(1).getUser().getId()))
+                .andExpect(jsonPath("$.comments[1].user.name").value(responseDto.getComments().get(1).getUser().getName()))
                 .andDo(document(
                         "getAll-commentAnswers",
                         getRequestPreProcessor(),
