@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const StyledUserQAs = styled.div`
-  /* border: 1px solid rgba(0, 0, 0, 0.2); */
+  /* border: 1px solid rgbaç(0, 0, 0, 0.2); */
   height: calc(100% - 300px);
 
   #answer-title,

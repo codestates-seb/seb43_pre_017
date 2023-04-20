@@ -6,6 +6,9 @@ import {
   StyledEditBtn,
 } from "./style";
 
+//data
+import MockupData from "./Data/data";
+
 //icon
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCakeCandles, faClock } from "@fortawesome/free-solid-svg-icons";
@@ -18,14 +21,14 @@ const UserInfo = () => {
           <img
             width="128"
             height="128"
-            src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1035&q=80"
+            src={MockupData.user[0].img}
             alt="고양이 유저"
           />
         </a>
       </StyledImgBox>
       <StyledInfoBox className="d-flex di-column ">
         <div id="user-name" className="d-flex ai-end mb10">
-          고양이
+          {MockupData.user[0].name}
         </div>
         <div id="user-info" className="d-flex fw">
           <FontAwesomeIcon icon={faCakeCandles} className="icon-cack" />
