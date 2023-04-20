@@ -78,6 +78,9 @@ include::{snippets}/get-article/curl-request.adoc[]
 .http-request
 include::{snippets}/get-article/http-request.adoc[]
 
+.response-fields
+include::{snippets}/get-article/response-fields.adoc[]
+
 .http-response
 include::{snippets}/get-article/http-response.adoc[]
 
@@ -144,6 +147,9 @@ include::{snippets}/getAll-answers/path-parameters.adoc[]
 
 .http-request
 include::{snippets}/getAll-answers/http-request.adoc[]
+
+.response-fields
+include::{snippets}/getAll-answers/response-fields.adoc[]
 
 .http-response
 include::{snippets}/getAll-answers/http-response.adoc[]
@@ -212,6 +218,9 @@ include::{snippets}/getAll-commentArticles/path-parameters.adoc[]
 .http-request
 include::{snippets}/getAll-commentArticles/http-request.adoc[]
 
+.response-fields
+include::{snippets}/getAll-commentArticles/response-fields.adoc[]
+
 .http-response
 include::{snippets}/getAll-commentArticles/http-response.adoc[]
 
@@ -278,6 +287,9 @@ include::{snippets}/getAll-commentAnswers/path-parameters.adoc[]
 
 .http-request
 include::{snippets}/getAll-commentAnswers/http-request.adoc[]
+
+.response-fields
+include::{snippets}/getAll-commentAnswers/response-fields.adoc[]
 
 .http-response
 include::{snippets}/getAll-commentAnswers/http-response.adoc[]
