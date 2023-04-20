@@ -7,9 +7,6 @@ import com.homunculus.preproject.answer.dto.AnswerSimpleResponseDto;
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.answer.mapper.AnswerMapper;
 import com.homunculus.preproject.answer.service.AnswerService;
-import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
-import com.homunculus.preproject.response.details.AnswerResponseDetails;
-import com.homunculus.preproject.response.details.CommentAnswerResponseDetails;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +15,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -190,7 +186,6 @@ class AnswerControllerTest {
 
             responseDto.setMessageCount(answers.size());
             responseDto.setAnswers(answers);
-            responseDto.setStatus(Answer.AnswerStatus.ANSWER_REGISTRY);
         }
 
         Page<Answer> answers = new PageImpl<>(List.of(new Answer(), new Answer()));
@@ -223,7 +218,6 @@ class AnswerControllerTest {
         expectAnswers(responseDto.getAnswers(), 1, actions);
 
         actions
-                .andExpect(jsonPath("$.status").value(responseDto.getStatus()))
                 .andDo(document(
                         "getAll-answers",
                         getRequestPreProcessor(),
@@ -240,13 +234,11 @@ class AnswerControllerTest {
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지"),
                                         fieldWithPath("messageCount").type(JsonFieldType.NUMBER).description("답변글 개수"),
                                         fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
-                                        fieldWithPath("answers").type(JsonFieldType.ARRAY).description("답변글 묶음"),
+                                        fieldWithPath("answers").type(JsonFieldType.ARRAY).description("답변글 목록"),
                                         fieldWithPath("answers[0].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
                                         fieldWithPath("answers[0].content").type(JsonFieldType.STRING).description("답변글 내용"),
                                         fieldWithPath("answers[0].createdAt").type(JsonFieldType.STRING).description("답변글 생성시간"),
-                                        fieldWithPath("answers[0].updatedAt").type(JsonFieldType.STRING).description("답변글 수정시간"),
-                                        fieldWithPath("answers[0].status").type(JsonFieldType.STRING).description("답변글 상태(등록상태, 삭제상태"),
-                                        fieldWithPath("status").type(JsonFieldType.STRING).description("질문글 상태(등록상태, 삭제상태)")
+                                        fieldWithPath("answers[0].updatedAt").type(JsonFieldType.STRING).description("답변글 수정시간")
                                 )
                         )
                 ));
@@ -258,7 +250,6 @@ class AnswerControllerTest {
         answers.setContent(answerContent);
         answers.setCreatedAt(timeStamp);
         answers.setUpdatedAt(timeStamp);
-        answers.setStatus(Answer.AnswerStatus.ANSWER_REGISTRY);
 
         return answers;
     }
@@ -266,8 +257,7 @@ class AnswerControllerTest {
     private void expectAnswers(List<AnswerResponseDto.Answers> answerResponseDetailsList, Integer index, ResultActions actions) throws Exception {
         actions
                 .andExpect(jsonPath("$.answers[" + index + "].id").value(answerResponseDetailsList.get(index).getId()))
-                .andExpect(jsonPath("$.answers[" + index + "].content").value(answerResponseDetailsList.get(index).getContent()))
-                .andExpect(jsonPath("$.answers[" + index + "].status").value(answerResponseDetailsList.get(index).getStatus()));
+                .andExpect(jsonPath("$.answers[" + index + "].content").value(answerResponseDetailsList.get(index).getContent()));
     }
 
     @Test

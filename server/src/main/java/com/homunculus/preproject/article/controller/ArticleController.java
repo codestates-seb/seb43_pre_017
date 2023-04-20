@@ -3,6 +3,7 @@ package com.homunculus.preproject.article.controller;
 import com.homunculus.preproject.answer.controller.AnswerController;
 import com.homunculus.preproject.answer.dto.AnswerSimpleResponseDto;
 import com.homunculus.preproject.article.dto.ArticleDto;
+import com.homunculus.preproject.article.dto.ArticleResponseDetailsDto;
 import com.homunculus.preproject.article.dto.ArticleResponseDto;
 import com.homunculus.preproject.article.dto.ArticleSimpleResponseDto;
 import com.homunculus.preproject.article.entity.Article;
@@ -73,9 +74,8 @@ public class ArticleController {
     public ResponseEntity getArticle(@PathVariable("article-id") @Positive Long articleId) {
         Article article = articleService.findArticle(articleId);
 
-        ArticleResponseDto responseDto = mapper.articleToArticleResponseDto(article);
+        ArticleResponseDetailsDto responseDto = mapper.articleToArticleResponseDetailsDto(article);
         responseDto.setMessage("질문글 조회를 완료했습니다.");
-        responseDto.setMessageCount(1);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 

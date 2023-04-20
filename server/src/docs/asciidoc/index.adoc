@@ -75,9 +75,6 @@ include::{snippets}/getAll-articles/http-response.adoc[]
 .curl-request
 include::{snippets}/get-article/curl-request.adoc[]
 
-.path-parameters
-include::{snippets}/get-article/path-parameters.adoc[]
-
 .http-request
 include::{snippets}/get-article/http-request.adoc[]
 

@@ -2,6 +2,7 @@ package com.homunculus.preproject.article.controller;
 
 import com.google.gson.Gson;
 import com.homunculus.preproject.article.dto.ArticleDto;
+import com.homunculus.preproject.article.dto.ArticleResponseDetailsDto;
 import com.homunculus.preproject.article.dto.ArticleResponseDto;
 import com.homunculus.preproject.article.dto.ArticleSimpleResponseDto;
 import com.homunculus.preproject.article.entity.Article;
@@ -242,7 +243,7 @@ class ArticleControllerTest {
                                 List.of(
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지"),
                                         fieldWithPath("messageCount").type(JsonFieldType.NUMBER).description("질문글 개수"),
-                                        fieldWithPath("articles").type(JsonFieldType.ARRAY).description("질문글 묶음"),
+                                        fieldWithPath("articles").type(JsonFieldType.ARRAY).description("질문글 목록"),
                                         fieldWithPath("articles[0].id").type(JsonFieldType.NUMBER).description("질문글 식별자"),
                                         fieldWithPath("articles[0].title").type(JsonFieldType.STRING).description("질문글 제목"),
                                         fieldWithPath("articles[0].content").type(JsonFieldType.STRING).description("질문글 내용"),
@@ -290,6 +291,200 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.articles[" + index + "].answerCount").value(articles.get(index).getAnswerCount()))
                 .andExpect(jsonPath("$.articles[" + index + "].status").value(articles.get(index).getStatus()));
     }
+
+    @Test
+    @DisplayName("Article 상세 조회 테스트")
+    void getArticle() throws Exception {
+        // given
+        final LocalDateTime timeStamp = LocalDateTime.of(2023,4,19,21,0,0);
+
+
+        final String articleMessage = "질문글 조회를 완료했습니다.";
+        final Long articleId = 1L;
+        final String articleTitle = "질문글 제목";
+        final String articleContent = "질문글 내용";
+
+        final Long userId = 1L;
+        final String userName = "유저";
+
+        final Long commentArticleId1 = 1L;      final String commentArticleContent1 = "질문의 댓글1";
+        final Long commentArticleId2 = 2L;      final String commentArticleContent2 = "질문의 댓글2";
+
+        final Long answerId1 = 1L;
+        final String answerContent1 = "답변1의 내용";
+        final Long commentAnswerId1_1 = 1L;     final String commentAnswerContent1_1 = "답변1의 댓글1";
+        final Long commentAnswerId1_2 = 2L;     final String commentAnswerContent1_2 = "답변1의 댓글2";
+
+        final Long answerId2 = 2L;
+        final String answerContent2 = "답변2의 내용";
+        final Long commentAnswerId2_1 = 3L;     final String commentAnswerContent2_1 = "답변2의 댓글1";
+        final Long commentAnswerId2_2 = 4L;     final String commentAnswerContent2_2 = "답변2의 댓글2";
+
+
+        ArticleResponseDetailsDto responseDto = new ArticleResponseDetailsDto();
+        {
+            responseDto.setMessage(articleMessage);
+
+            ArticleResponseDetailsDto.Article article = new ArticleResponseDetailsDto.Article();
+            {
+                article.setId(articleId);
+                article.setTitle(articleTitle);
+                article.setContent(articleContent);
+                article.setCreatedAt(timeStamp);
+                article.setUpdatedAt(timeStamp);
+            }
+            responseDto.setArticle(article);
+
+            ArticleResponseDetailsDto.User user = new ArticleResponseDetailsDto.User();
+            {
+                user.setId(userId);
+                user.setName(userName);
+            }
+            responseDto.setUser(user);
+
+            List<ArticleResponseDetailsDto.Comments> commentArticles = new ArrayList<>();
+            {
+                ArticleResponseDetailsDto.Comments comment1 = new ArticleResponseDetailsDto.Comments();
+                comment1.setId(commentArticleId1);
+                comment1.setContent(commentArticleContent1);
+                comment1.setCreatedAt(timeStamp);
+                comment1.setUpdatedAt(timeStamp);
+                commentArticles.add(comment1);
+
+                ArticleResponseDetailsDto.Comments comment2 = new ArticleResponseDetailsDto.Comments();
+                comment2.setId(commentArticleId2);
+                comment2.setContent(commentArticleContent2);
+                comment2.setCreatedAt(timeStamp);
+                comment2.setUpdatedAt(timeStamp);
+                commentArticles.add(comment2);
+            }
+            responseDto.setComments(commentArticles);
+
+            List<ArticleResponseDetailsDto.Answers> answers = new ArrayList<>();
+            {
+                answers.add(createDummyAnswer(
+                        timeStamp, answerId1, answerContent1,
+                        commentAnswerId1_1, commentAnswerContent1_1,
+                        commentAnswerId1_2, commentAnswerContent1_2
+                ));
+                answers.add(createDummyAnswer(
+                        timeStamp, answerId2, answerContent2,
+                        commentAnswerId2_1, commentAnswerContent2_1,
+                        commentAnswerId2_2, commentAnswerContent2_2
+                ));
+            }
+            responseDto.setAnswers(answers);
+        }
+
+        given(articleService.findArticle(anyLong())).willReturn(new Article());
+
+        // when
+        given(mapper.articleToArticleResponseDetailsDto(any())).willReturn(responseDto);
+
+        ResultActions actions =
+                mockMvc.perform(
+                        get("/api/article/{articleId}", articleId)
+                                .accept(MediaType.APPLICATION_JSON)
+                );
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value(responseDto.getMessage()))
+                .andExpect(jsonPath("$.article.id").value(responseDto.getArticle().getId()))
+                .andExpect(jsonPath("$.article.title").value(responseDto.getArticle().getTitle()))
+                .andExpect(jsonPath("$.article.content").value(responseDto.getArticle().getContent()))
+                .andExpect(jsonPath("$.user.id").value(responseDto.getUser().getId()))
+                .andExpect(jsonPath("$.user.name").value(responseDto.getUser().getName()));
+
+        expectComments(responseDto.getComments(), 0, actions);
+        expectComments(responseDto.getComments(), 1, actions);
+        expectAnswers(responseDto.getAnswers(), 0, actions);
+        expectAnswers(responseDto.getAnswers(), 1, actions);
+
+        actions
+                .andDo(document(
+                        "get-article",
+                        getRequestPreProcessor(),
+                        getResponsePreProcessor(),
+                        responseFields(
+                                List.of(
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지"),
+                                        fieldWithPath("article").type(JsonFieldType.OBJECT).description("질문글 정보"),
+                                        fieldWithPath("article.id").type(JsonFieldType.NUMBER).description("질문글 식별자"),
+                                        fieldWithPath("article.title").type(JsonFieldType.STRING).description("질문글 제목"),
+                                        fieldWithPath("article.content").type(JsonFieldType.STRING).description("질문글 내용"),
+                                        fieldWithPath("article.createdAt").type(JsonFieldType.STRING).description("질문글 생성시간"),
+                                        fieldWithPath("article.updatedAt").type(JsonFieldType.STRING).description("질문글 수정시간"),
+                                        fieldWithPath("user").type(JsonFieldType.OBJECT).description("질문글 등록 유저 정보"),
+                                        fieldWithPath("user.id").type(JsonFieldType.NUMBER).description("유저 식별자"),
+                                        fieldWithPath("user.name").type(JsonFieldType.STRING).description("유저 이름"),
+                                        fieldWithPath("comments").type(JsonFieldType.ARRAY).description("질문에 대한 답변글 목록"),
+                                        fieldWithPath("comments[0].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
+                                        fieldWithPath("comments[0].content").type(JsonFieldType.STRING).description("답변글 내용"),
+                                        fieldWithPath("comments[0].createdAt").type(JsonFieldType.STRING).description("답변글 생성시간"),
+                                        fieldWithPath("comments[0].updatedAt").type(JsonFieldType.STRING).description("답변글 수정시간"),
+                                        fieldWithPath("answers").type(JsonFieldType.ARRAY).description("질문의 답변글 목록"),
+                                        fieldWithPath("answers[0].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
+                                        fieldWithPath("answers[0].content").type(JsonFieldType.STRING).description("답변글 내용"),
+                                        fieldWithPath("answers[0].comments").type(JsonFieldType.ARRAY).description("답변글의 댓글 목록"),
+                                        fieldWithPath("answers[0].createdAt").type(JsonFieldType.STRING).description("답변의 생성시간"),
+                                        fieldWithPath("answers[0].updatedAt").type(JsonFieldType.STRING).description("답변의 수정시간"),
+                                        fieldWithPath("answers[0].comments[0].id").type(JsonFieldType.NUMBER).description("댓글의 식별자"),
+                                        fieldWithPath("answers[0].comments[0].content").type(JsonFieldType.STRING).description("댓글의 내용"),
+                                        fieldWithPath("answers[0].comments[0].createdAt").type(JsonFieldType.STRING).description("댓글의 생성시간"),
+                                        fieldWithPath("answers[0].comments[0].updatedAt").type(JsonFieldType.STRING).description("댓글의 수정시간")
+                                )
+                        )
+                ));
+    }
+
+    private static ArticleResponseDetailsDto.Answers createDummyAnswer(LocalDateTime timeStamp,
+                                                                       Long answerId, String answerContent,
+                                                                       Long commentAnswerId1, String commentAnswerContent1,
+                                                                       Long commentAnswerId2, String commentAnswerContent2) {
+        ArticleResponseDetailsDto.Answers answer = new ArticleResponseDetailsDto.Answers();
+        answer.setId(answerId);
+        answer.setContent(answerContent);
+        answer.setCreatedAt(timeStamp);
+        answer.setUpdatedAt(timeStamp);
+
+        List<ArticleResponseDetailsDto.Answers.Comments> commentAnswers = new ArrayList<>();
+        {
+            commentAnswers.add(createDummyCommentAnswer(timeStamp, commentAnswerId1, commentAnswerContent1));
+            commentAnswers.add(createDummyCommentAnswer(timeStamp, commentAnswerId2, commentAnswerContent2));
+        }
+        answer.setComments(commentAnswers);
+        return answer;
+    }
+
+    private static ArticleResponseDetailsDto.Answers.Comments createDummyCommentAnswer(LocalDateTime timeStamp,
+                                                                                       Long commentAnswerId1_1, String commentAnswerContent1_1) {
+        ArticleResponseDetailsDto.Answers.Comments comment = new ArticleResponseDetailsDto.Answers.Comments();
+        comment.setId(commentAnswerId1_1);
+        comment.setContent(commentAnswerContent1_1);
+        comment.setCreatedAt(timeStamp);
+        comment.setUpdatedAt(timeStamp);
+        return comment;
+    }
+
+
+    private void expectComments(List<ArticleResponseDetailsDto.Comments> comments, Integer index, ResultActions actions) throws Exception {
+        actions
+                .andExpect(jsonPath("$.comments[" + index + "].id").value(comments.get(index).getId()))
+                .andExpect(jsonPath("$.comments[" + index + "].content").value(comments.get(index).getContent()));
+    }
+
+    private void expectAnswers(List<ArticleResponseDetailsDto.Answers> answers, Integer index, ResultActions actions) throws Exception {
+        actions
+                .andExpect(jsonPath("$.answers[" + index + "].id").value(answers.get(index).getId()))
+                .andExpect(jsonPath("$.answers[" + index + "].content").value(answers.get(index).getContent()))
+                .andExpect(jsonPath("$.answers[" + index + "].comments[0].id").value(answers.get(index).getComments().get(0).getId()))
+                .andExpect(jsonPath("$.answers[" + index + "].comments[0].content").value(answers.get(index).getComments().get(0).getContent()))
+                .andExpect(jsonPath("$.answers[" + index + "].comments[1].id").value(answers.get(index).getComments().get(1).getId()))
+                .andExpect(jsonPath("$.answers[" + index + "].comments[1].content").value(answers.get(index).getComments().get(1).getContent()));
+    }
+
 
     @Test
     @DisplayName("Article 삭제 테스트")
