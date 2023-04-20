@@ -52,7 +52,7 @@ public class EvaluationAnswerController {
         evaluationAnswerService.createEvaluationAnswer(mapper.evaluationAnswerPostDtoToEvaluationAnswer(evaluationAnswerDtoPost));
 
         EvaluationAnswerSimpleResponseDto responseDto = createEvaluationAnswerSimpleResponseDto(EvaluationAnswerSimpleResponseMessages.EVALUATION_ANSWER_MESSAGE_POST);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping(EVALUATION_ANSWER_DEFAULT_URL + "/{answerId}" + EVALUATION_ANSWER_DEFAULT_URL_DETAIL + "/{evaluationId}")

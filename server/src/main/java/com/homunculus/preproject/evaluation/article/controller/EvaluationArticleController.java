@@ -55,7 +55,7 @@ public class EvaluationArticleController {
         evaluationArticleService.createEvaluationArticle(mapper.evaluationArticlePostDtoToEvaluationArticle(evaluationArticleDtoPost));
 
         EvaluationArticleSimpleResponseDto responseDto = createEvaluationArticleSimpleResponseDto(EvaluationArticleSimpleResponseMessages.EVALUATION_ARTICLE_MESSAGE_POST);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping(EVALUATION_ARTICLE_DEFAULT_URL + "/{articleId}" + EVALUATION_ARTICLE_DEFAULT_URL_DETAIL + "/{evaluationId}")
