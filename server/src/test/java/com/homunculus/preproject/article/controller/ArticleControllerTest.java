@@ -1,13 +1,6 @@
 package com.homunculus.preproject.article.controller;
 
 import com.google.gson.Gson;
-import com.homunculus.preproject.answer.controller.AnswerController;
-import com.homunculus.preproject.answer.dto.AnswerDto;
-import com.homunculus.preproject.answer.dto.AnswerResponseDto;
-import com.homunculus.preproject.answer.dto.AnswerSimpleResponseDto;
-import com.homunculus.preproject.answer.entity.Answer;
-import com.homunculus.preproject.answer.mapper.AnswerMapper;
-import com.homunculus.preproject.answer.service.AnswerService;
 import com.homunculus.preproject.article.dto.ArticleDto;
 import com.homunculus.preproject.article.dto.ArticleSimpleResponseDto;
 import com.homunculus.preproject.article.entity.Article;
@@ -19,29 +12,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.homunculus.preproject.util.ApiDocumentUtils.getRequestPreProcessor;
 import static com.homunculus.preproject.util.ApiDocumentUtils.getResponsePreProcessor;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -70,8 +54,8 @@ class ArticleControllerTest {
     @DisplayName("Article 등록 테스트")
     void postArticleTest() throws Exception {
         // given
-        final String postTitle = "무언가 타이틀";
-        final String postContent = "아무거나 집어넣은 내용";
+        final String postTitle = "등록할 질문글 제목";
+        final String postContent = "등록할 질문글 내용";
         final String responseContent = "질문을 등록했습니다.";
         final Long articleId = 1L;
 
@@ -107,8 +91,64 @@ class ArticleControllerTest {
                         getResponsePreProcessor(),
                         requestFields(
                                 List.of(
-                                        fieldWithPath("title").type(JsonFieldType.STRING).description("컨텐츠 제목"),
-                                        fieldWithPath("content").type(JsonFieldType.STRING).description("컨텐츠 내용")
+                                        fieldWithPath("title").type(JsonFieldType.STRING).description("질문글 제목"),
+                                        fieldWithPath("content").type(JsonFieldType.STRING).description("질문글 내용")
+                                )
+                        ),
+                        responseFields(
+                                List.of(
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
+                                )
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("Article 수정 테스트")
+    void patchArticle() throws Exception {
+        // given
+        final String patchTitle = "수정할 질문글 제목";
+        final String patchContent = "수정할 질문글 내용";
+        final String responseContent = "질문을 수정했습니다.";
+        final Long articleId = 1L;
+
+        ArticleDto.Patch patch = new ArticleDto.Patch();
+        patch.setTitle(patchTitle);
+        patch.setContent(patchContent);
+        String content = gson.toJson(patch);
+
+        given(mapper.articlePatchDtoToArticle(any())).willReturn(new Article());
+
+        ArticleSimpleResponseDto responseDto = new ArticleSimpleResponseDto();
+        responseDto.setMessage(responseContent);
+
+        given(articleService.updateArticle(any())).willReturn(new Article());
+
+        // when
+
+        ResultActions actions =
+                mockMvc.perform(
+                        patch("/api/article/{articleId}", articleId)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(content)
+                );
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value(responseDto.getMessage()))
+                .andDo(document(
+                        "patch-article",
+                        getRequestPreProcessor(),
+                        getResponsePreProcessor(),
+                        pathParameters(
+                                parameterWithName("articleId").description("질문글 식별자")
+                        ),
+                        requestFields(
+                                List.of(
+                                        fieldWithPath("title").type(JsonFieldType.STRING).description("질문글 제목"),
+                                        fieldWithPath("content").type(JsonFieldType.STRING).description("질문글 내용")
                                 )
                         ),
                         responseFields(
@@ -119,61 +159,6 @@ class ArticleControllerTest {
                 ));
     }
 /*
-    @Test
-    @DisplayName("Answer 수정 테스트")
-    void patchAnswer() throws Exception {
-        // given
-        final String patchContent = "아무거나 집어넣은 내용";
-        final String responseContent = "답변을 수정했습니다.";
-        final Long articleId = 1L;
-        final Long answerId = 1L;
-
-        AnswerDto.Patch patch = new AnswerDto.Patch();
-        patch.setContent(patchContent);
-        String content = gson.toJson(patch);
-
-        given(mapper.answerPatchDtoToAnswer(any())).willReturn(new Answer());
-
-        AnswerSimpleResponseDto responseDto = new AnswerSimpleResponseDto();
-        responseDto.setMessage(responseContent);
-
-        given(answerService.updateAnswer(any())).willReturn(new Answer());
-
-        // when
-
-        ResultActions actions =
-                mockMvc.perform(
-                        patch("/api/article/{articleId}/answer/{answerId}", articleId, answerId)
-                                .accept(MediaType.APPLICATION_JSON)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(content)
-                );
-
-        // then
-        actions
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value(responseContent))
-                .andDo(document(
-                        "patch-answer",
-                        getRequestPreProcessor(),
-                        getResponsePreProcessor(),
-                        pathParameters(
-                                parameterWithName("articleId").description("질문글 식별자"),
-                                parameterWithName("answerId").description("답변글 식별자")
-                        ),
-                        requestFields(
-                                List.of(
-                                        fieldWithPath("content").type(JsonFieldType.STRING).description("컨텐츠 내용")
-                                )
-                        ),
-                        responseFields(
-                                List.of(
-                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
-                                )
-                        )
-                ));
-    }
-
     @Test
     @DisplayName("Answer 조회 테스트")
     void getAllAnswers() throws Exception {

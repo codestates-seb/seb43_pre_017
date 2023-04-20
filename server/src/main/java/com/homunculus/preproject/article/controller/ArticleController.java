@@ -65,7 +65,7 @@ public class ArticleController {
         articleDtoPatch.setArticleId(articleId);
         Article article = articleService.updateArticle(mapper.articlePatchDtoToArticle(articleDtoPatch));
 
-        ArticleSimpleResponseDto responseDto = createArticleSimpleResponseDto(ArticleSimpleResponseMessages.ARTICLE_MESSAGE_POST);
+        ArticleSimpleResponseDto responseDto = createArticleSimpleResponseDto(ArticleSimpleResponseMessages.ARTICLE_MESSAGE_PATCH);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 

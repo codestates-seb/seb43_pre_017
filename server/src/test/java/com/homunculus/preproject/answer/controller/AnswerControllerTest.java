@@ -63,7 +63,7 @@ class AnswerControllerTest {
     @DisplayName("Answer 등록 테스트")
     void postAnswerTest() throws Exception {
         // given
-        final String postContent = "아무거나 집어넣은 내용";
+        final String postContent = "등록할 답변글 내용";
         final String responseContent = "답변을 등록했습니다.";
         final Long articleId = 1L;
 
@@ -102,7 +102,7 @@ class AnswerControllerTest {
                         ),
                         requestFields(
                                 List.of(
-                                        fieldWithPath("content").type(JsonFieldType.STRING).description("컨텐츠 내용")
+                                        fieldWithPath("content").type(JsonFieldType.STRING).description("답변글 내용")
                                 )
                         ),
                         responseFields(
@@ -117,7 +117,7 @@ class AnswerControllerTest {
     @DisplayName("Answer 수정 테스트")
     void patchAnswer() throws Exception {
         // given
-        final String patchContent = "아무거나 집어넣은 내용";
+        final String patchContent = "수정할 답변글 내용";
         final String responseContent = "답변을 수정했습니다.";
         final Long articleId = 1L;
         final Long answerId = 1L;
@@ -157,7 +157,7 @@ class AnswerControllerTest {
                         ),
                         requestFields(
                                 List.of(
-                                        fieldWithPath("content").type(JsonFieldType.STRING).description("컨텐츠 내용")
+                                        fieldWithPath("content").type(JsonFieldType.STRING).description("답변글 내용")
                                 )
                         ),
                         responseFields(
