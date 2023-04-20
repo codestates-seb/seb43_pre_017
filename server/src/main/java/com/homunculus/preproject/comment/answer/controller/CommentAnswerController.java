@@ -1,8 +1,6 @@
 package com.homunculus.preproject.comment.answer.controller;
 
 
-import com.homunculus.preproject.answer.controller.AnswerController;
-import com.homunculus.preproject.answer.dto.AnswerSimpleResponseDto;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerDto;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerResponseDto;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerSimpleResponseDto;
@@ -57,7 +55,7 @@ public class CommentAnswerController {
     public ResponseEntity postCommentAnswer(@Valid @RequestBody CommentAnswerDto.Post commentAnswerDtoPost,
                                             @PathVariable("answerId") @Positive Long answerId) {
         commentAnswerDtoPost.setAnswerId(answerId);
-        CommentAnswer commentAnswer = commentAnswerService.createCommentAnswer(mapper.commentAnswerPostDtoToCommentAnswer(commentAnswerDtoPost));
+        commentAnswerService.createCommentAnswer(mapper.commentAnswerPostDtoToCommentAnswer(commentAnswerDtoPost));
 
         CommentAnswerSimpleResponseDto responseDto = createAnswerSimpleResponseDto(CommentAnswerSimpleResponseMessages.COMMENT_ANSWER_MESSAGE_POST);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
@@ -70,7 +68,7 @@ public class CommentAnswerController {
         commentAnswerDtoPatch.setCommentId(commentId);
         commentAnswerDtoPatch.setAnswerId(answerId);
         CommentAnswer commentAnswer = mapper.commentAnswerPatchDtoToCommentAnswer(commentAnswerDtoPatch);
-        CommentAnswer updatedCommentAnswer = commentAnswerService.updateCommentAnswer(commentAnswer);
+        commentAnswerService.updateCommentAnswer(commentAnswer);
 
         CommentAnswerSimpleResponseDto responseDto = createAnswerSimpleResponseDto(CommentAnswerSimpleResponseMessages.COMMENT_ANSWER_MESSAGE_PATCH);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
