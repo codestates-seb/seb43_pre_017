@@ -1,5 +1,5 @@
 package com.homunculus.preproject.evaluation.answer.dto;
 
-public class evaluationAnswerResponseDto {
+public class EvaluationAnswerResponseDto {
     private String message;
 }
