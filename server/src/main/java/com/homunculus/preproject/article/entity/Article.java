@@ -5,6 +5,7 @@ import com.homunculus.preproject.audit.Auditable;
 import com.homunculus.preproject.comment.article.entity.CommentArticle;
 import com.homunculus.preproject.evaluation.article.entity.EvaluationArticle;
 import com.homunculus.preproject.user.entity.User;
+import com.homunculus.preproject.user.entity.UserDetails;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,6 +35,10 @@ public class Article extends Auditable {
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "USERDETAILS_ID")
+    private UserDetails userDetails;
 
     @OneToMany(mappedBy = "article")
     private List<Answer> answers = new ArrayList<>();
