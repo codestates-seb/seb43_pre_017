@@ -269,24 +269,24 @@ class CommentArticleControllerTest {
 
         return comments;
     }
-/*
+
     @Test
-    @DisplayName("CommentAnswer 삭제 테스트")
-    void deleteCommentAnswer() throws Exception {
+    @DisplayName("CommentArticle 삭제 테스트")
+    void deleteCommentArticle() throws Exception {
         // given
-        final Long answerId = 1L;
+        final Long articleId = 1L;
         final Long commentId = 1L;
         final String responseContent = "댓글을 삭제했습니다.";
 
-        CommentAnswerSimpleResponseDto responseDto = new CommentAnswerSimpleResponseDto();
+        CommentArticleSimpleResponseDto responseDto = new CommentArticleSimpleResponseDto();
         responseDto.setMessage(responseContent);
 
-        doNothing().when(commentAnswerService).deleteCommentAnswer(anyLong(), anyLong());
+        doNothing().when(commentArticleService).deleteCommentArticle(anyLong(), anyLong());
 
         // when
         ResultActions actions =
                 mockMvc.perform(
-                        delete("/api/answer/{answerId}/comment/{commentId}", answerId, commentId)
+                        delete("/api/article/{articleId}/comment/{commentId}", articleId, commentId)
                 );
 
         // then
@@ -294,11 +294,11 @@ class CommentArticleControllerTest {
                 .andExpect(status().isNoContent())
                 .andExpect(jsonPath("$.message").value(responseDto.getMessage()))
                 .andDo(document(
-                        "delete-commentAnswer",
+                        "delete-commentArticle",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         pathParameters(
-                                parameterWithName("answerId").description("답변글 식별자"),
+                                parameterWithName("articleId").description("질문글 식별자"),
                                 parameterWithName("commentId").description("댓글 식별자")
                         ),
                         responseFields(
@@ -308,5 +308,4 @@ class CommentArticleControllerTest {
                         )
                 ));
     }
- */
 }
