@@ -7,7 +7,83 @@
 
 Homunculus <https://github.com/codestates-seb/seb43_pre_017>
 
-v1.0.0, 2023.04.19
+v1.0.0, 2023.04.20
+
+***
+== ArticleController
+=== 질문 등록
+.curl-request
+include::{snippets}/post-article/curl-request.adoc[]
+
+.http-request
+include::{snippets}/post-article/http-request.adoc[]
+
+.request-fields
+include::{snippets}/post-article/request-fields.adoc[]
+
+.http-response
+include::{snippets}/post-article/http-response.adoc[]
+
+
+***
+=== 질문 수정
+.curl-request
+include::{snippets}/patch-article/curl-request.adoc[]
+
+.path-parameters
+include::{snippets}/patch-article/path-parameters.adoc[]
+
+.http-request
+include::{snippets}/patch-article/http-request.adoc[]
+
+.request-fields
+include::{snippets}/patch-article/request-fields.adoc[]
+
+.http-response
+include::{snippets}/patch-article/http-response.adoc[]
+
+
+***
+=== 질문 삭제
+.curl-request
+include::{snippets}/delete-article/curl-request.adoc[]
+
+.path-parameters
+include::{snippets}/delete-article/path-parameters.adoc[]
+
+.http-request
+include::{snippets}/delete-article/http-request.adoc[]
+
+.http-response
+include::{snippets}/delete-article/http-response.adoc[]
+
+
+***
+=== 질문 조회
+.curl-request
+include::{snippets}/getAll-articles/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getAll-articles/http-request.adoc[]
+
+.http-response
+include::{snippets}/getAll-articles/http-response.adoc[]
+
+
+***
+=== 질문 상세 조회
+.curl-request
+include::{snippets}/get-article/curl-request.adoc[]
+
+.http-request
+include::{snippets}/get-article/http-request.adoc[]
+
+.response-fields
+include::{snippets}/get-article/response-fields.adoc[]
+
+.http-response
+include::{snippets}/get-article/http-response.adoc[]
+
 
 ***
 == AnswerController
@@ -72,5 +148,217 @@ include::{snippets}/getAll-answers/path-parameters.adoc[]
 .http-request
 include::{snippets}/getAll-answers/http-request.adoc[]
 
+.response-fields
+include::{snippets}/getAll-answers/response-fields.adoc[]
+
 .http-response
 include::{snippets}/getAll-answers/http-response.adoc[]
+
+
+***
+== Comment Article Controller
+=== 질문에 대한 댓글 등록
+.curl-request
+include::{snippets}/post-commentArticle/curl-request.adoc[]
+
+.path-parameters
+include::{snippets}/post-commentArticle/path-parameters.adoc[]
+
+.http-request
+include::{snippets}/post-commentArticle/http-request.adoc[]
+
+.request-fields
+include::{snippets}/post-commentArticle/request-fields.adoc[]
+
+.http-response
+include::{snippets}/post-commentArticle/http-response.adoc[]
+
+
+***
+=== 질문에 대한 댓글 수정
+.curl-request
+include::{snippets}/patch-commentArticle/curl-request.adoc[]
+
+.path-parameters
+include::{snippets}/patch-commentArticle/path-parameters.adoc[]
+
+.http-request
+include::{snippets}/patch-commentArticle/http-request.adoc[]
+
+.request-fields
+include::{snippets}/patch-commentArticle/request-fields.adoc[]
+
+.http-response
+include::{snippets}/patch-commentArticle/http-response.adoc[]
+
+
+***
+=== 질문에 대한 댓글 삭제
+.curl-request
+include::{snippets}/delete-commentArticle/curl-request.adoc[]
+
+.path-parameters
+include::{snippets}/delete-commentArticle/path-parameters.adoc[]
+
+.http-request
+include::{snippets}/delete-commentArticle/http-request.adoc[]
+
+.http-response
+include::{snippets}/delete-commentArticle/http-response.adoc[]
+
+
+***
+=== 질문에 대한 댓글 조회
+.curl-request
+include::{snippets}/getAll-commentArticles/curl-request.adoc[]
+
+.path-parameters
+include::{snippets}/getAll-commentArticles/path-parameters.adoc[]
+
+.http-request
+include::{snippets}/getAll-commentArticles/http-request.adoc[]
+
+.response-fields
+include::{snippets}/getAll-commentArticles/response-fields.adoc[]
+
+.http-response
+include::{snippets}/getAll-commentArticles/http-response.adoc[]
+
+
+***
+== Comment Answer Controller
+=== 답변에 대한 댓글 등록
+.curl-request
+include::{snippets}/post-commentAnswer/curl-request.adoc[]
+
+.path-parameters
+include::{snippets}/post-commentAnswer/path-parameters.adoc[]
+
+.http-request
+include::{snippets}/post-commentAnswer/http-request.adoc[]
+
+.request-fields
+include::{snippets}/post-commentAnswer/request-fields.adoc[]
+
+.http-response
+include::{snippets}/post-commentAnswer/http-response.adoc[]
+
+
+***
+=== 답변에 대한 댓글 수정
+.curl-request
+include::{snippets}/patch-commentAnswer/curl-request.adoc[]
+
+.path-parameters
+include::{snippets}/patch-commentAnswer/path-parameters.adoc[]
+
+.http-request
+include::{snippets}/patch-commentAnswer/http-request.adoc[]
+
+.request-fields
+include::{snippets}/patch-commentAnswer/request-fields.adoc[]
+
+.http-response
+include::{snippets}/patch-commentAnswer/http-response.adoc[]
+
+
+***
+=== 답변에 대한 댓글 삭제
+.curl-request
+include::{snippets}/delete-commentAnswer/curl-request.adoc[]
+
+.path-parameters
+include::{snippets}/delete-commentAnswer/path-parameters.adoc[]
+
+.http-request
+include::{snippets}/delete-commentAnswer/http-request.adoc[]
+
+.http-response
+include::{snippets}/delete-commentAnswer/http-response.adoc[]
+
+
+***
+=== 답변에 대한 댓글 조회
+.curl-request
+include::{snippets}/getAll-commentAnswers/curl-request.adoc[]
+
+.path-parameters
+include::{snippets}/getAll-commentAnswers/path-parameters.adoc[]
+
+.http-request
+include::{snippets}/getAll-commentAnswers/http-request.adoc[]
+
+.response-fields
+include::{snippets}/getAll-commentAnswers/response-fields.adoc[]
+
+.http-response
+include::{snippets}/getAll-commentAnswers/http-response.adoc[]
+
+
+***
+== Evaluation Article Controller
+=== 질문글에 대한 평가 등록
+.curl-request
+include::{snippets}/post-evaluationArticle/curl-request.adoc[]
+
+.path-parameters
+include::{snippets}/post-evaluationArticle/path-parameters.adoc[]
+
+.http-request
+include::{snippets}/post-evaluationArticle/http-request.adoc[]
+
+.request-fields
+include::{snippets}/post-evaluationArticle/request-fields.adoc[]
+
+.http-response
+include::{snippets}/post-evaluationArticle/http-response.adoc[]
+
+
+***
+=== 질문글에 대한 평가 삭제
+.curl-request
+include::{snippets}/delete-evaluationArticle/curl-request.adoc[]
+
+.path-parameters
+include::{snippets}/delete-evaluationArticle/path-parameters.adoc[]
+
+.http-request
+include::{snippets}/delete-evaluationArticle/http-request.adoc[]
+
+.http-response
+include::{snippets}/delete-evaluationArticle/http-response.adoc[]
+
+
+***
+== Evaluation Answer Controller
+=== 답변글에 대한 평가 등록
+.curl-request
+include::{snippets}/post-evaluationAnswer/curl-request.adoc[]
+
+.path-parameters
+include::{snippets}/post-evaluationAnswer/path-parameters.adoc[]
+
+.http-request
+include::{snippets}/post-evaluationAnswer/http-request.adoc[]
+
+.request-fields
+include::{snippets}/post-evaluationAnswer/request-fields.adoc[]
+
+.http-response
+include::{snippets}/post-evaluationAnswer/http-response.adoc[]
+
+
+***
+=== 답변글에 대한 평가 삭제
+.curl-request
+include::{snippets}/delete-evaluationAnswer/curl-request.adoc[]
+
+.path-parameters
+include::{snippets}/delete-evaluationAnswer/path-parameters.adoc[]
+
+.http-request
+include::{snippets}/delete-evaluationAnswer/http-request.adoc[]
+
+.http-response
+include::{snippets}/delete-evaluationAnswer/http-response.adoc[]
+

@@ -1,40 +1,48 @@
 package com.homunculus.preproject.article.dto;
 
-import com.homunculus.preproject.answer.entity.Answer;
-import com.homunculus.preproject.article.entity.Article;
-import com.homunculus.preproject.comment.article.entity.CommentArticle;
-import com.homunculus.preproject.response.details.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@NoArgsConstructor
+@Getter
+@Setter
 public class ArticleResponseDto {
     private String message;
-    private ArticleResponseDetails article;
-    private UserResponseDetails user;
-    private List<Comments> comments;
-    private List<Answers> answers;
+    private Integer messageCount;
+    private Integer evaluationScore;
 
-    private Article.ArticleStatus status;
-    public String getStatus() { return status.getStatus(); }
+    private List<Articles> articles;
 
-    public static class Comments {
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class Articles {
         private Long id;
-        private Long content;
-
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;    // todo : 필드명 주의
-
-        private CommentArticle.CommentArticleStatus status;
-        public String getStatus() { return status.getStatus(); }
-    }
-    public static class Answers {
-        private Long id;
+        private String title;
         private String content;
         private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;    // todo : 필드명 주의
+        private LocalDateTime updatedAt;
+        private User user;
+        private Count count;
 
-        private Answer.AnswerStatus status;
-        public String getStatus() { return status.getStatus(); }
+        @Getter
+        @Setter
+        @NoArgsConstructor
+        public static class Count {
+            private Integer comments;    // todo: 이 질문글에 달린 댓글 갯수 카운팅을 매퍼에서 구현해야함
+            private Integer answers;    // todo: 이 질문글에 달린 답변글 갯수 카운팅을 매퍼에서 구현해야함
+        }
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class User {
+        private Long id;
+        private String name;
     }
 }

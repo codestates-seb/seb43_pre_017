@@ -1,28 +1,39 @@
 package com.homunculus.preproject.comment.article.dto;
 
-import com.homunculus.preproject.comment.article.entity.CommentArticle;
-import com.homunculus.preproject.response.details.CommentArticleResponseDetails;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class CommentArticleResponseDto {
     private String message;
     private Integer messageCount;
+
+    private Long articleId;
     private List<Comments> comments;
 
-    private CommentArticle.CommentArticleStatus status;
-    public String getStatus() { return status.getStatus(); }
-
+    @Getter
+    @Setter
+    @NoArgsConstructor
     public static class Comments {
         private Long id;
-        private Long content;
+        private String content;
+        private User user;
 
         private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;    // todo : 필드명 주의
+        private LocalDateTime updatedAt;
 
-        private CommentArticle.CommentArticleStatus status;
-        public String getStatus() { return status.getStatus(); }
+        @Getter
+        @Setter
+        @NoArgsConstructor
+        public static class User {
+            private Long id;
+            private String name;
+        }
     }
-
 }
