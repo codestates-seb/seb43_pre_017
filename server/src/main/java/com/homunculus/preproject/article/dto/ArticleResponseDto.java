@@ -4,12 +4,19 @@ import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.comment.article.entity.CommentArticle;
 import com.homunculus.preproject.response.details.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@NoArgsConstructor
+@Getter
+@Setter
 public class ArticleResponseDto {
     private String message;
+    private Integer messageCount;
     private ArticleResponseDetails article;
     private UserResponseDetails user;
     private List<Comments> comments;
