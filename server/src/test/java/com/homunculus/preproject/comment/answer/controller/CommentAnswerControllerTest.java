@@ -1,13 +1,6 @@
 package com.homunculus.preproject.comment.answer.controller;
 
 import com.google.gson.Gson;
-import com.homunculus.preproject.answer.controller.AnswerController;
-import com.homunculus.preproject.answer.dto.AnswerDto;
-import com.homunculus.preproject.answer.dto.AnswerResponseDto;
-import com.homunculus.preproject.answer.dto.AnswerSimpleResponseDto;
-import com.homunculus.preproject.answer.entity.Answer;
-import com.homunculus.preproject.answer.mapper.AnswerMapper;
-import com.homunculus.preproject.answer.service.AnswerService;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerDto;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerResponseDto;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerSimpleResponseDto;

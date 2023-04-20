@@ -23,7 +23,24 @@ public class AnswerResponseDto {
     public static class Answers {
         private Long id;
         private String content;
+        private User user;
+        private Count count;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;    // todo : 필드명 주의
+
+        @Getter
+        @Setter
+        @NoArgsConstructor
+        public static class User {
+            private Long id;
+            private String name;
+        }
+
+        @Getter
+        @Setter
+        @NoArgsConstructor
+        public static class Count {
+            private Integer comments;
+        }
     }
 }

@@ -170,8 +170,13 @@ class AnswerControllerTest {
 
         final String answerMessage = "답변글 조회를 완료했습니다.";
         final Long articleId = 1L;
-        final Long answerId1 = 1L;          final String answerContent1 = "답변글 내용1";
-        final Long answerId2 = 2L;          final String answerContent2 = "답변글 내용2";
+        final Long answerId1 = 1L;      final String answerContent1 = "답변글 내용1";
+        final Long userId1 = 1L;        final String userName1 = "유저1";
+        final Integer commentCount1 = 5;
+
+        final Long answerId2 = 2L;      final String answerContent2 = "답변글 내용2";
+        final Long userId2 = 2L;        final String userName2 = "유저2";
+        final Integer commentCount2 = 999;
 
         AnswerResponseDto responseDto = new AnswerResponseDto();
         {
@@ -179,8 +184,8 @@ class AnswerControllerTest {
             responseDto.setArticleId(articleId);
 
             List<AnswerResponseDto.Answers> answers = new ArrayList<>();
-            answers.add(createDummyAnswers(timeStamp, answerId1, answerContent1));
-            answers.add(createDummyAnswers(timeStamp, answerId2, answerContent2));
+            answers.add(createDummyAnswers(timeStamp, answerId1, answerContent1, userId1, userName1, commentCount1));
+            answers.add(createDummyAnswers(timeStamp, answerId2, answerContent2, userId2, userName2, commentCount2));
 
             responseDto.setMessageCount(answers.size());
             responseDto.setAnswers(answers);
@@ -235,6 +240,11 @@ class AnswerControllerTest {
                                         fieldWithPath("answers").type(JsonFieldType.ARRAY).description("답변글 목록"),
                                         fieldWithPath("answers[0].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
                                         fieldWithPath("answers[0].content").type(JsonFieldType.STRING).description("답변글 내용"),
+                                        fieldWithPath("answers[0].user").type(JsonFieldType.OBJECT).description("답변글 작성한 유저의 정보"),
+                                        fieldWithPath("answers[0].user.id").type(JsonFieldType.NUMBER).description("유저의 식별자"),
+                                        fieldWithPath("answers[0].user.name").type(JsonFieldType.STRING).description("유저의 이름"),
+                                        fieldWithPath("answers[0].count").type(JsonFieldType.OBJECT).description("댓글 개수 목록"),
+                                        fieldWithPath("answers[0].count.comments").type(JsonFieldType.NUMBER).description("총 댓글 개수"),
                                         fieldWithPath("answers[0].createdAt").type(JsonFieldType.STRING).description("답변글 생성시간"),
                                         fieldWithPath("answers[0].updatedAt").type(JsonFieldType.STRING).description("답변글 수정시간")
                                 )
@@ -242,10 +252,21 @@ class AnswerControllerTest {
                 ));
     }
 
-    private static AnswerResponseDto.Answers createDummyAnswers(LocalDateTime timeStamp, Long answerId, String answerContent) {
+    private static AnswerResponseDto.Answers createDummyAnswers(
+                   LocalDateTime timeStamp, Long answerId, String answerContent, Long userId, String userName, Integer commentCount) {
         AnswerResponseDto.Answers answers = new AnswerResponseDto.Answers();
         answers.setId(answerId);
         answers.setContent(answerContent);
+
+        AnswerResponseDto.Answers.User user = new AnswerResponseDto.Answers.User();
+        user.setId(userId);
+        user.setName(userName);
+        answers.setUser(user);
+
+        AnswerResponseDto.Answers.Count count = new AnswerResponseDto.Answers.Count();
+        count.setComments(commentCount);
+        answers.setCount(count);
+
         answers.setCreatedAt(timeStamp);
         answers.setUpdatedAt(timeStamp);
 

@@ -25,6 +25,7 @@ import java.util.List;
 public class CommentArticleController {
     private static final String COMMENT_ARTICLE_DEFAULT_URL = "/api/article";
     private static final String COMMENT_ARTICLE_DEFAULT_URL_DETAIL = "/comment";
+    private static final String COMMENT_ARTICLE_ALL_MAPPING_URL = "/comments";
 
     private final CommentArticleService commentArticleService;
     private final CommentArticleMapper mapper;
@@ -72,7 +73,7 @@ public class CommentArticleController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping(COMMENT_ARTICLE_DEFAULT_URL + "/{articleId}" + COMMENT_ARTICLE_DEFAULT_URL_DETAIL)
+    @GetMapping(COMMENT_ARTICLE_DEFAULT_URL + "/{articleId}" + COMMENT_ARTICLE_ALL_MAPPING_URL)
     public ResponseEntity getAllCommentArticles(@PathVariable("articleId") @Positive Long articleId,
                                         @RequestParam("page") @Positive Integer page,
                                         @RequestParam("size") @Positive Integer size) {
