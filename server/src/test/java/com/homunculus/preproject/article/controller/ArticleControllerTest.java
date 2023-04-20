@@ -176,6 +176,7 @@ class ArticleControllerTest {
         final String articleMessage = "질문글 조회를 완료했습니다.";
 
         final Long articleId1 = 1L;
+        final Integer evaluationScore = 32500;
         final Integer commentCount1 = 99;              final Integer answerCount1 = 5;
         final String articleTitle1 = "질문글 제목1";     final String articleContent1 = "질문글 내용1";
         final Long userId1 = 1L;        final String userName1 = "유저1";
@@ -188,6 +189,7 @@ class ArticleControllerTest {
         ArticleResponseDto responseDto = new ArticleResponseDto();
         {
             responseDto.setMessage(articleMessage);
+            responseDto.setEvaluationScore(evaluationScore);
 
             List<ArticleResponseDto.Articles> articles = new ArrayList<>();
             articles.add(createDummyArticles(timeStamp,
@@ -243,6 +245,7 @@ class ArticleControllerTest {
                                 List.of(
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지"),
                                         fieldWithPath("messageCount").type(JsonFieldType.NUMBER).description("질문글 개수"),
+                                        fieldWithPath("evaluationScore").type(JsonFieldType.NUMBER).description("추천 점수"),
                                         fieldWithPath("articles").type(JsonFieldType.ARRAY).description("질문글 목록"),
                                         fieldWithPath("articles[0].id").type(JsonFieldType.NUMBER).description("질문글 식별자"),
                                         fieldWithPath("articles[0].title").type(JsonFieldType.STRING).description("질문글 제목"),

@@ -13,6 +13,7 @@ import java.util.List;
 public class ArticleResponseDto {
     private String message;
     private Integer messageCount;
+    private Integer evaluationScore;
 
     private List<Articles> articles;
 

@@ -170,6 +170,7 @@ class AnswerControllerTest {
 
         final String answerMessage = "답변글 조회를 완료했습니다.";
         final Long articleId = 1L;
+        final Integer evaluationScore = 999;
         final Long answerId1 = 1L;      final String answerContent1 = "답변글 내용1";
         final Long userId1 = 1L;        final String userName1 = "유저1";
         final Integer commentCount1 = 5;
@@ -182,6 +183,7 @@ class AnswerControllerTest {
         {
             responseDto.setMessage(answerMessage);
             responseDto.setArticleId(articleId);
+            responseDto.setEvaluationScore(evaluationScore);
 
             List<AnswerResponseDto.Answers> answers = new ArrayList<>();
             answers.add(createDummyAnswers(timeStamp, answerId1, answerContent1, userId1, userName1, commentCount1));
@@ -215,7 +217,8 @@ class AnswerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(responseDto.getMessage()))
                 .andExpect(jsonPath("$.messageCount").value(responseDto.getMessageCount()))
-                .andExpect(jsonPath("$.articleId").value(responseDto.getArticleId()));
+                .andExpect(jsonPath("$.articleId").value(responseDto.getArticleId()))
+                .andExpect(jsonPath("$.evaluationScore").value(responseDto.getEvaluationScore()));
 
         expectAnswers(responseDto.getAnswers(), 0, actions);
         expectAnswers(responseDto.getAnswers(), 1, actions);
@@ -237,6 +240,7 @@ class AnswerControllerTest {
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지"),
                                         fieldWithPath("messageCount").type(JsonFieldType.NUMBER).description("답변글 개수"),
                                         fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
+                                        fieldWithPath("evaluationScore").type(JsonFieldType.NUMBER).description("추천 점수"),
                                         fieldWithPath("answers").type(JsonFieldType.ARRAY).description("답변글 목록"),
                                         fieldWithPath("answers[0].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
                                         fieldWithPath("answers[0].content").type(JsonFieldType.STRING).description("답변글 내용"),

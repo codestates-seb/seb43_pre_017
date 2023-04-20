@@ -14,6 +14,7 @@ public class AnswerResponseDto {
     private String message;
     private Integer messageCount;    // todo : FE 와 상의 필요
     private Long articleId;
+    private Integer evaluationScore;
 
     private List<Answers> answers;
 
