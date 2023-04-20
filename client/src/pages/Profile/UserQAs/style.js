@@ -1,16 +1,21 @@
 import styled from "styled-components";
 
 export const StyledUserQAs = styled.div`
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  height: calc(100% - 200px);
+  /* border: 1px solid rgba(0, 0, 0, 0.2); */
+  height: calc(100% - 300px);
 
-  .d-grid {
-    /* display: grid; */
+  #answer-title,
+  #question-title {
+    font-size: 26px;
   }
-  .d-flex {
-    /* display: flex; */
-  }
-  .1 {
+
+  #answers,
+  #questions {
     border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+  }
+  a {
+    margin: 0 5px 0;
+    color: ${({ theme }) => theme.colors.blue600};
   }
 `;

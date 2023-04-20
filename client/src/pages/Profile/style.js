@@ -12,90 +12,49 @@ const StyledProfile = styled.div`
   box-sizing: border-box;
   /* position: relative; */
 
-  .content {
-    width: 100%;
-    padding: 0;
-  }
-  /* margin */
-  .m16 {
-    margin: 16px;
-  }
-  .ml10 {
-    margin-left: 10px;
-  }
-  .mb10 {
-    margin-bottom: 10px;
-  }
-  .mb16 {
-    margin-bottom: 16px;
-  }
-  .mr10 {
-    margin-right: 10px;
-  }
-
+  /* display */
   .d-flex {
     display: flex;
   }
-  .imgbox {
-    margin: 16px;
+  .d-grid {
+    display: grid;
   }
-  .userImg {
-    border-radius: 3px;
+
+  /* flex-direction */
+  .di-column {
+    flex-direction: column;
   }
-  .wh100 {
-    width: 100%;
-    height: 100%;
+  .di-row {
+    flex-direction: row;
+  }
+  /* align-items */
+  .ai-start {
+    align-items: start;
   }
   .ai-center {
     align-items: center;
   }
-  .username {
-    font-size: 30px;
-  }
-  .info-box1 {
-    border: 1px solid blue;
-    /* position: relative; */
-  }
-  .edit-btn-box {
-    padding: 10px;
-    border: 1px solid red;
+  .ai-end {
     align-items: end;
-    /* flex-grow: 1; */
   }
 
-  .info-box {
-    /* border: 1px solid green; */
-    height: 550px;
-  }
-  .answers {
-    /* border: solid 1px red; */
-    height: 250px;
-    flex-direction: column;
-  }
-  .questions {
-    /* border: solid 1px blue; */
-    height: 250px;
-    flex-direction: column;
+  /* justify-content */
+  .js-center {
+    justify-content: center;
   }
 
+  /* box-size */
   .fg1 {
     flex-grow: 1;
   }
-  .fg2 {
-    flex-grow: 2;
+  .mb10 {
+    margin-bottom: 10px;
   }
-
-  .title {
-    /* border: 1px solid black; */
-    align-items: end;
-    font-size: 30px;
+  .p16 {
+    padding: 16px;
   }
-  .eg {
-    border: 1px solid black;
-    border-radius: 3px;
-    text-align: center;
-    width: 100%;
-    justify-content: center;
+  .pb10 {
+    padding-bottom: 10px;
   }
 `;
 

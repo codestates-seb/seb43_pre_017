@@ -1,45 +1,8 @@
 import styled from "styled-components";
 
 export const StyledUserInfo = styled.div`
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  /* border: 1px solid rgba(0, 0, 0, 0.2); */
   height: calc(100% - 600px);
-
-  /* display */
-  .d-flex {
-    display: flex;
-  }
-
-  /* flex-direction */
-  .di-column {
-    flex-direction: column;
-  }
-  .di-row {
-    flex-direction: row;
-  }
-
-  /* align-items */
-  .ai-start {
-    align-items: start;
-  }
-  .ai-center {
-    align-items: center;
-  }
-  .ai-end {
-    align-items: end;
-  }
-
-  /* justify-content */
-  .js-center {
-    justify-content: center;
-  }
-
-  /* box-size */
-  .fg1 {
-    flex-grow: 1;
-  }
-  .mb10 {
-    margin-bottom: 10px;
-  }
 `;
 
 /** 20230420 - 유저 이미지 - by sinyaenok*/
