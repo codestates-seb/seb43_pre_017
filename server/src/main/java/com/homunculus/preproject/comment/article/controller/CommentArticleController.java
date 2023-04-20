@@ -21,15 +21,15 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class CommentArticleController {
-    private static final String COMMENT_DEFAULT_URL = "/api/article";
-    private static final String COMMENT_DEFAULT_URL_DETAIL = "/comment";
+    private static final String COMMENT_ARTICLE_DEFAULT_URL = "/api/article";
+    private static final String COMMENT_ARTICLE_DEFAULT_URL_DETAIL = "/comment";
 
 
 
     private final CommentArticleService commentArticleService;
     private final CommentArticleMapper mapper;
 
-    @PostMapping(COMMENT_DEFAULT_URL + "/{articleId}" + COMMENT_DEFAULT_URL_DETAIL)
+    @PostMapping(COMMENT_ARTICLE_DEFAULT_URL + "/{articleId}" + COMMENT_ARTICLE_DEFAULT_URL_DETAIL)
     public ResponseEntity postCommentArticle(@Valid @RequestBody CommentArticleDto.Post commentArticleDtoPost,
                                       @PathVariable("articleId") @Positive Long articleId) {
         commentArticleDtoPost.setArticleId(articleId);
@@ -39,7 +39,7 @@ public class CommentArticleController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
-    @PatchMapping(COMMENT_DEFAULT_URL + "/{articleId}" + COMMENT_DEFAULT_URL_DETAIL + "/{commentId}")
+    @PatchMapping(COMMENT_ARTICLE_DEFAULT_URL + "/{articleId}" + COMMENT_ARTICLE_DEFAULT_URL_DETAIL + "/{commentId}")
     public ResponseEntity patchCommentArticle(@Valid @RequestBody CommentArticleDto.Patch commentArticleDtoPatch,
                                        @PathVariable("articleId") @Positive Long articleId,
                                        @PathVariable("commentId") @Positive Long commentId) {
@@ -52,7 +52,7 @@ public class CommentArticleController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping(COMMENT_DEFAULT_URL + "/{articleId}" + COMMENT_DEFAULT_URL_DETAIL)
+    @GetMapping(COMMENT_ARTICLE_DEFAULT_URL + "/{articleId}" + COMMENT_ARTICLE_DEFAULT_URL_DETAIL)
     public ResponseEntity getAllCommentArticles(@PathVariable("articleId") @Positive Long articleId,
                                         @RequestParam("page") @Positive Integer page,
                                         @RequestParam("size") @Positive Integer size) {
@@ -66,7 +66,7 @@ public class CommentArticleController {
     }
 
 
-    @DeleteMapping(COMMENT_DEFAULT_URL + "/{articleId}" + COMMENT_DEFAULT_URL_DETAIL + "/{commentId}")
+    @DeleteMapping(COMMENT_DEFAULT_URL + "/{articleId}" + COMMENT_ARTICLE_DEFAULT_URL_DETAIL + "/{commentId}")
     public ResponseEntity deleteCommentArticle(@PathVariable("articleId") @Positive Long articleId,
                                               @PathVariable("commentId") @Positive Long commentId) {
         commentArticleService.deleteCommentArticle(articleId, commentId);
