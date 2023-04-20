@@ -106,33 +106,33 @@ class CommentArticleControllerTest {
                         )
                 ));
     }
-/*
+
     @Test
-    @DisplayName("CommentAnswer 수정 테스트")
-    void patchCommentAnswer() throws Exception {
+    @DisplayName("CommentArticle 수정 테스트")
+    void patchCommentArticle() throws Exception {
         // given
         final String patchContent = "수정할 댓글 내용";
         final String responseContent = "댓글을 수정했습니다.";
-        final Long answerId = 1L;
+        final Long articleId = 1L;
         final Long commentId = 1L;
 
-        CommentAnswerDto.Patch patch = new CommentAnswerDto.Patch();
+        CommentArticleDto.Patch patch = new CommentArticleDto.Patch();
         patch.setContent(patchContent);
         String content = gson.toJson(patch);
-        patch.setAnswerId(answerId);
+        patch.setAnswerId(articleId);
         patch.setCommentId(commentId);
 
-        given(mapper.commentAnswerPatchDtoToCommentAnswer(any())).willReturn(new CommentAnswer());
+        given(mapper.commentArticlePatchDtoToCommentArticle(any())).willReturn(new CommentArticle());
 
-        CommentAnswerSimpleResponseDto responseDto = new CommentAnswerSimpleResponseDto();
+        CommentArticleSimpleResponseDto responseDto = new CommentArticleSimpleResponseDto();
         responseDto.setMessage(responseContent);
 
-        given(commentAnswerService.updateCommentAnswer(any())).willReturn(new CommentAnswer());
+        given(commentArticleService.updateCommentArticle(any())).willReturn(new CommentArticle());
 
         // when
         ResultActions actions =
                 mockMvc.perform(
-                        patch("/api/answer/{answerId}/comment/{commentId}", answerId, commentId)
+                        patch("/api/article/{articleId}/comment/{commentId}", articleId, commentId)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(content)
@@ -143,11 +143,11 @@ class CommentArticleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(responseDto.getMessage()))
                 .andDo(document(
-                        "patch-commentAnswer",
+                        "patch-commentArticle",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         pathParameters(
-                                parameterWithName("answerId").description("답변글 식별자"),
+                                parameterWithName("articleId").description("질문글 식별자"),
                                 parameterWithName("commentId").description("댓글 식별자")
                         ),
                         requestFields(
@@ -162,7 +162,7 @@ class CommentArticleControllerTest {
                         )
                 ));
     }
-
+/*
     @Test
     @DisplayName("CommentAnswer 조회 테스트")
     void getAllCommentAnswers() throws Exception {
