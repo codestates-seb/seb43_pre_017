@@ -5,14 +5,12 @@ import com.homunculus.preproject.evaluation.answer.dto.EvaluationAnswerResponseD
 import com.homunculus.preproject.evaluation.answer.entity.EvaluationAnswer;
 import com.homunculus.preproject.evaluation.answer.mapper.EvaluationAnswerMapper;
 import com.homunculus.preproject.evaluation.answer.service.EvaluationAnswerService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -21,13 +19,13 @@ import javax.validation.constraints.Positive;
 @RequiredArgsConstructor
 @Validated
 public class EvaluationAnswerController {
-    private static final String EVALUATIONANSWER_DEFAULT_URL = "/api/answer";
-    private static final String EVALUATIONANSWER_DEFAULT_URL_DETAIL = "/evaluation";
+    private static final String EVALUATION_ANSWER_DEFAULT_URL = "/api/answer";
+    private static final String EVALUATION_ANSWER_DEFAULT_URL_DETAIL = "/evaluation";
 
     private final EvaluationAnswerService evaluationAnswerService;
     private final EvaluationAnswerMapper mapper;
 
-    @PostMapping(EVALUATIONANSWER_DEFAULT_URL + "/{answerId}" + EVALUATIONANSWER_DEFAULT_URL_DETAIL)
+    @PostMapping(EVALUATION_ANSWER_DEFAULT_URL + "/{answerId}" + EVALUATION_ANSWER_DEFAULT_URL_DETAIL)
     public ResponseEntity postEvaluationAnswer(@Valid @RequestBody EvaluationAnswerDto.Post evaluationAnswerDtoPost,
                                                @PathVariable("answerId") @Positive Long answerId) {
         evaluationAnswerDtoPost.setAnswerId(answerId);
@@ -37,4 +35,11 @@ public class EvaluationAnswerController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @DeleteMapping(EVALUATION_ANSWER_DEFAULT_URL + "/{answerId}" + EVALUATION_ANSWER_DEFAULT_URL_DETAIL + "/{evaluationId}")
+    public ResponseEntity deleteEvaluationAnswer(@PathVariable("answerId") @Positive Long answerId,
+                                                 @PathVariable("evaluationId") @Positive Long evaluationId) {
+        evaluationAnswerService.deleteEvaluationAnswer(answerId, evaluationId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

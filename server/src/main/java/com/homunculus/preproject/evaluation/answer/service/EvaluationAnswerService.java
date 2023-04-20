@@ -6,4 +6,7 @@ public class EvaluationAnswerService {
     public EvaluationAnswer createEvaluationAnswer(EvaluationAnswer evaluation) {
         return null;
     }
+
+    public void deleteEvaluationAnswer(Long answerId, Long evaluationId) {
+    }
 }
