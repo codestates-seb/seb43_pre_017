@@ -33,7 +33,7 @@ public class AnswerController {
     private final AnswerMapper mapper;
 
 
-    private enum AnswerSingleResponseMessages {
+    private enum AnswerSimpleResponseMessages {
         ANSWER_MESSAGE_POST("답변을 등록했습니다."),
         ANSWER_MESSAGE_PATCH("답변을 수정했습니다."),
         ANSWER_MESSAGE_DELETE("답변을 삭제했습니다.");
@@ -41,14 +41,14 @@ public class AnswerController {
         @Getter
         private final String message;
 
-        AnswerSingleResponseMessages(String message) {
+        AnswerSimpleResponseMessages(String message) {
             this.message = message;
         }
     }
 
-    public static AnswerSimpleResponseDto createAnswerSimpleResponseDto(AnswerSingleResponseMessages answerSingleResponseMessages) {
+    public static AnswerSimpleResponseDto createAnswerSimpleResponseDto(AnswerSimpleResponseMessages answerSimpleResponseMessages) {
         AnswerSimpleResponseDto responseDto = new AnswerSimpleResponseDto();
-        responseDto.setMessage(answerSingleResponseMessages.getMessage());
+        responseDto.setMessage(answerSimpleResponseMessages.getMessage());
 
         return responseDto;
     }
@@ -60,7 +60,7 @@ public class AnswerController {
         Answer answer = mapper.answerPostDtoToAnswer(answerDtoPost);
         answerService.createAnswer(answer);
 
-        AnswerSimpleResponseDto responseDto = createAnswerSimpleResponseDto(AnswerSingleResponseMessages.ANSWER_MESSAGE_POST);
+        AnswerSimpleResponseDto responseDto = createAnswerSimpleResponseDto(AnswerSimpleResponseMessages.ANSWER_MESSAGE_POST);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
@@ -74,7 +74,7 @@ public class AnswerController {
         answerService.updateAnswer(answer);
 
         return new ResponseEntity<>(
-                createAnswerSimpleResponseDto(AnswerSingleResponseMessages.ANSWER_MESSAGE_PATCH),
+                createAnswerSimpleResponseDto(AnswerSimpleResponseMessages.ANSWER_MESSAGE_PATCH),
                 HttpStatus.OK
         );
     }
@@ -102,7 +102,7 @@ public class AnswerController {
         answerService.deleteAnswer(articleId, answerId);
 
         return new ResponseEntity<>(
-                createAnswerSimpleResponseDto(AnswerSingleResponseMessages.ANSWER_MESSAGE_DELETE),
+                createAnswerSimpleResponseDto(AnswerSimpleResponseMessages.ANSWER_MESSAGE_DELETE),
                 HttpStatus.NO_CONTENT
         );
     }
