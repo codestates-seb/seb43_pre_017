@@ -66,7 +66,7 @@ public class CommentArticleController {
     }
 
 
-    @DeleteMapping(COMMENT_DEFAULT_URL + "/{articleId}" + COMMENT_ARTICLE_DEFAULT_URL_DETAIL + "/{commentId}")
+    @DeleteMapping(COMMENT_ARTICLE_DEFAULT_URL + "/{articleId}" + COMMENT_ARTICLE_DEFAULT_URL_DETAIL + "/{commentId}")
     public ResponseEntity deleteCommentArticle(@PathVariable("articleId") @Positive Long articleId,
                                               @PathVariable("commentId") @Positive Long commentId) {
         commentArticleService.deleteCommentArticle(articleId, commentId);
