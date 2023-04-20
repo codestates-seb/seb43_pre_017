@@ -7,7 +7,83 @@
 
 Homunculus <https://github.com/codestates-seb/seb43_pre_017>
 
-v1.0.0, 2023.04.19
+v1.0.0, 2023.04.20
+
+***
+== ArticleController
+=== 질문 등록
+.curl-request
+include::{snippets}/post-article/curl-request.adoc[]
+
+.http-request
+include::{snippets}/post-article/http-request.adoc[]
+
+.request-fields
+include::{snippets}/post-article/request-fields.adoc[]
+
+.http-response
+include::{snippets}/post-article/http-response.adoc[]
+
+
+***
+=== 질문 수정
+.curl-request
+include::{snippets}/patch-article/curl-request.adoc[]
+
+.path-parameters
+include::{snippets}/patch-article/path-parameters.adoc[]
+
+.http-request
+include::{snippets}/patch-article/http-request.adoc[]
+
+.request-fields
+include::{snippets}/patch-article/request-fields.adoc[]
+
+.http-response
+include::{snippets}/patch-article/http-response.adoc[]
+
+
+***
+=== 질문 삭제
+.curl-request
+include::{snippets}/delete-article/curl-request.adoc[]
+
+.path-parameters
+include::{snippets}/delete-article/path-parameters.adoc[]
+
+.http-request
+include::{snippets}/delete-article/http-request.adoc[]
+
+.http-response
+include::{snippets}/delete-article/http-response.adoc[]
+
+
+***
+=== 질문 조회
+.curl-request
+include::{snippets}/getAll-articles/curl-request.adoc[]
+
+.http-request
+include::{snippets}/getAll-articles/http-request.adoc[]
+
+.http-response
+include::{snippets}/getAll-articles/http-response.adoc[]
+
+
+***
+=== 질문 상세 조회
+.curl-request
+include::{snippets}/get-article/curl-request.adoc[]
+
+.path-parameters
+include::{snippets}/get-article/path-parameters.adoc[]
+
+.http-request
+include::{snippets}/get-article/http-request.adoc[]
+
+.http-response
+include::{snippets}/get-article/http-response.adoc[]
+
 
 ***
 == AnswerController

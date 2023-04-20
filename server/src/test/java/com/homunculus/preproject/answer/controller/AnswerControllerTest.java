@@ -176,8 +176,8 @@ class AnswerControllerTest {
 
         final String answerMessage = "답변글 조회를 완료했습니다.";
         final Long articleId = 1L;
-        final Long answerId1 = 1L;          final String answerContent1 = "무언가1";
-        final Long answerId2 = 2L;          final String answerContent2 = "무언가2";
+        final Long answerId1 = 1L;          final String answerContent1 = "답변글 내용1";
+        final Long answerId2 = 2L;          final String answerContent2 = "답변글 내용2";
 
         AnswerResponseDto responseDto = new AnswerResponseDto();
         {
@@ -238,7 +238,7 @@ class AnswerControllerTest {
                         responseFields(
                                 List.of(
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지"),
-                                        fieldWithPath("messageCount").type(JsonFieldType.NUMBER).description("답변글 갯수"),
+                                        fieldWithPath("messageCount").type(JsonFieldType.NUMBER).description("답변글 개수"),
                                         fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
                                         fieldWithPath("answers").type(JsonFieldType.ARRAY).description("답변글 묶음"),
                                         fieldWithPath("answers[0].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
