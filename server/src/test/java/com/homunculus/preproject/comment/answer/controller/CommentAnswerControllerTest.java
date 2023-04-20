@@ -58,7 +58,7 @@ class CommentAnswerControllerTest {
 
     @Test
     @DisplayName("CommentAnswer 등록 테스트")
-    void postAnswerTest() throws Exception {
+    void postCommentAnswerTest() throws Exception {
         // given
         final String postContent = "등록할 댓글 내용";
         final String responseContent = "댓글을 등록했습니다.";
