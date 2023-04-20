@@ -42,7 +42,7 @@ public class CommentAnswerController {
         }
     }
 
-    public static CommentAnswerSimpleResponseDto createAnswerSimpleResponseDto(
+    public static CommentAnswerSimpleResponseDto createCommentAnswerSimpleResponseDto(
                   CommentAnswerController.CommentAnswerSimpleResponseMessages commentAnswerSimpleResponseMessages) {
         CommentAnswerSimpleResponseDto responseDto = new CommentAnswerSimpleResponseDto();
         responseDto.setMessage(commentAnswerSimpleResponseMessages.getMessage());
@@ -57,7 +57,7 @@ public class CommentAnswerController {
         commentAnswerDtoPost.setAnswerId(answerId);
         commentAnswerService.createCommentAnswer(mapper.commentAnswerPostDtoToCommentAnswer(commentAnswerDtoPost));
 
-        CommentAnswerSimpleResponseDto responseDto = createAnswerSimpleResponseDto(CommentAnswerSimpleResponseMessages.COMMENT_ANSWER_MESSAGE_POST);
+        CommentAnswerSimpleResponseDto responseDto = createCommentAnswerSimpleResponseDto(CommentAnswerSimpleResponseMessages.COMMENT_ANSWER_MESSAGE_POST);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
@@ -70,7 +70,7 @@ public class CommentAnswerController {
         CommentAnswer commentAnswer = mapper.commentAnswerPatchDtoToCommentAnswer(commentAnswerDtoPatch);
         commentAnswerService.updateCommentAnswer(commentAnswer);
 
-        CommentAnswerSimpleResponseDto responseDto = createAnswerSimpleResponseDto(CommentAnswerSimpleResponseMessages.COMMENT_ANSWER_MESSAGE_PATCH);
+        CommentAnswerSimpleResponseDto responseDto = createCommentAnswerSimpleResponseDto(CommentAnswerSimpleResponseMessages.COMMENT_ANSWER_MESSAGE_PATCH);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
@@ -92,7 +92,7 @@ public class CommentAnswerController {
                                               @PathVariable("commentId") @Positive Long commentId) {
         commentAnswerService.deleteCommentAnswer(answerId, commentId);
 
-        CommentAnswerSimpleResponseDto responseDto = createAnswerSimpleResponseDto(CommentAnswerSimpleResponseMessages.COMMENT_ANSWER_MESSAGE_DELETE);
+        CommentAnswerSimpleResponseDto responseDto = createCommentAnswerSimpleResponseDto(CommentAnswerSimpleResponseMessages.COMMENT_ANSWER_MESSAGE_DELETE);
         return new ResponseEntity<>(responseDto, HttpStatus.NO_CONTENT);
     }
 }
