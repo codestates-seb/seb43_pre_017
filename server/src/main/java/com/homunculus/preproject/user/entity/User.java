@@ -1,22 +1,17 @@
 package com.homunculus.preproject.user.entity;
 
-import com.homunculus.preproject.answer.entity.Answer;
-import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.audit.Auditable;
-import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
-import com.homunculus.preproject.evaluation.answer.entity.EvaluationAnswer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "USERS")
 public class User extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,18 +29,8 @@ public class User extends Auditable {
     @Column(length = 13, nullable = false, unique = true)
     private String phone;
 
-    @OneToMany(mappedBy = "user")
-    private List<Article> articles = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<Answer> answers = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<CommentAnswer> commentAnswers = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<EvaluationAnswer> evaluationAnswers = new ArrayList<>();
-
+    @OneToOne(mappedBy = "user")
+    private UserDetails userDetails;
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
