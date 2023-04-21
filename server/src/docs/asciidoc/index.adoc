@@ -66,6 +66,9 @@ include::{snippets}/getAll-articles/curl-request.adoc[]
 .http-request
 include::{snippets}/getAll-articles/http-request.adoc[]
 
+.response-fields
+include::{snippets}/getAll-articles/response-fields.adoc[]
+
 .http-response
 include::{snippets}/getAll-articles/http-response.adoc[]
 
