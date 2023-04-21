@@ -5,10 +5,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EvaluationArticleService {
-    public EvaluationArticle createEvaluationArticle(EvaluationArticle evaluation) {
+    public EvaluationArticle createEvaluationArticle(EvaluationArticle evaluationArticle) {
         return null;
     }
 
-    public void deleteEvaluationArticle(Long articleId, Long evaluationId) {
-    }
+    public EvaluationArticle deleteEvaluationArticle(Long articleId, Long evaluationId) { return null; }
 }

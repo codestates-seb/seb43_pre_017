@@ -16,9 +16,7 @@ public class CommentAnswerService {
         return null;
     }
 
-    public void deleteCommentAnswer(Long answerId, Long commentId) {
-    }
+    public CommentAnswer deleteCommentAnswer(Long answerId, Long commentId) { return null; }
 
-    public Page<CommentAnswer> findCommentAnswers(Long answerId, Integer page, Integer size) {return null;
-    }
+    public Page<CommentAnswer> findCommentAnswers(Long answerId, Integer page, Integer size) {return null; }
 }
