@@ -170,7 +170,7 @@ class ArticleControllerTest {
     @DisplayName("Article 조회 테스트")
     void getAllArticles() throws Exception {
         // given
-        final LocalDateTime timeStamp = LocalDateTime.of(2023,4,19,21,0,0);
+        final LocalDateTime timeStamp = LocalDateTime.now();
 
         final String articleMessage = "질문글 조회를 완료했습니다.";
 
@@ -251,9 +251,9 @@ class ArticleControllerTest {
                                         fieldWithPath("articles[0].content").type(JsonFieldType.STRING).description("질문글 내용"),
                                         fieldWithPath("articles[0].createdAt").type(JsonFieldType.STRING).description("질문글 생성시간"),
                                         fieldWithPath("articles[0].updatedAt").type(JsonFieldType.STRING).description("질문글 수정시간"),
-                                        fieldWithPath("articles[0].user").type(JsonFieldType.OBJECT).description("질문글 등록한 유저의 정보"),
-                                        fieldWithPath("articles[0].user.id").type(JsonFieldType.NUMBER).description("유저의 식별번호"),
-                                        fieldWithPath("articles[0].user.name").type(JsonFieldType.STRING).description("유저의 이름"),
+                                        fieldWithPath("articles[0].member").type(JsonFieldType.OBJECT).description("질문글 등록한 유저의 정보"),
+                                        fieldWithPath("articles[0].member.id").type(JsonFieldType.NUMBER).description("유저의 식별번호"),
+                                        fieldWithPath("articles[0].member.name").type(JsonFieldType.STRING).description("유저의 이름"),
                                         fieldWithPath("articles[0].count").type(JsonFieldType.OBJECT).description("질문에 대한 개수 목록"),
                                         fieldWithPath("articles[0].count.comments").type(JsonFieldType.NUMBER).description("댓글 개수"),
                                         fieldWithPath("articles[0].count.answers").type(JsonFieldType.NUMBER).description("답변글 개수")
@@ -291,8 +291,8 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.articles[" + index + "].id").value(articles.get(index).getId()))
                 .andExpect(jsonPath("$.articles[" + index + "].title").value(articles.get(index).getTitle()))
                 .andExpect(jsonPath("$.articles[" + index + "].content").value(articles.get(index).getContent()))
-                .andExpect(jsonPath("$.articles[" + index + "].user.id").value(articles.get(index).getMember().getId()))
-                .andExpect(jsonPath("$.articles[" + index + "].user.name").value(articles.get(index).getMember().getName()))
+                .andExpect(jsonPath("$.articles[" + index + "].member.id").value(articles.get(index).getMember().getId()))
+                .andExpect(jsonPath("$.articles[" + index + "].member.name").value(articles.get(index).getMember().getName()))
                 .andExpect(jsonPath("$.articles[" + index + "].count.comments").value(articles.get(index).getCount().getComments()))
                 .andExpect(jsonPath("$.articles[" + index + "].count.answers").value(articles.get(index).getCount().getAnswers()));
     }
@@ -301,7 +301,7 @@ class ArticleControllerTest {
     @DisplayName("Article 상세 조회 테스트")
     void getArticle() throws Exception {
         // given
-        final LocalDateTime timeStamp = LocalDateTime.of(2023,4,19,21,0,0);
+        final LocalDateTime timeStamp = LocalDateTime.now();
 
 
         final String articleMessage = "질문글 조회를 완료했습니다.";
@@ -399,8 +399,8 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.article.id").value(responseDto.getArticle().getId()))
                 .andExpect(jsonPath("$.article.title").value(responseDto.getArticle().getTitle()))
                 .andExpect(jsonPath("$.article.content").value(responseDto.getArticle().getContent()))
-                .andExpect(jsonPath("$.user.id").value(responseDto.getMember().getId()))
-                .andExpect(jsonPath("$.user.name").value(responseDto.getMember().getName()));
+                .andExpect(jsonPath("$.member.id").value(responseDto.getMember().getId()))
+                .andExpect(jsonPath("$.member.name").value(responseDto.getMember().getName()));
 
         expectComments(responseDto.getComments(), 0, actions);
         expectComments(responseDto.getComments(), 1, actions);
@@ -421,9 +421,9 @@ class ArticleControllerTest {
                                         fieldWithPath("article.content").type(JsonFieldType.STRING).description("질문글 내용"),
                                         fieldWithPath("article.createdAt").type(JsonFieldType.STRING).description("질문글 생성시간"),
                                         fieldWithPath("article.updatedAt").type(JsonFieldType.STRING).description("질문글 수정시간"),
-                                        fieldWithPath("user").type(JsonFieldType.OBJECT).description("질문글 등록 유저 정보"),
-                                        fieldWithPath("user.id").type(JsonFieldType.NUMBER).description("유저 식별자"),
-                                        fieldWithPath("user.name").type(JsonFieldType.STRING).description("유저 이름"),
+                                        fieldWithPath("member").type(JsonFieldType.OBJECT).description("질문글 등록 유저 정보"),
+                                        fieldWithPath("member.id").type(JsonFieldType.NUMBER).description("유저 식별자"),
+                                        fieldWithPath("member.name").type(JsonFieldType.STRING).description("유저 이름"),
                                         fieldWithPath("comments").type(JsonFieldType.ARRAY).description("질문에 대한 답변글 목록"),
                                         fieldWithPath("comments[0].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
                                         fieldWithPath("comments[0].content").type(JsonFieldType.STRING).description("답변글 내용"),
