@@ -208,7 +208,7 @@ class AnswerControllerTest {
         given(answerService.findAnswers(anyLong(), anyInt(), anyInt())).willReturn(answers);
 
         // when
-        given(mapper.answersToAnswerResponseDto(any())).willReturn(responseDto);
+        given(mapper.answersToAnswerResponseDto(anyLong(), any())).willReturn(responseDto);
 
         String page = "1";
         String size = "10";
