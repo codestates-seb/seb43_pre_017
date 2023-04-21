@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ArticleSimpleResponseDto {
-    private Long id;
+    private Long articleId;
     private String message;
 }

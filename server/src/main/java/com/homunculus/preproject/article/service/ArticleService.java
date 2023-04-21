@@ -50,11 +50,12 @@ public class ArticleService {
         return articlePage;
     }
 
-    public void deleteArticle(Long articleId) {
+    public Article deleteArticle(Long articleId) {
         Article findArticle = findVerifiedArticle(articleId);
 
         // 특정 질문 정보 삭제
         articleRepository.delete(findArticle);
+        return findArticle;
     }
 
     // 이미 등록된 질문인지 검증

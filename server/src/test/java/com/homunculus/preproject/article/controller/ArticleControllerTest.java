@@ -66,6 +66,7 @@ class ArticleControllerTest {
         final String postTitle = "등록할 질문글 제목";
         final String postContent = "등록할 질문글 내용";
         final String responseContent = "질문을 등록했습니다.";
+        final Long articleId = 1L;
 
         ArticleDto.Post post = new ArticleDto.Post();
         post.setTitle(postTitle);
@@ -75,11 +76,12 @@ class ArticleControllerTest {
 
         ArticleSimpleResponseDto responseDto = new ArticleSimpleResponseDto();
         responseDto.setMessage(responseContent);
+        responseDto.setArticleId(articleId);
+        given(mapper.articleToArticleSimpleResponseDto(any(), any())).willReturn(responseDto);
 
         given(articleService.createArticle(any())).willReturn(new Article());
 
         // when
-
         ResultActions actions =
                 mockMvc.perform(
                         post("/api/article")
@@ -105,6 +107,7 @@ class ArticleControllerTest {
                         ),
                         responseFields(
                                 List.of(
+                                        fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
                                 )
                         )
@@ -129,6 +132,8 @@ class ArticleControllerTest {
 
         ArticleSimpleResponseDto responseDto = new ArticleSimpleResponseDto();
         responseDto.setMessage(responseContent);
+        responseDto.setArticleId(articleId);
+        given(mapper.articleToArticleSimpleResponseDto(any(), any())).willReturn(responseDto);
 
         given(articleService.updateArticle(any())).willReturn(new Article());
 
@@ -160,6 +165,7 @@ class ArticleControllerTest {
                         ),
                         responseFields(
                                 List.of(
+                                        fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
                                 )
                         )
@@ -398,8 +404,10 @@ class ArticleControllerTest {
 
         ArticleSimpleResponseDto responseDto = new ArticleSimpleResponseDto();
         responseDto.setMessage(responseContent);
+        responseDto.setArticleId(articleId);
+        given(mapper.articleToArticleSimpleResponseDto(any(), any())).willReturn(responseDto);
 
-        doNothing().when(articleService).deleteArticle(anyLong());
+        given(articleService.deleteArticle(anyLong())).willReturn(new Article());
 
         // when
         ResultActions actions =
@@ -420,6 +428,7 @@ class ArticleControllerTest {
                         ),
                         responseFields(
                                 List.of(
+                                        fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
                                 )
                         )
