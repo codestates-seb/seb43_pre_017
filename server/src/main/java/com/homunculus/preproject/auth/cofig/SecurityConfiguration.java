@@ -1,25 +1,43 @@
 package com.homunculus.preproject.auth.cofig;
 
-import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Configuration;
+import com.homunculus.preproject.auth.filter.JwtAuthenticationFilter;
+import com.homunculus.preproject.auth.filter.JwtVerificationFilter;
+import com.homunculus.preproject.auth.handler.MemberAccessDeniedHandler;
+import com.homunculus.preproject.auth.handler.MemberAuthenticationEntryPoint;
+import com.homunculus.preproject.auth.handler.MemberAuthenticationFailureHandler;
+import com.homunculus.preproject.auth.handler.MemberAuthenticationSuccessHandler;
+import com.homunculus.preproject.auth.jwt.JwtTokenizer;
+import com.homunculus.preproject.auth.utils.CustomAuthorityUtils;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.security.core.userdetails.User;
+
 import java.util.Arrays;
 
-@AllArgsConstructor
 @Configuration
+@EnableWebSecurity
 public class SecurityConfiguration {
+    private final JwtTokenizer jwtTokenizer;
+    private final CustomAuthorityUtils authorityUtils;
+
+    public SecurityConfiguration(JwtTokenizer jwtTokenizer,
+                                 CustomAuthorityUtils authorityUtils) {
+        this.jwtTokenizer = jwtTokenizer;
+        this.authorityUtils = authorityUtils;
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -27,40 +45,21 @@ public class SecurityConfiguration {
                 .and()
                 .csrf().disable()
                 .cors(Customizer.withDefaults())
-                .formLogin()
-//                .loginPage("/api/login")
-//                .loginProcessingUrl("/process_login")
-//                .failureUrl("/api/login?error")
-//                .and()
-//                .logout()
-//                .logoutUrl("/api/logout")
-//                .logoutSuccessUrl("/")
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .exceptionHandling().accessDeniedPage("/api/login/access-denied")
+                .formLogin().disable()
+                .httpBasic().disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(new MemberAuthenticationEntryPoint())
+                .accessDeniedHandler(new MemberAccessDeniedHandler())
                 .and()
-//                .httpBasic().disable()
+                .apply(new CustomFilterConfigurer())
+                .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        // 회원 접근 제어
-                        .antMatchers(HttpMethod.POST, "/api/signup").permitAll()
-                        .antMatchers(HttpMethod.PATCH, "/api/member/*").hasRole("USER")
-                        .antMatchers(HttpMethod.GET, "/api/member/*").hasRole("USER")
-                        .antMatchers(HttpMethod.DELETE, "/api/member/*").hasRole("USER")
-                        // 질문 접근 제어
-                        .antMatchers(HttpMethod.POST, "/api/article").hasRole("USER")
-                        .antMatchers(HttpMethod.PATCH, "/api/article/*").hasRole("USER")
-                        .antMatchers(HttpMethod.GET, "/api/article/*").permitAll()
-                        .antMatchers(HttpMethod.GET, "/api/articles/*").permitAll()
-                        .antMatchers(HttpMethod.DELETE, "/api/article/*").hasRole("USER")
-                        .antMatchers(HttpMethod.DELETE, "/api/articles").hasRole("USER")
-                        // 답변 접근 제어
-                        .antMatchers(HttpMethod.POST, "/api/article/*/answer").hasRole("USER")
-                        .antMatchers(HttpMethod.PATCH, "/api/article/*/answer/*").hasRole("USER")
-                        .antMatchers(HttpMethod.GET, "/api/article/*/answers/*").permitAll()
-                        .antMatchers(HttpMethod.DELETE, "/api/article/*/answer/*").hasRole("USER")
-                        // 로그아웃 접근 제어
-                        .antMatchers(HttpMethod.POST, "/api/logout").hasRole("USER")
-
-                        .anyRequest().permitAll()
+                        .antMatchers(HttpMethod.OPTIONS).permitAll()
+                        .antMatchers(HttpMethod.POST,"/api/signup", "/api/login").permitAll()
+                        .antMatchers(HttpMethod.GET,"/api/articles", "/api/article/*/answers").permitAll()
+                        .anyRequest().hasRole("USER")
                 );
 
         return http.build();
@@ -74,11 +73,14 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+
         configuration.setAllowCredentials(true);
-        configuration.addAllowedOriginPattern("http://localhost:3000");
+        configuration.addAllowedOriginPattern("*");
+//        configuration.addAllowedOriginPattern("http://localhost:3000");
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setExposedHeaders(Arrays.asList("*"));
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -86,24 +88,23 @@ public class SecurityConfiguration {
         return source;
     }
 
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        UserDetails user =
-                User.withDefaultPasswordEncoder()
-                        .username("user@gmail.com")
-                        .password("1111")
-                        .roles("USER")
-                        .build();
 
+    public class CustomFilterConfigurer extends AbstractHttpConfigurer<CustomFilterConfigurer, HttpSecurity> {
+        @Override
+        public void configure(HttpSecurity builder) throws Exception {
+            AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
-        UserDetails admin =
-                User.withDefaultPasswordEncoder()
-                        .username("admin@gmail.com")
-                        .password("2222")
-                        .roles("ADMIN")
-                        .build();
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer);
 
-        return new InMemoryUserDetailsManager(user, admin);
+            jwtAuthenticationFilter.setFilterProcessesUrl("/api/login");
+            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
+            jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils);
+
+            builder
+                    .addFilter(jwtAuthenticationFilter)
+                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class);
+        }
     }
 }
