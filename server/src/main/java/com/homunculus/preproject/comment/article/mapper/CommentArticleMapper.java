@@ -10,16 +10,37 @@ import com.homunculus.preproject.comment.article.dto.CommentArticleSimpleRespons
 import com.homunculus.preproject.comment.article.entity.CommentArticle;
 import org.mapstruct.Mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CommentArticleMapper {
     CommentArticle commentArticlePostDtoToCommentArticle(CommentArticleDto.Post commentDtoPost);
     CommentArticle commentArticlePatchDtoToCommentArticle(CommentArticleDto.Patch commentDtoPatch);
-    default CommentArticleResponseDto commentArticlesToCommentArticleResponseDto(List<CommentArticle> commentArticles) {
+    default CommentArticleResponseDto commentArticlesToCommentArticleResponseDto(Long articleId, List<CommentArticle> commentArticles) {
         CommentArticleResponseDto result = new CommentArticleResponseDto();
         result.setMessage("댓글들 조회를 완료했습니다.");
         result.setMessageCount(commentArticles.size());
+        result.setArticleId(articleId);
+
+        List<CommentArticleResponseDto.Comments> resultComments = new ArrayList<>();
+        {
+            for(CommentArticle src : commentArticles) {
+                CommentArticleResponseDto.Comments comment = new CommentArticleResponseDto.Comments();
+                comment.setId(src.getCommentArticleId());
+                comment.setContent(src.getContent());
+
+                CommentArticleResponseDto.Comments.Member member = new CommentArticleResponseDto.Comments.Member();
+                member.setId(src.getMember().getMemberId());
+                member.setName(src.getMember().getName());
+                comment.setMember(member);
+
+                comment.setCreatedAt(src.getCreatedAt());
+                comment.setUpdatedAt(src.getUpdatedAt());
+                resultComments.add(comment);
+            }
+        }
+        result.setComments(resultComments);
 
         return result;
     }
@@ -29,7 +50,7 @@ public interface CommentArticleMapper {
         CommentArticleSimpleResponseDto responseDto = new CommentArticleSimpleResponseDto();
         responseDto.setMessage(commentArticleSimpleResponseMessages.getMessage());
         responseDto.setArticleId(commentArticle.getArticle().getArticleId());
-        responseDto.setCommentId(commentArticle.getCommentId());
+        responseDto.setCommentId(commentArticle.getCommentArticleId());
 
         return responseDto;
     }

@@ -65,8 +65,9 @@ public class CommentArticleController {
         Page<CommentArticle> pageCommentArticles = commentArticleService.findCommentArticles(articleId, page - 1, size);
         List<CommentArticle> commentArticles = pageCommentArticles.getContent();
 
-        CommentArticleResponseDto responseDto = mapper.commentArticlesToCommentArticleResponseDto(commentArticles);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return new ResponseEntity<>(
+                mapper.commentArticlesToCommentArticleResponseDto(articleId, commentArticles),
+                HttpStatus.OK);
     }
 
 
