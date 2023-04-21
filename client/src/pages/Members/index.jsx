@@ -5,6 +5,7 @@ import { StyledSearchFrom } from "../../Layout/Header/style";
 import SortTeb from "./SortTeb";
 import MemberBrowser from "./MemberBrowser";
 
+/** 20230421 - 유저 목록 페이지 - by sinyaenok */
 const Members = () => {
   return (
     <StyledMembers>
