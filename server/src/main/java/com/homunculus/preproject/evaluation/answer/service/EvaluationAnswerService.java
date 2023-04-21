@@ -5,10 +5,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EvaluationAnswerService {
-    public EvaluationAnswer createEvaluationAnswer(EvaluationAnswer evaluation) {
+    public EvaluationAnswer createEvaluationAnswer(EvaluationAnswer evaluationAnswer) {
         return null;
     }
 
-    public void deleteEvaluationAnswer(Long answerId, Long evaluationId) {
-    }
+    public EvaluationAnswer deleteEvaluationAnswer(Long answerId, Long evaluationId) { return null; }
 }

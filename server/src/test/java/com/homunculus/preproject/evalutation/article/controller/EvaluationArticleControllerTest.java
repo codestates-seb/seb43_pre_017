@@ -59,6 +59,7 @@ class EvaluationArticleControllerTest {
         // given
         final String responseContent = "평가를 등록했습니다.";
         final Long articleId = 1L;
+        final Long evaluationId = 1L;
         final String score = "+1";
 
         EvaluationArticleDto.Post post = new EvaluationArticleDto.Post();
@@ -69,6 +70,9 @@ class EvaluationArticleControllerTest {
 
         EvaluationArticleSimpleResponseDto responseDto = new EvaluationArticleSimpleResponseDto();
         responseDto.setMessage(responseContent);
+        responseDto.setArticleId(articleId);
+        responseDto.setEvaluationId(evaluationId);
+        given(mapper.evaluationArticleToEvaluationArticleSimpleResponseDto(any(), any())).willReturn(responseDto);
 
         given(evaluationArticleService.createEvaluationArticle(any())).willReturn(new EvaluationArticle());
 
@@ -100,6 +104,8 @@ class EvaluationArticleControllerTest {
                         ),
                         responseFields(
                                 List.of(
+                                        fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
+                                        fieldWithPath("evaluationId").type(JsonFieldType.NUMBER).description("질문글 추천 식별자"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
                                 )
                         )
@@ -116,8 +122,11 @@ class EvaluationArticleControllerTest {
 
         EvaluationArticleSimpleResponseDto responseDto = new EvaluationArticleSimpleResponseDto();
         responseDto.setMessage(responseContent);
+        responseDto.setArticleId(articleId);
+        responseDto.setEvaluationId(evaluationId);
+        given(mapper.evaluationArticleToEvaluationArticleSimpleResponseDto(any(), any())).willReturn(responseDto);
 
-        doNothing().when(evaluationArticleService).deleteEvaluationArticle(anyLong(), anyLong());
+        given(evaluationArticleService.deleteEvaluationArticle(anyLong(), anyLong())).willReturn(new EvaluationArticle());
 
         // when
         ResultActions actions =
@@ -139,6 +148,8 @@ class EvaluationArticleControllerTest {
                         ),
                         responseFields(
                                 List.of(
+                                        fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
+                                        fieldWithPath("evaluationId").type(JsonFieldType.NUMBER).description("질문글 추천 식별자"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
                                 )
                         )

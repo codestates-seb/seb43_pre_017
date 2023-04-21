@@ -8,5 +8,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class CommentArticleSimpleResponseDto {
+    private Long articleId;
+    private Long commentId;
     private String message;
 }

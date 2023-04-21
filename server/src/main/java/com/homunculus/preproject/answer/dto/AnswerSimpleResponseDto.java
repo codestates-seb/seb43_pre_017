@@ -8,5 +8,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class AnswerSimpleResponseDto {
+    private Long articleId;
+    private Long answerId;
     private String message;
 }

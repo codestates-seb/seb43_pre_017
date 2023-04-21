@@ -1,12 +1,10 @@
 package com.homunculus.preproject.answer.controller;
 
 import com.homunculus.preproject.answer.dto.AnswerDto;
-import com.homunculus.preproject.answer.dto.AnswerResponseDto;
-import com.homunculus.preproject.answer.dto.AnswerSimpleResponseDto;
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.answer.mapper.AnswerMapper;
+import com.homunculus.preproject.answer.mapper.AnswerSimpleResponseMessages;
 import com.homunculus.preproject.answer.service.AnswerService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -33,35 +31,16 @@ public class AnswerController {
     private final AnswerMapper mapper;
 
 
-    private enum AnswerSimpleResponseMessages {
-        ANSWER_MESSAGE_POST("답변을 등록했습니다."),
-        ANSWER_MESSAGE_PATCH("답변을 수정했습니다."),
-        ANSWER_MESSAGE_DELETE("답변을 삭제했습니다.");
-
-        @Getter
-        private final String message;
-
-        AnswerSimpleResponseMessages(String message) {
-            this.message = message;
-        }
-    }
-
-    public static AnswerSimpleResponseDto createAnswerSimpleResponseDto(AnswerSimpleResponseMessages answerSimpleResponseMessages) {
-        AnswerSimpleResponseDto responseDto = new AnswerSimpleResponseDto();
-        responseDto.setMessage(answerSimpleResponseMessages.getMessage());
-
-        return responseDto;
-    }
-
     @PostMapping(ANSWER_DEFAULT_URL + "/{articleId}" + ANSWER_DEFAULT_URL_DETAIL)
     public ResponseEntity postAnswer (@PathVariable("articleId") @Positive Long articleId,
                                       @Valid @RequestBody AnswerDto.Post answerDtoPost) {
         answerDtoPost.setArticleId(articleId);
         Answer answer = mapper.answerPostDtoToAnswer(answerDtoPost);
-        answerService.createAnswer(answer);
+        Answer createdAnswer = answerService.createAnswer(answer);
 
-        AnswerSimpleResponseDto responseDto = createAnswerSimpleResponseDto(AnswerSimpleResponseMessages.ANSWER_MESSAGE_POST);
-        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                mapper.answerToAnswerSimpleResponseDto(createdAnswer, AnswerSimpleResponseMessages.ANSWER_MESSAGE_POST),
+                HttpStatus.CREATED);
     }
 
     @PatchMapping(ANSWER_DEFAULT_URL + "/{articleId}" + ANSWER_DEFAULT_URL_DETAIL + "/{answerId}")
@@ -71,12 +50,11 @@ public class AnswerController {
         answerDtoPatch.setArticleId(articleId);
         answerDtoPatch.setAnswerId(answerId);
         Answer answer = mapper.answerPatchDtoToAnswer(answerDtoPatch);
-        answerService.updateAnswer(answer);
+        Answer updatedAnswer = answerService.updateAnswer(answer);
 
         return new ResponseEntity<>(
-                createAnswerSimpleResponseDto(AnswerSimpleResponseMessages.ANSWER_MESSAGE_PATCH),
-                HttpStatus.OK
-        );
+                mapper.answerToAnswerSimpleResponseDto(updatedAnswer, AnswerSimpleResponseMessages.ANSWER_MESSAGE_PATCH),
+                HttpStatus.OK);
     }
 
     @GetMapping(ANSWER_DEFAULT_URL + "/{articleId}" + ANSWER_ALL_MAPPING_URL_DETAIL)
@@ -86,12 +64,8 @@ public class AnswerController {
         Page<Answer> pageAnswers = answerService.findAnswers(articleId, page - 1, size);
         List<Answer> answers = pageAnswers.getContent();
 
-        AnswerResponseDto responseDto = mapper.answersToAnswerResponseDto(answers);
-        responseDto.setMessage("답변글 조회를 완료했습니다.");
-        responseDto.setMessageCount(responseDto.getAnswers().size());
-
         return new ResponseEntity<>(
-                responseDto,
+                mapper.answersToAnswerResponseDto(answers),
                 HttpStatus.OK);
     }
 
@@ -99,10 +73,10 @@ public class AnswerController {
     public ResponseEntity deleteAnswer(@PathVariable("articleId") @Positive Long articleId,
                                        @PathVariable("answerId") @Positive Long answerId) {
 
-        answerService.deleteAnswer(articleId, answerId);
+        Answer deletedAnswer = answerService.deleteAnswer(articleId, answerId);
 
         return new ResponseEntity<>(
-                createAnswerSimpleResponseDto(AnswerSimpleResponseMessages.ANSWER_MESSAGE_DELETE),
+                mapper.answerToAnswerSimpleResponseDto(deletedAnswer, AnswerSimpleResponseMessages.ANSWER_MESSAGE_DELETE),
                 HttpStatus.NO_CONTENT
         );
     }
