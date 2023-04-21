@@ -8,6 +8,9 @@ import com.homunculus.preproject.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -23,17 +26,14 @@ public class ArticleService {
     }
 
     public Article updateArticle(Article article) {
-        // 업데이트를 하기 위해서 DB에 해당 정보가 있는지 확인(수정이니까 해당정보가 있는지 알아야함)
-        // 만일 없다면 예외처리 있으면 수정 내용반영
         Article findArticle = findVerifiedArticle(article.getArticleId());
 
-        // title , content 내용 업데이트
         Optional.ofNullable(article.getTitle())
                 .ifPresent(title -> findArticle.setTitle(title));
         Optional.ofNullable(article.getContent())
                 .ifPresent(content -> findArticle.setContent(content));
 
-        // Article 정보 업데이트
+
         return articleRepository.save(findArticle);
     }
 
@@ -43,13 +43,21 @@ public class ArticleService {
 
     public Page<Article> findArticles(int page, int size) {
 
-        return null;
+        Pageable pageable = PageRequest.of(page, size, Sort.by("articleId").descending());
+
+        Page<Article> articlePage = articleRepository.findAll(pageable);
+
+        return articlePage;
     }
 
     public void deleteArticle(Long articleId) {
+        Article findArticle = findVerifiedArticle(articleId);
 
-        return;
+        // 특정 질문 정보 삭제
+        articleRepository.delete(findArticle);
     }
+
+    // 이미 등록된 질문인지 검증
     public Article findVerifiedArticle(long articleId) {
         Optional<Article> optionalArticle =
                 articleRepository.findById(articleId);
