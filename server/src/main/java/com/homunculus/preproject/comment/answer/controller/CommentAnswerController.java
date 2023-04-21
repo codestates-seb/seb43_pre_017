@@ -6,6 +6,7 @@ import com.homunculus.preproject.comment.answer.dto.CommentAnswerResponseDto;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerSimpleResponseDto;
 import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import com.homunculus.preproject.comment.answer.mapper.CommentAnswerMapper;
+import com.homunculus.preproject.comment.answer.mapper.CommentAnswerSimpleResponseMessages;
 import com.homunculus.preproject.comment.answer.service.CommentAnswerService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -30,36 +31,16 @@ public class CommentAnswerController {
     private final CommentAnswerService commentAnswerService;
     private final CommentAnswerMapper mapper;
 
-    private enum CommentAnswerSimpleResponseMessages {
-        COMMENT_ANSWER_MESSAGE_POST("댓글을 등록했습니다."),
-        COMMENT_ANSWER_MESSAGE_PATCH("댓글을 수정했습니다."),
-        COMMENT_ANSWER_MESSAGE_DELETE("댓글을 삭제했습니다.");
-
-        @Getter
-        private final String message;
-
-        CommentAnswerSimpleResponseMessages(String message) {
-            this.message = message;
-        }
-    }
-
-    public static CommentAnswerSimpleResponseDto createCommentAnswerSimpleResponseDto(
-                  CommentAnswerController.CommentAnswerSimpleResponseMessages commentAnswerSimpleResponseMessages) {
-        CommentAnswerSimpleResponseDto responseDto = new CommentAnswerSimpleResponseDto();
-        responseDto.setMessage(commentAnswerSimpleResponseMessages.getMessage());
-
-        return responseDto;
-    }
-
-
     @PostMapping(COMMENT_ANSWER_DEFAULT_URL + "/{answerId}" + COMMENT_ANSWER_DEFAULT_URL_DETAIL)
     public ResponseEntity postCommentAnswer(@Valid @RequestBody CommentAnswerDto.Post commentAnswerDtoPost,
                                             @PathVariable("answerId") @Positive Long answerId) {
         commentAnswerDtoPost.setAnswerId(answerId);
-        commentAnswerService.createCommentAnswer(mapper.commentAnswerPostDtoToCommentAnswer(commentAnswerDtoPost));
+        CommentAnswer createdCommentAnswer = commentAnswerService.createCommentAnswer(mapper.commentAnswerPostDtoToCommentAnswer(commentAnswerDtoPost));
 
-        CommentAnswerSimpleResponseDto responseDto = createCommentAnswerSimpleResponseDto(CommentAnswerSimpleResponseMessages.COMMENT_ANSWER_MESSAGE_POST);
-        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                mapper.commentAnswerToCommentAnswerSimpleResponseDto(createdCommentAnswer,
+                        CommentAnswerSimpleResponseMessages.COMMENT_ANSWER_MESSAGE_POST),
+                HttpStatus.CREATED);
     }
 
     @PatchMapping(COMMENT_ANSWER_DEFAULT_URL + "/{answerId}" + COMMENT_ANSWER_DEFAULT_URL_DETAIL + "/{commentId}")
@@ -69,10 +50,12 @@ public class CommentAnswerController {
         commentAnswerDtoPatch.setCommentId(commentId);
         commentAnswerDtoPatch.setAnswerId(answerId);
         CommentAnswer commentAnswer = mapper.commentAnswerPatchDtoToCommentAnswer(commentAnswerDtoPatch);
-        commentAnswerService.updateCommentAnswer(commentAnswer);
+        CommentAnswer updatedCommentAnswer = commentAnswerService.updateCommentAnswer(commentAnswer);
 
-        CommentAnswerSimpleResponseDto responseDto = createCommentAnswerSimpleResponseDto(CommentAnswerSimpleResponseMessages.COMMENT_ANSWER_MESSAGE_PATCH);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return new ResponseEntity<>(
+                mapper.commentAnswerToCommentAnswerSimpleResponseDto(updatedCommentAnswer,
+                        CommentAnswerSimpleResponseMessages.COMMENT_ANSWER_MESSAGE_PATCH),
+                HttpStatus.OK);
     }
 
     @GetMapping(COMMENT_ANSWER_DEFAULT_URL + "/{answerId}" + COMMENT_ANSWER_ALL_MAPPING_URL)
@@ -82,18 +65,19 @@ public class CommentAnswerController {
         Page<CommentAnswer> pageCommentAnswers = commentAnswerService.findCommentAnswers(answerId,page - 1, size);
         List<CommentAnswer> commentAnswers = pageCommentAnswers.getContent();
 
-        CommentAnswerResponseDto responseDto = mapper.commentAnswersToCommentAnswerResponseDto(commentAnswers);
-        responseDto.setMessage("댓글들 조회를 완료했습니다.");
-        responseDto.setMessageCount(commentAnswers.size());
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return new ResponseEntity<>(
+                mapper.commentAnswersToCommentAnswerResponseDto(commentAnswers),
+                HttpStatus.OK);
     }
 
     @DeleteMapping(COMMENT_ANSWER_DEFAULT_URL + "/{answerId}" + COMMENT_ANSWER_DEFAULT_URL_DETAIL + "/{commentId}")
     public ResponseEntity deleteCommentAnswer(@PathVariable("answerId") @Positive Long answerId,
                                               @PathVariable("commentId") @Positive Long commentId) {
-        commentAnswerService.deleteCommentAnswer(answerId, commentId);
+        CommentAnswer deletedCommentAnswer = commentAnswerService.deleteCommentAnswer(answerId, commentId);
 
-        CommentAnswerSimpleResponseDto responseDto = createCommentAnswerSimpleResponseDto(CommentAnswerSimpleResponseMessages.COMMENT_ANSWER_MESSAGE_DELETE);
-        return new ResponseEntity<>(responseDto, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(
+                mapper.commentAnswerToCommentAnswerSimpleResponseDto(deletedCommentAnswer,
+                        CommentAnswerSimpleResponseMessages.COMMENT_ANSWER_MESSAGE_DELETE),
+                HttpStatus.NO_CONTENT);
     }
 }

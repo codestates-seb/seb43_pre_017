@@ -43,7 +43,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @MockBean(JpaMetamodelMappingContext.class)
 @AutoConfigureRestDocs
 class CommentAnswerControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -63,6 +62,7 @@ class CommentAnswerControllerTest {
         final String postContent = "등록할 댓글 내용";
         final String responseContent = "댓글을 등록했습니다.";
         final Long answerId = 1L;
+        final Long commentId = 1L;
 
         CommentAnswerDto.Post post = new CommentAnswerDto.Post();
         post.setContent(postContent);
@@ -72,6 +72,9 @@ class CommentAnswerControllerTest {
 
         CommentAnswerSimpleResponseDto responseDto = new CommentAnswerSimpleResponseDto();
         responseDto.setMessage(responseContent);
+        responseDto.setAnswerId(answerId);
+        responseDto.setCommentId(commentId);
+        given(mapper.commentAnswerToCommentAnswerSimpleResponseDto(any(), any())).willReturn(responseDto);
 
         given(commentAnswerService.createCommentAnswer(any())).willReturn(new CommentAnswer());
 
@@ -103,6 +106,8 @@ class CommentAnswerControllerTest {
                         ),
                         responseFields(
                                 List.of(
+                                        fieldWithPath("answerId").type(JsonFieldType.NUMBER).description("답변글 식별자"),
+                                        fieldWithPath("commentId").type(JsonFieldType.NUMBER).description("답변글의 댓글 식별자"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
                                 )
                         )
@@ -128,6 +133,9 @@ class CommentAnswerControllerTest {
 
         CommentAnswerSimpleResponseDto responseDto = new CommentAnswerSimpleResponseDto();
         responseDto.setMessage(responseContent);
+        responseDto.setAnswerId(answerId);
+        responseDto.setCommentId(commentId);
+        given(mapper.commentAnswerToCommentAnswerSimpleResponseDto(any(), any())).willReturn(responseDto);
 
         given(commentAnswerService.updateCommentAnswer(any())).willReturn(new CommentAnswer());
 
@@ -159,6 +167,8 @@ class CommentAnswerControllerTest {
                         ),
                         responseFields(
                                 List.of(
+                                        fieldWithPath("answerId").type(JsonFieldType.NUMBER).description("답변글 식별자"),
+                                        fieldWithPath("commentId").type(JsonFieldType.NUMBER).description("답변글의 댓글 식별자"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
                                 )
                         )
@@ -280,8 +290,11 @@ class CommentAnswerControllerTest {
 
         CommentAnswerSimpleResponseDto responseDto = new CommentAnswerSimpleResponseDto();
         responseDto.setMessage(responseContent);
+        responseDto.setAnswerId(answerId);
+        responseDto.setCommentId(commentId);
+        given(mapper.commentAnswerToCommentAnswerSimpleResponseDto(any(), any())).willReturn(responseDto);
 
-        doNothing().when(commentAnswerService).deleteCommentAnswer(anyLong(), anyLong());
+        given(commentAnswerService.deleteCommentAnswer(anyLong(), anyLong())).willReturn(new CommentAnswer());
 
         // when
         ResultActions actions =
@@ -303,6 +316,8 @@ class CommentAnswerControllerTest {
                         ),
                         responseFields(
                                 List.of(
+                                        fieldWithPath("answerId").type(JsonFieldType.NUMBER).description("답변글 식별자"),
+                                        fieldWithPath("commentId").type(JsonFieldType.NUMBER).description("답변글의 댓글 식별자"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
                                 )
                         )
