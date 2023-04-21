@@ -1,15 +1,15 @@
 package com.homunculus.preproject.response.details;
 
-import com.homunculus.preproject.user.entity.User;
+import com.homunculus.preproject.member.entity.Member;
 
 import java.time.LocalDateTime;
 
-public class UserResponseDetails {
+public class MemberResponseDetails {
     private Long id;
     private String name;
 
     private LocalDateTime createdAt;    // todo : 가입날짜
 
-    private User.UserStatus status;
+    private Member.MemberStatus status;
     public String getStatus() { return status.getStatus(); }
 }

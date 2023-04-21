@@ -13,7 +13,7 @@ import java.util.List;
 public class ArticleResponseDetailsDto {
     private String message;
     private Article article;
-    private User user;
+    private Member member;
 
     private List<Comments> comments;
     private List<Answers> answers;
@@ -32,7 +32,7 @@ public class ArticleResponseDetailsDto {
     @Getter
     @Setter
     @NoArgsConstructor
-    public static class User {
+    public static class Member {
         private Long id;
         private String name;
     }

@@ -219,12 +219,12 @@ class CommentAnswerControllerTest {
                 .andExpect(jsonPath("$.answerId").value(responseDto.getAnswerId()))
                 .andExpect(jsonPath("$.comments[0].id").value(responseDto.getComments().get(0).getId()))
                 .andExpect(jsonPath("$.comments[0].content").value(responseDto.getComments().get(0).getContent()))
-                .andExpect(jsonPath("$.comments[0].user.id").value(responseDto.getComments().get(0).getUser().getId()))
-                .andExpect(jsonPath("$.comments[0].user.name").value(responseDto.getComments().get(0).getUser().getName()))
+                .andExpect(jsonPath("$.comments[0].user.id").value(responseDto.getComments().get(0).getMember().getId()))
+                .andExpect(jsonPath("$.comments[0].user.name").value(responseDto.getComments().get(0).getMember().getName()))
                 .andExpect(jsonPath("$.comments[1].id").value(responseDto.getComments().get(1).getId()))
                 .andExpect(jsonPath("$.comments[1].content").value(responseDto.getComments().get(1).getContent()))
-                .andExpect(jsonPath("$.comments[1].user.id").value(responseDto.getComments().get(1).getUser().getId()))
-                .andExpect(jsonPath("$.comments[1].user.name").value(responseDto.getComments().get(1).getUser().getName()))
+                .andExpect(jsonPath("$.comments[1].user.id").value(responseDto.getComments().get(1).getMember().getId()))
+                .andExpect(jsonPath("$.comments[1].user.name").value(responseDto.getComments().get(1).getMember().getName()))
                 .andDo(document(
                         "getAll-commentAnswers",
                         getRequestPreProcessor(),
@@ -262,10 +262,10 @@ class CommentAnswerControllerTest {
         comments.setCreatedAt(timeStamp);
         comments.setUpdatedAt(timeStamp);
 
-        CommentAnswerResponseDto.Comments.User user = new CommentAnswerResponseDto.Comments.User();
-        user.setId(userId);
-        user.setName(userName);
-        comments.setUser(user);
+        CommentAnswerResponseDto.Comments.Member member = new CommentAnswerResponseDto.Comments.Member();
+        member.setId(userId);
+        member.setName(userName);
+        comments.setMember(member);
 
         return comments;
     }
