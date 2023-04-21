@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 public class AnswerResponseDto {
     private String message;
-    private Integer messageCount;    // todo : FE 와 상의 필요
+    private Integer messageCount;
     private Long articleId;
     private Integer evaluationScore;
 
@@ -27,7 +27,7 @@ public class AnswerResponseDto {
         private Member member;
         private Count count;
         private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;    // todo : 필드명 주의
+        private LocalDateTime updatedAt;
 
         @Getter
         @Setter

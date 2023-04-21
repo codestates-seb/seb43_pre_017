@@ -65,7 +65,7 @@ public class AnswerController {
         List<Answer> answers = pageAnswers.getContent();
 
         return new ResponseEntity<>(
-                mapper.answersToAnswerResponseDto(answers),
+                mapper.answersToAnswerResponseDto(articleId, answers),
                 HttpStatus.OK);
     }
 
