@@ -21,17 +21,22 @@ const Header = () => {
         {/* 로고 */}
         <StyledLogo>
           {/* 큰 로고 */}
-          <img
-            src="https://stackoverflow.design/assets/img/logos/so/logo-stackoverflow.svg"
-            alt="스택오버플로우 로고"
-            className="stack-overflow"
-          />
+          <a href="/">
+            <img
+              src="https://stackoverflow.design/assets/img/logos/so/logo-stackoverflow.svg"
+              alt="스택오버플로우 로고"
+              className="stack-overflow"
+            />
+          </a>
+
           {/* 작은 로고 */}
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Stack_Overflow_icon.svg/1024px-Stack_Overflow_icon.svg.png?20190716190036"
-            alt="스택오버플로우 로고"
-            className="min-stack-overflow"
-          />
+          <a href="/">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Stack_Overflow_icon.svg/1024px-Stack_Overflow_icon.svg.png?20190716190036"
+              alt="스택오버플로우 로고"
+              className="min-stack-overflow"
+            />
+          </a>
         </StyledLogo>
 
         {/* 서치창 */}
