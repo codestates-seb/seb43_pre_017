@@ -11,6 +11,7 @@ const SideBar = () => {
   const { pathname } = useLocation();
 
   if (window.location.pathname === "/Login") return null;
+  if (window.location.pathname === "/signup") return null;
   return (
     <StyledSideBar>
       <>
