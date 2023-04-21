@@ -175,12 +175,13 @@ class ArticleControllerTest {
         final String articleMessage = "질문글 조회를 완료했습니다.";
 
         final Long articleId1 = 1L;
-        final Integer evaluationScore = 32500;
+        final Integer evaluationScore1 = 32500;
         final Integer commentCount1 = 99;               final Integer answerCount1 = 5;
         final String articleTitle1 = "질문글 제목1";      final String articleContent1 = "질문글 내용1";
         final Long memberId1 = 1L;                      final String memberName1 = "유저1";
 
         final Long articleId2 = 2L;
+        final Integer evaluationScore2 = 100;
         final Integer commentCount2 = 20;               final Integer answerCount2 = 9;
         final String articleTitle2 = "질문글 제목2";      final String articleContent2 = "질문글 내용2";
         final Long memberId2 = 3L;                      final String memberName2 = "유저2";
@@ -188,14 +189,13 @@ class ArticleControllerTest {
         ArticleResponseDto responseDto = new ArticleResponseDto();
         {
             responseDto.setMessage(articleMessage);
-            responseDto.setEvaluationScore(evaluationScore);
 
             List<ArticleResponseDto.Articles> articles = new ArrayList<>();
-            articles.add(createDummyArticles(timeStamp,
+            articles.add(createDummyArticles(timeStamp, evaluationScore1,
                     articleId1, articleTitle1, articleContent1,
                     memberId1, memberName1, commentCount1, answerCount1
             ));
-            articles.add(createDummyArticles(timeStamp,
+            articles.add(createDummyArticles(timeStamp, evaluationScore2,
                     articleId2, articleTitle2, articleContent2,
                     memberId2, memberName2, commentCount2, answerCount2
             ));
@@ -244,11 +244,11 @@ class ArticleControllerTest {
                                 List.of(
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지"),
                                         fieldWithPath("messageCount").type(JsonFieldType.NUMBER).description("질문글 개수"),
-                                        fieldWithPath("evaluationScore").type(JsonFieldType.NUMBER).description("추천 점수"),
                                         fieldWithPath("articles").type(JsonFieldType.ARRAY).description("질문글 목록"),
                                         fieldWithPath("articles[].id").type(JsonFieldType.NUMBER).description("질문글 식별자"),
                                         fieldWithPath("articles[].title").type(JsonFieldType.STRING).description("질문글 제목"),
                                         fieldWithPath("articles[].content").type(JsonFieldType.STRING).description("질문글 내용"),
+                                        fieldWithPath("articles[].evaluationScore").type(JsonFieldType.NUMBER).description("추천 점수"),
                                         fieldWithPath("articles[].createdAt").type(JsonFieldType.STRING).description("질문글 생성시간"),
                                         fieldWithPath("articles[].updatedAt").type(JsonFieldType.STRING).description("질문글 수정시간"),
                                         fieldWithPath("articles[].member").type(JsonFieldType.OBJECT).description("질문글 등록한 유저의 정보"),
@@ -262,7 +262,7 @@ class ArticleControllerTest {
                 ));
     }
 
-    private static ArticleResponseDto.Articles createDummyArticles(LocalDateTime timeStamp,
+    private static ArticleResponseDto.Articles createDummyArticles(LocalDateTime timeStamp, Integer evaluationScore,
                                                             Long articleId, String articleTitle, String articleContent,
                                                             Long memberId, String memberName,
                                                             Integer commentCount, Integer answerCount) {
@@ -270,6 +270,7 @@ class ArticleControllerTest {
         articles.setId(articleId);
         articles.setTitle(articleTitle);
         articles.setContent(articleContent);
+        articles.setEvaluationScore(evaluationScore);
         articles.setCreatedAt(timeStamp);
         articles.setUpdatedAt(timeStamp);
 
@@ -291,6 +292,7 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.articles[" + index + "].id").value(articles.get(index).getId()))
                 .andExpect(jsonPath("$.articles[" + index + "].title").value(articles.get(index).getTitle()))
                 .andExpect(jsonPath("$.articles[" + index + "].content").value(articles.get(index).getContent()))
+                .andExpect(jsonPath("$.articles[" + index + "].evaluationScore").value(articles.get(index).getEvaluationScore()))
                 .andExpect(jsonPath("$.articles[" + index + "].member.id").value(articles.get(index).getMember().getId()))
                 .andExpect(jsonPath("$.articles[" + index + "].member.name").value(articles.get(index).getMember().getName()))
                 .andExpect(jsonPath("$.articles[" + index + "].count.comments").value(articles.get(index).getCount().getComments()))
@@ -419,6 +421,7 @@ class ArticleControllerTest {
                                         fieldWithPath("article.id").type(JsonFieldType.NUMBER).description("질문글 식별자"),
                                         fieldWithPath("article.title").type(JsonFieldType.STRING).description("질문글 제목"),
                                         fieldWithPath("article.content").type(JsonFieldType.STRING).description("질문글 내용"),
+                                        fieldWithPath("article.evaluationScore").type(JsonFieldType.STRING).description("질문글 추천점수"),
                                         fieldWithPath("article.createdAt").type(JsonFieldType.STRING).description("질문글 생성시간"),
                                         fieldWithPath("article.updatedAt").type(JsonFieldType.STRING).description("질문글 수정시간"),
                                         fieldWithPath("member").type(JsonFieldType.OBJECT).description("질문글 등록 유저 정보"),

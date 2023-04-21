@@ -13,7 +13,6 @@ import java.util.List;
 public class ArticleResponseDto {
     private String message;
     private Integer messageCount;
-    private Integer evaluationScore;
 
     private List<Articles> articles;
 
@@ -24,6 +23,7 @@ public class ArticleResponseDto {
         private Long id;
         private String title;
         private String content;
+        private Integer evaluationScore;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
         private Member member;
