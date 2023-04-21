@@ -1,5 +1,6 @@
 package com.homunculus.preproject.article.mapper;
 
+import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.article.dto.ArticleDto;
 import com.homunculus.preproject.article.dto.ArticleResponseDetailsDto;
 import com.homunculus.preproject.article.dto.ArticleResponseDto;
@@ -47,7 +48,7 @@ public interface ArticleMapper {
 
         result.setMessage("질문글 조회를 완료했습니다.");
         result.setMessageCount(articles.size());
-
+        
         List<ArticleResponseDto.Articles> resultArticles = new ArrayList<>();
         {
             for(Article src : articles) {
