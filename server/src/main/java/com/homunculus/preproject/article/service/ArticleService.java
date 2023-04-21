@@ -25,15 +25,16 @@ public class ArticleService {
     public Article updateArticle(Article article) {
         // 업데이트를 하기 위해서 DB에 해당 정보가 있는지 확인(수정이니까 해당정보가 있는지 알아야함)
         // 만일 없다면 예외처리 있으면 수정 내용반영
-        // Article findArticle = findVerifiedArticle(article.getArticleId());
+        Article findArticle = findVerifiedArticle(article.getArticleId());
 
         // title , content 내용 업데이트
-        // Optional.ofNullable(article.getTitle())
-        //         .ifPresent(title -> findArticle.setTitle(title));
+        Optional.ofNullable(article.getTitle())
+                .ifPresent(title -> findArticle.setTitle(title));
+        Optional.ofNullable(article.getContent())
+                .ifPresent(content -> findArticle.setContent(content));
 
-
-        // 반영한 내용을 저장
-        return null;
+        // Article 정보 업데이트
+        return articleRepository.save(findArticle);
     }
 
     public Article findArticle(Long articleId) {
