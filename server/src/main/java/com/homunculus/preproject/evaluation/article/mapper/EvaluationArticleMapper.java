@@ -5,9 +5,11 @@ import com.homunculus.preproject.evaluation.article.dto.EvaluationArticleRespons
 import com.homunculus.preproject.evaluation.article.dto.EvaluationArticleSimpleResponseDto;
 import com.homunculus.preproject.evaluation.article.entity.EvaluationArticle;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface EvaluationArticleMapper {
+    @Mapping(source = "evaluationScore", target = "evaluationArticleScore")
     EvaluationArticle evaluationArticlePostDtoToEvaluationArticle(EvaluationArticleDto.Post evaluationDtoPost);
 
     default EvaluationArticleSimpleResponseDto evaluationArticleToEvaluationArticleSimpleResponseDto(EvaluationArticle evaluationArticle,

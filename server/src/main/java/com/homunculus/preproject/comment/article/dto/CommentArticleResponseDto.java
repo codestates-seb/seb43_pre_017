@@ -13,8 +13,8 @@ import java.util.List;
 public class CommentArticleResponseDto {
     private String message;
     private Integer messageCount;
-
     private Long articleId;
+
     private List<Comments> comments;
 
     @Getter

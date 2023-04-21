@@ -17,7 +17,7 @@ public class EvaluationArticle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long evaluationId;
-
+    private String evaluationArticleScore;
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;

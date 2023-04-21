@@ -5,9 +5,11 @@ import com.homunculus.preproject.evaluation.answer.dto.EvaluationAnswerResponseD
 import com.homunculus.preproject.evaluation.answer.dto.EvaluationAnswerSimpleResponseDto;
 import com.homunculus.preproject.evaluation.answer.entity.EvaluationAnswer;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface EvaluationAnswerMapper {
+    @Mapping(source = "evaluationScore", target = "evaluationAnswerScore")
     EvaluationAnswer evaluationAnswerPostDtoToEvaluationAnswer(EvaluationAnswerDto.Post evaluationDtoPost);
 
     default EvaluationAnswerSimpleResponseDto evaluationAnswerToevaluationAnswerSimpleResponseDto(EvaluationAnswer evaluationAnswer,
@@ -19,6 +21,4 @@ public interface EvaluationAnswerMapper {
 
         return responseDto;
     }
-
-
 }

@@ -206,7 +206,7 @@ class CommentAnswerControllerTest {
         given(commentAnswerService.findCommentAnswers(anyLong(), anyInt(), anyInt())).willReturn(commentAnswers);
 
         // when
-        given(mapper.commentAnswersToCommentAnswerResponseDto(any())).willReturn(responseDto);
+        given(mapper.commentAnswersToCommentAnswerResponseDto(anyLong(), any())).willReturn(responseDto);
 
         String page = "1";
         String size = "10";

@@ -127,7 +127,7 @@ class CommentArticleControllerTest {
         CommentArticleDto.Patch patch = new CommentArticleDto.Patch();
         patch.setContent(patchContent);
         String content = gson.toJson(patch);
-        patch.setAnswerId(articleId);
+        patch.setArticleId(articleId);
         patch.setCommentId(commentId);
 
         given(mapper.commentArticlePatchDtoToCommentArticle(any())).willReturn(new CommentArticle());
@@ -207,7 +207,7 @@ class CommentArticleControllerTest {
         given(commentArticleService.findCommentArticles(anyLong(), anyInt(), anyInt())).willReturn(commentArticlePage);
 
         // when
-        given(mapper.commentArticlesToCommentArticleResponseDto(any())).willReturn(responseDto);
+        given(mapper.commentArticlesToCommentArticleResponseDto(anyLong(), any())).willReturn(responseDto);
 
         String page = "1";
         String size = "10";
