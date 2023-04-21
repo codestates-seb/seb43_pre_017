@@ -24,9 +24,12 @@ public class ArticleService {
 
     public Article updateArticle(Article article) {
         // 업데이트를 하기 위해서 DB에 해당 정보가 있는지 확인(수정이니까 해당정보가 있는지 알아야함)
-        // Article findArticle = findVeryfiedArticle(article.getArticleId());
-
         // 만일 없다면 예외처리 있으면 수정 내용반영
+        // Article findArticle = findVerifiedArticle(article.getArticleId());
+
+        // title , content 내용 업데이트
+        // Optional.ofNullable(article.getTitle())
+        //         .ifPresent(title -> findArticle.setTitle(title));
 
 
         // 반영한 내용을 저장
@@ -34,8 +37,7 @@ public class ArticleService {
     }
 
     public Article findArticle(Long articleId) {
-
-        return null;
+        return findVerifiedArticle(articleId);
     }
 
     public Page<Article> findArticles(int page, int size) {
