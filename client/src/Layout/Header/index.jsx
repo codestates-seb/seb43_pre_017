@@ -18,20 +18,23 @@ const Header = () => {
   return (
     <StyledHeader>
       <StyledContaier className="container">
+        {/* 로고 */}
         <StyledLogo>
           {/* 큰 로고 */}
           <img
             src="https://stackoverflow.design/assets/img/logos/so/logo-stackoverflow.svg"
-            alt="stack-overflow"
+            alt="스택오버플로우 로고"
             className="stack-overflow"
           />
           {/* 작은 로고 */}
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Stack_Overflow_icon.svg/1024px-Stack_Overflow_icon.svg.png?20190716190036"
-            alt="min-stack-overflow"
+            alt="스택오버플로우 로고"
             className="min-stack-overflow"
           />
         </StyledLogo>
+
+        {/* 서치창 */}
         <StyledSearchFrom>
           <div className="search-bar">
             <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
@@ -42,6 +45,7 @@ const Header = () => {
             />
           </div>
         </StyledSearchFrom>
+
         <Nav />
       </StyledContaier>
     </StyledHeader>
