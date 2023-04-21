@@ -170,17 +170,18 @@ class ArticleControllerTest {
     @DisplayName("Article 조회 테스트")
     void getAllArticles() throws Exception {
         // given
-        final LocalDateTime timeStamp = LocalDateTime.of(2023,4,19,21,0,0);
+        final LocalDateTime timeStamp = LocalDateTime.now();
 
         final String articleMessage = "질문글 조회를 완료했습니다.";
 
         final Long articleId1 = 1L;
-        final Integer evaluationScore = 32500;
+        final Integer evaluationScore1 = 32500;
         final Integer commentCount1 = 99;               final Integer answerCount1 = 5;
         final String articleTitle1 = "질문글 제목1";      final String articleContent1 = "질문글 내용1";
         final Long memberId1 = 1L;                      final String memberName1 = "유저1";
 
         final Long articleId2 = 2L;
+        final Integer evaluationScore2 = 100;
         final Integer commentCount2 = 20;               final Integer answerCount2 = 9;
         final String articleTitle2 = "질문글 제목2";      final String articleContent2 = "질문글 내용2";
         final Long memberId2 = 3L;                      final String memberName2 = "유저2";
@@ -188,14 +189,13 @@ class ArticleControllerTest {
         ArticleResponseDto responseDto = new ArticleResponseDto();
         {
             responseDto.setMessage(articleMessage);
-            responseDto.setEvaluationScore(evaluationScore);
 
             List<ArticleResponseDto.Articles> articles = new ArrayList<>();
-            articles.add(createDummyArticles(timeStamp,
+            articles.add(createDummyArticles(timeStamp, evaluationScore1,
                     articleId1, articleTitle1, articleContent1,
                     memberId1, memberName1, commentCount1, answerCount1
             ));
-            articles.add(createDummyArticles(timeStamp,
+            articles.add(createDummyArticles(timeStamp, evaluationScore2,
                     articleId2, articleTitle2, articleContent2,
                     memberId2, memberName2, commentCount2, answerCount2
             ));
@@ -244,25 +244,25 @@ class ArticleControllerTest {
                                 List.of(
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지"),
                                         fieldWithPath("messageCount").type(JsonFieldType.NUMBER).description("질문글 개수"),
-                                        fieldWithPath("evaluationScore").type(JsonFieldType.NUMBER).description("추천 점수"),
                                         fieldWithPath("articles").type(JsonFieldType.ARRAY).description("질문글 목록"),
-                                        fieldWithPath("articles[0].id").type(JsonFieldType.NUMBER).description("질문글 식별자"),
-                                        fieldWithPath("articles[0].title").type(JsonFieldType.STRING).description("질문글 제목"),
-                                        fieldWithPath("articles[0].content").type(JsonFieldType.STRING).description("질문글 내용"),
-                                        fieldWithPath("articles[0].createdAt").type(JsonFieldType.STRING).description("질문글 생성시간"),
-                                        fieldWithPath("articles[0].updatedAt").type(JsonFieldType.STRING).description("질문글 수정시간"),
-                                        fieldWithPath("articles[0].user").type(JsonFieldType.OBJECT).description("질문글 등록한 유저의 정보"),
-                                        fieldWithPath("articles[0].user.id").type(JsonFieldType.NUMBER).description("유저의 식별번호"),
-                                        fieldWithPath("articles[0].user.name").type(JsonFieldType.STRING).description("유저의 이름"),
-                                        fieldWithPath("articles[0].count").type(JsonFieldType.OBJECT).description("질문에 대한 개수 목록"),
-                                        fieldWithPath("articles[0].count.comments").type(JsonFieldType.NUMBER).description("댓글 개수"),
-                                        fieldWithPath("articles[0].count.answers").type(JsonFieldType.NUMBER).description("답변글 개수")
+                                        fieldWithPath("articles[].id").type(JsonFieldType.NUMBER).description("질문글 식별자"),
+                                        fieldWithPath("articles[].title").type(JsonFieldType.STRING).description("질문글 제목"),
+                                        fieldWithPath("articles[].content").type(JsonFieldType.STRING).description("질문글 내용"),
+                                        fieldWithPath("articles[].evaluationScore").type(JsonFieldType.NUMBER).description("추천 점수"),
+                                        fieldWithPath("articles[].createdAt").type(JsonFieldType.STRING).description("질문글 생성시간"),
+                                        fieldWithPath("articles[].updatedAt").type(JsonFieldType.STRING).description("질문글 수정시간"),
+                                        fieldWithPath("articles[].member").type(JsonFieldType.OBJECT).description("질문글 등록한 유저의 정보"),
+                                        fieldWithPath("articles[].member.id").type(JsonFieldType.NUMBER).description("유저의 식별번호"),
+                                        fieldWithPath("articles[].member.name").type(JsonFieldType.STRING).description("유저의 이름"),
+                                        fieldWithPath("articles[].count").type(JsonFieldType.OBJECT).description("질문에 대한 개수 목록"),
+                                        fieldWithPath("articles[].count.comments").type(JsonFieldType.NUMBER).description("댓글 개수"),
+                                        fieldWithPath("articles[].count.answers").type(JsonFieldType.NUMBER).description("답변글 개수")
                                 )
                         )
                 ));
     }
 
-    private static ArticleResponseDto.Articles createDummyArticles(LocalDateTime timeStamp,
+    private static ArticleResponseDto.Articles createDummyArticles(LocalDateTime timeStamp, Integer evaluationScore,
                                                             Long articleId, String articleTitle, String articleContent,
                                                             Long memberId, String memberName,
                                                             Integer commentCount, Integer answerCount) {
@@ -270,6 +270,7 @@ class ArticleControllerTest {
         articles.setId(articleId);
         articles.setTitle(articleTitle);
         articles.setContent(articleContent);
+        articles.setEvaluationScore(evaluationScore);
         articles.setCreatedAt(timeStamp);
         articles.setUpdatedAt(timeStamp);
 
@@ -291,8 +292,9 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.articles[" + index + "].id").value(articles.get(index).getId()))
                 .andExpect(jsonPath("$.articles[" + index + "].title").value(articles.get(index).getTitle()))
                 .andExpect(jsonPath("$.articles[" + index + "].content").value(articles.get(index).getContent()))
-                .andExpect(jsonPath("$.articles[" + index + "].user.id").value(articles.get(index).getMember().getId()))
-                .andExpect(jsonPath("$.articles[" + index + "].user.name").value(articles.get(index).getMember().getName()))
+                .andExpect(jsonPath("$.articles[" + index + "].evaluationScore").value(articles.get(index).getEvaluationScore()))
+                .andExpect(jsonPath("$.articles[" + index + "].member.id").value(articles.get(index).getMember().getId()))
+                .andExpect(jsonPath("$.articles[" + index + "].member.name").value(articles.get(index).getMember().getName()))
                 .andExpect(jsonPath("$.articles[" + index + "].count.comments").value(articles.get(index).getCount().getComments()))
                 .andExpect(jsonPath("$.articles[" + index + "].count.answers").value(articles.get(index).getCount().getAnswers()));
     }
@@ -301,7 +303,7 @@ class ArticleControllerTest {
     @DisplayName("Article 상세 조회 테스트")
     void getArticle() throws Exception {
         // given
-        final LocalDateTime timeStamp = LocalDateTime.of(2023,4,19,21,0,0);
+        final LocalDateTime timeStamp = LocalDateTime.now();
 
 
         final String articleMessage = "질문글 조회를 완료했습니다.";
@@ -399,8 +401,8 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.article.id").value(responseDto.getArticle().getId()))
                 .andExpect(jsonPath("$.article.title").value(responseDto.getArticle().getTitle()))
                 .andExpect(jsonPath("$.article.content").value(responseDto.getArticle().getContent()))
-                .andExpect(jsonPath("$.user.id").value(responseDto.getMember().getId()))
-                .andExpect(jsonPath("$.user.name").value(responseDto.getMember().getName()));
+                .andExpect(jsonPath("$.member.id").value(responseDto.getMember().getId()))
+                .andExpect(jsonPath("$.member.name").value(responseDto.getMember().getName()));
 
         expectComments(responseDto.getComments(), 0, actions);
         expectComments(responseDto.getComments(), 1, actions);
@@ -419,26 +421,27 @@ class ArticleControllerTest {
                                         fieldWithPath("article.id").type(JsonFieldType.NUMBER).description("질문글 식별자"),
                                         fieldWithPath("article.title").type(JsonFieldType.STRING).description("질문글 제목"),
                                         fieldWithPath("article.content").type(JsonFieldType.STRING).description("질문글 내용"),
+                                        fieldWithPath("article.evaluationScore").type(JsonFieldType.STRING).description("질문글 추천점수"),
                                         fieldWithPath("article.createdAt").type(JsonFieldType.STRING).description("질문글 생성시간"),
                                         fieldWithPath("article.updatedAt").type(JsonFieldType.STRING).description("질문글 수정시간"),
-                                        fieldWithPath("user").type(JsonFieldType.OBJECT).description("질문글 등록 유저 정보"),
-                                        fieldWithPath("user.id").type(JsonFieldType.NUMBER).description("유저 식별자"),
-                                        fieldWithPath("user.name").type(JsonFieldType.STRING).description("유저 이름"),
+                                        fieldWithPath("member").type(JsonFieldType.OBJECT).description("질문글 등록 유저 정보"),
+                                        fieldWithPath("member.id").type(JsonFieldType.NUMBER).description("유저 식별자"),
+                                        fieldWithPath("member.name").type(JsonFieldType.STRING).description("유저 이름"),
                                         fieldWithPath("comments").type(JsonFieldType.ARRAY).description("질문에 대한 답변글 목록"),
-                                        fieldWithPath("comments[0].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
-                                        fieldWithPath("comments[0].content").type(JsonFieldType.STRING).description("답변글 내용"),
-                                        fieldWithPath("comments[0].createdAt").type(JsonFieldType.STRING).description("답변글 생성시간"),
-                                        fieldWithPath("comments[0].updatedAt").type(JsonFieldType.STRING).description("답변글 수정시간"),
+                                        fieldWithPath("comments[].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
+                                        fieldWithPath("comments[].content").type(JsonFieldType.STRING).description("답변글 내용"),
+                                        fieldWithPath("comments[].createdAt").type(JsonFieldType.STRING).description("답변글 생성시간"),
+                                        fieldWithPath("comments[].updatedAt").type(JsonFieldType.STRING).description("답변글 수정시간"),
                                         fieldWithPath("answers").type(JsonFieldType.ARRAY).description("질문의 답변글 목록"),
-                                        fieldWithPath("answers[0].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
-                                        fieldWithPath("answers[0].content").type(JsonFieldType.STRING).description("답변글 내용"),
-                                        fieldWithPath("answers[0].comments").type(JsonFieldType.ARRAY).description("답변글의 댓글 목록"),
-                                        fieldWithPath("answers[0].createdAt").type(JsonFieldType.STRING).description("답변의 생성시간"),
-                                        fieldWithPath("answers[0].updatedAt").type(JsonFieldType.STRING).description("답변의 수정시간"),
-                                        fieldWithPath("answers[0].comments[0].id").type(JsonFieldType.NUMBER).description("댓글의 식별자"),
-                                        fieldWithPath("answers[0].comments[0].content").type(JsonFieldType.STRING).description("댓글의 내용"),
-                                        fieldWithPath("answers[0].comments[0].createdAt").type(JsonFieldType.STRING).description("댓글의 생성시간"),
-                                        fieldWithPath("answers[0].comments[0].updatedAt").type(JsonFieldType.STRING).description("댓글의 수정시간")
+                                        fieldWithPath("answers[].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
+                                        fieldWithPath("answers[].content").type(JsonFieldType.STRING).description("답변글 내용"),
+                                        fieldWithPath("answers[].comments").type(JsonFieldType.ARRAY).description("답변글의 댓글 목록"),
+                                        fieldWithPath("answers[].createdAt").type(JsonFieldType.STRING).description("답변의 생성시간"),
+                                        fieldWithPath("answers[].updatedAt").type(JsonFieldType.STRING).description("답변의 수정시간"),
+                                        fieldWithPath("answers[].comments[].id").type(JsonFieldType.NUMBER).description("댓글의 식별자"),
+                                        fieldWithPath("answers[].comments[].content").type(JsonFieldType.STRING).description("댓글의 내용"),
+                                        fieldWithPath("answers[].comments[].createdAt").type(JsonFieldType.STRING).description("댓글의 생성시간"),
+                                        fieldWithPath("answers[].comments[].updatedAt").type(JsonFieldType.STRING).description("댓글의 수정시간")
                                 )
                         )
                 ));

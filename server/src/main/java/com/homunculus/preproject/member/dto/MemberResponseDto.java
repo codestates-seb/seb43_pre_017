@@ -10,12 +10,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MemberResponseDto extends Auditable {
+public class MemberResponseDto {
+    private String memberId;
     private String message;
     private MemberResponseDetails member;
 
-    private Member.MemberStatus status;
-    public String getStatus() {
-        return status.getStatus();
-    }
 }

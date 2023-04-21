@@ -30,7 +30,7 @@ public class Article extends Auditable {
     private String content;
 
     @Column(nullable = false)
-    private Long viewCount;
+    private Integer viewCount = 0;
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")

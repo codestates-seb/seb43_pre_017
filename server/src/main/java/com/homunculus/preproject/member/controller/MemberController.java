@@ -2,10 +2,12 @@ package com.homunculus.preproject.member.controller;
 
 import com.homunculus.preproject.member.dto.MemberDto;
 import com.homunculus.preproject.member.dto.MemberResponseDto;
+import com.homunculus.preproject.member.dto.MemberSimpleResponseDto;
 import com.homunculus.preproject.member.entity.Member;
 import com.homunculus.preproject.member.mapper.MemberMapper;
 import com.homunculus.preproject.member.service.MemberService;
 import com.homunculus.preproject.utils.UriCreator;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -28,11 +30,32 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberMapper mapper;
 
-    @PostMapping(MEMBER_DEFAULT_URL)
-    public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post memberDtoPost) {
-        Member member = memberService.createMember(mapper.memberPostDtoToMember(memberDtoPost));
+//    private enum AuthSimpleResponseMessages {
+//        AUTH_MESSAGE_POST("회원가입에 성공했습니다. \n 로그인 페이지로 이동됩니다."),
+//        AUTH_MESSAGE_LOGIN("로그인에 성공했습니다."),
+//        AUTH_MESSAGE_LOGOUT("로그아웃되었습니다. \n 메인 페이지로 이동됩니다.");
+//
+//        @Getter
+//        private final String message;
+//
+//        AuthSimpleResponseMessages(String message) {
+//            this.message = message;
+//        }
+//    }
+//
+//    public static MemberSimpleResponseDto createMemberSimpleResponseDto(MemberController.AuthSimpleResponseMessages authSimpleResponseMessages) {
+//        MemberSimpleResponseDto responseDto = new MemberSimpleResponseDto();
+//        responseDto.setMessage(authSimpleResponseMessages.getMessage());
+//
+//        return responseDto;
+//    }
 
-        URI location = UriCreator.createUri(MEMBER_DEFAULT_URL, member.getMemberId());
+    @PostMapping("/api/signup")
+    public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post memberDtoPost) {
+        Member member = mapper.memberPostDtoToMember(memberDtoPost);
+        Member createdMember = memberService.createMember(member);
+
+        URI location = UriCreator.createUri("/api/member", member.getMemberId());
 
         return new ResponseEntity<>(location, HttpStatus.CREATED);
     }
@@ -41,7 +64,8 @@ public class MemberController {
     public ResponseEntity patchMember(@PathVariable("memberId") @Positive Long memberId,
                                       @Valid @RequestBody MemberDto.Patch memberDtoPatch) {
         memberDtoPatch.setMemberId(memberId);
-        Member member = memberService.updateMember(mapper.memberPatchDtoToMember(memberDtoPatch));
+        Member member = mapper.memberPatchDtoToMember(memberDtoPatch);
+        Member updateMember = memberService.updateMember(member);
 
         MemberResponseDto responseDto = mapper.memberToMemberResponseDto(member);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -49,9 +73,9 @@ public class MemberController {
 
     @GetMapping(MEMBER_DEFAULT_URL + "/{memberId}")
     public ResponseEntity getMember(@PathVariable("memberId") @Positive Long memberId) {
-        Member member = memberService.findMember(memberId);
+        Member findedmember = memberService.findMember(memberId);
 
-        MemberResponseDto responseDto = mapper.memberToMemberResponseDto(member);
+        MemberResponseDto responseDto = mapper.memberToMemberResponseDto(findedmember);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
@@ -61,14 +85,13 @@ public class MemberController {
         Page<Member> pageMembers = memberService.findMembers(page - 1, size);
         List<Member> members = pageMembers.getContent();
 
-        return new ResponseEntity<>(
-                mapper.membersToMemberResponseDtos(members),
-                HttpStatus.OK);
+        List<MemberResponseDto> responseDtos = mapper.membersToMemberResponseDtos(members);
+        return new ResponseEntity<>(responseDtos, HttpStatus.OK);
     }
 
     @DeleteMapping(MEMBER_DEFAULT_URL + "/{memberId}")
-    public ResponseEntity deleteUser(@PathVariable("memberId") @Positive Long userId) {
-        memberService.deleteMember(userId);
+    public ResponseEntity deleteUser(@PathVariable("memberId") @Positive Long memberId) {
+        memberService.deleteMember(memberId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

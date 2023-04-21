@@ -166,7 +166,7 @@ class AnswerControllerTest {
     @DisplayName("Answer 조회 테스트")
     void getAllAnswers() throws Exception {
         // given
-        final LocalDateTime timeStamp = LocalDateTime.of(2023,4,19,21,0,0);
+        final LocalDateTime timeStamp = LocalDateTime.now();
 
         final String answerMessage = "답변글 조회를 완료했습니다.";
         final Long articleId = 1L;
@@ -242,15 +242,15 @@ class AnswerControllerTest {
                                         fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
                                         fieldWithPath("evaluationScore").type(JsonFieldType.NUMBER).description("추천 점수"),
                                         fieldWithPath("answers").type(JsonFieldType.ARRAY).description("답변글 목록"),
-                                        fieldWithPath("answers[0].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
-                                        fieldWithPath("answers[0].content").type(JsonFieldType.STRING).description("답변글 내용"),
-                                        fieldWithPath("answers[0].member").type(JsonFieldType.OBJECT).description("답변글 작성한 유저의 정보"),
-                                        fieldWithPath("answers[0].member.id").type(JsonFieldType.NUMBER).description("유저의 식별자"),
-                                        fieldWithPath("answers[0].member.name").type(JsonFieldType.STRING).description("유저의 이름"),
-                                        fieldWithPath("answers[0].count").type(JsonFieldType.OBJECT).description("댓글 개수 목록"),
-                                        fieldWithPath("answers[0].count.comments").type(JsonFieldType.NUMBER).description("총 댓글 개수"),
-                                        fieldWithPath("answers[0].createdAt").type(JsonFieldType.STRING).description("답변글 생성시간"),
-                                        fieldWithPath("answers[0].updatedAt").type(JsonFieldType.STRING).description("답변글 수정시간")
+                                        fieldWithPath("answers[].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
+                                        fieldWithPath("answers[].content").type(JsonFieldType.STRING).description("답변글 내용"),
+                                        fieldWithPath("answers[].member").type(JsonFieldType.OBJECT).description("답변글 작성한 유저의 정보"),
+                                        fieldWithPath("answers[].member.id").type(JsonFieldType.NUMBER).description("유저의 식별자"),
+                                        fieldWithPath("answers[].member.name").type(JsonFieldType.STRING).description("유저의 이름"),
+                                        fieldWithPath("answers[].count").type(JsonFieldType.OBJECT).description("댓글 개수 목록"),
+                                        fieldWithPath("answers[].count.comments").type(JsonFieldType.NUMBER).description("총 댓글 개수"),
+                                        fieldWithPath("answers[].createdAt").type(JsonFieldType.STRING).description("답변글 생성시간"),
+                                        fieldWithPath("answers[].updatedAt").type(JsonFieldType.STRING).description("답변글 수정시간")
                                 )
                         )
                 ));
