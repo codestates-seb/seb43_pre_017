@@ -219,12 +219,12 @@ class CommentAnswerControllerTest {
                 .andExpect(jsonPath("$.answerId").value(responseDto.getAnswerId()))
                 .andExpect(jsonPath("$.comments[0].id").value(responseDto.getComments().get(0).getId()))
                 .andExpect(jsonPath("$.comments[0].content").value(responseDto.getComments().get(0).getContent()))
-                .andExpect(jsonPath("$.comments[0].user.id").value(responseDto.getComments().get(0).getUser().getId()))
-                .andExpect(jsonPath("$.comments[0].user.name").value(responseDto.getComments().get(0).getUser().getName()))
+                .andExpect(jsonPath("$.comments[0].user.id").value(responseDto.getComments().get(0).getMember().getId()))
+                .andExpect(jsonPath("$.comments[0].user.name").value(responseDto.getComments().get(0).getMember().getName()))
                 .andExpect(jsonPath("$.comments[1].id").value(responseDto.getComments().get(1).getId()))
                 .andExpect(jsonPath("$.comments[1].content").value(responseDto.getComments().get(1).getContent()))
-                .andExpect(jsonPath("$.comments[1].user.id").value(responseDto.getComments().get(1).getUser().getId()))
-                .andExpect(jsonPath("$.comments[1].user.name").value(responseDto.getComments().get(1).getUser().getName()))
+                .andExpect(jsonPath("$.comments[1].user.id").value(responseDto.getComments().get(1).getMember().getId()))
+                .andExpect(jsonPath("$.comments[1].user.name").value(responseDto.getComments().get(1).getMember().getName()))
                 .andDo(document(
                         "getAll-commentAnswers",
                         getRequestPreProcessor(),
@@ -242,13 +242,13 @@ class CommentAnswerControllerTest {
                                         fieldWithPath("messageCount").type(JsonFieldType.NUMBER).description("댓글 개수"),
                                         fieldWithPath("answerId").type(JsonFieldType.NUMBER).description("답변글 식별자"),
                                         fieldWithPath("comments").type(JsonFieldType.ARRAY).description("답변글의 댓글 목록"),
-                                        fieldWithPath("comments[0].id").type(JsonFieldType.NUMBER).description("댓글 식별자"),
-                                        fieldWithPath("comments[0].content").type(JsonFieldType.STRING).description("댓글 내용"),
-                                        fieldWithPath("comments[0].user").type(JsonFieldType.OBJECT).description("댓글 작성한 유저"),
-                                        fieldWithPath("comments[0].user.id").type(JsonFieldType.NUMBER).description("유저의 식별자"),
-                                        fieldWithPath("comments[0].user.name").type(JsonFieldType.STRING).description("유저의 이름"),
-                                        fieldWithPath("comments[0].createdAt").type(JsonFieldType.STRING).description("댓글 생성시간"),
-                                        fieldWithPath("comments[0].updatedAt").type(JsonFieldType.STRING).description("댓글 수정시간")
+                                        fieldWithPath("comments[].id").type(JsonFieldType.NUMBER).description("댓글 식별자"),
+                                        fieldWithPath("comments[].content").type(JsonFieldType.STRING).description("댓글 내용"),
+                                        fieldWithPath("comments[].user").type(JsonFieldType.OBJECT).description("댓글 작성한 유저"),
+                                        fieldWithPath("comments[].user.id").type(JsonFieldType.NUMBER).description("유저의 식별자"),
+                                        fieldWithPath("comments[].user.name").type(JsonFieldType.STRING).description("유저의 이름"),
+                                        fieldWithPath("comments[].createdAt").type(JsonFieldType.STRING).description("댓글 생성시간"),
+                                        fieldWithPath("comments[].updatedAt").type(JsonFieldType.STRING).description("댓글 수정시간")
                                 )
                         )
                 ));
@@ -262,10 +262,10 @@ class CommentAnswerControllerTest {
         comments.setCreatedAt(timeStamp);
         comments.setUpdatedAt(timeStamp);
 
-        CommentAnswerResponseDto.Comments.User user = new CommentAnswerResponseDto.Comments.User();
-        user.setId(userId);
-        user.setName(userName);
-        comments.setUser(user);
+        CommentAnswerResponseDto.Comments.Member member = new CommentAnswerResponseDto.Comments.Member();
+        member.setId(userId);
+        member.setName(userName);
+        comments.setMember(member);
 
         return comments;
     }

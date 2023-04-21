@@ -1,7 +1,5 @@
 package com.homunculus.preproject.article.controller;
 
-import com.homunculus.preproject.answer.controller.AnswerController;
-import com.homunculus.preproject.answer.dto.AnswerSimpleResponseDto;
 import com.homunculus.preproject.article.dto.ArticleDto;
 import com.homunculus.preproject.article.dto.ArticleResponseDetailsDto;
 import com.homunculus.preproject.article.dto.ArticleResponseDto;
@@ -9,7 +7,6 @@ import com.homunculus.preproject.article.dto.ArticleSimpleResponseDto;
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.article.mapper.ArticleMapper;
 import com.homunculus.preproject.article.service.ArticleService;
-import com.homunculus.preproject.response.details.ArticleResponseDetails;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -70,8 +67,8 @@ public class ArticleController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping(ARTICLE_DEFAULT_URL + "/{article-id}")
-    public ResponseEntity getArticle(@PathVariable("article-id") @Positive Long articleId) {
+    @GetMapping(ARTICLE_DEFAULT_URL + "/{articleId}")
+    public ResponseEntity getArticle(@PathVariable("articleId") @Positive Long articleId) {
         Article article = articleService.findArticle(articleId);
 
         ArticleResponseDetailsDto responseDto = mapper.articleToArticleResponseDetailsDto(article);
@@ -91,8 +88,8 @@ public class ArticleController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @DeleteMapping(ARTICLE_DEFAULT_URL + "/{article-id}")
-    public ResponseEntity deleteArticle(@PathVariable("article-id") @Positive Long articleId) {
+    @DeleteMapping(ARTICLE_DEFAULT_URL + "/{articleId}")
+    public ResponseEntity deleteArticle(@PathVariable("articleId") @Positive Long articleId) {
         articleService.deleteArticle(articleId);
 
         ArticleSimpleResponseDto responseDto = createArticleSimpleResponseDto(ArticleSimpleResponseMessages.ARTICLE_MESSAGE_DELETE);

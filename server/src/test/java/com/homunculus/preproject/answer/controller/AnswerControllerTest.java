@@ -172,11 +172,11 @@ class AnswerControllerTest {
         final Long articleId = 1L;
         final Integer evaluationScore = 999;
         final Long answerId1 = 1L;      final String answerContent1 = "답변글 내용1";
-        final Long userId1 = 1L;        final String userName1 = "유저1";
+        final Long memberId1 = 1L;      final String memberName1 = "유저1";
         final Integer commentCount1 = 5;
 
         final Long answerId2 = 2L;      final String answerContent2 = "답변글 내용2";
-        final Long userId2 = 2L;        final String userName2 = "유저2";
+        final Long memberId2 = 2L;      final String memberName2 = "유저2";
         final Integer commentCount2 = 999;
 
         AnswerResponseDto responseDto = new AnswerResponseDto();
@@ -186,8 +186,8 @@ class AnswerControllerTest {
             responseDto.setEvaluationScore(evaluationScore);
 
             List<AnswerResponseDto.Answers> answers = new ArrayList<>();
-            answers.add(createDummyAnswers(timeStamp, answerId1, answerContent1, userId1, userName1, commentCount1));
-            answers.add(createDummyAnswers(timeStamp, answerId2, answerContent2, userId2, userName2, commentCount2));
+            answers.add(createDummyAnswers(timeStamp, answerId1, answerContent1, memberId1, memberName1, commentCount1));
+            answers.add(createDummyAnswers(timeStamp, answerId2, answerContent2, memberId2, memberName2, commentCount2));
 
             responseDto.setMessageCount(answers.size());
             responseDto.setAnswers(answers);
@@ -242,30 +242,30 @@ class AnswerControllerTest {
                                         fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
                                         fieldWithPath("evaluationScore").type(JsonFieldType.NUMBER).description("추천 점수"),
                                         fieldWithPath("answers").type(JsonFieldType.ARRAY).description("답변글 목록"),
-                                        fieldWithPath("answers[0].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
-                                        fieldWithPath("answers[0].content").type(JsonFieldType.STRING).description("답변글 내용"),
-                                        fieldWithPath("answers[0].user").type(JsonFieldType.OBJECT).description("답변글 작성한 유저의 정보"),
-                                        fieldWithPath("answers[0].user.id").type(JsonFieldType.NUMBER).description("유저의 식별자"),
-                                        fieldWithPath("answers[0].user.name").type(JsonFieldType.STRING).description("유저의 이름"),
-                                        fieldWithPath("answers[0].count").type(JsonFieldType.OBJECT).description("댓글 개수 목록"),
-                                        fieldWithPath("answers[0].count.comments").type(JsonFieldType.NUMBER).description("총 댓글 개수"),
-                                        fieldWithPath("answers[0].createdAt").type(JsonFieldType.STRING).description("답변글 생성시간"),
-                                        fieldWithPath("answers[0].updatedAt").type(JsonFieldType.STRING).description("답변글 수정시간")
+                                        fieldWithPath("answers[].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
+                                        fieldWithPath("answers[].content").type(JsonFieldType.STRING).description("답변글 내용"),
+                                        fieldWithPath("answers[].member").type(JsonFieldType.OBJECT).description("답변글 작성한 유저의 정보"),
+                                        fieldWithPath("answers[].member.id").type(JsonFieldType.NUMBER).description("유저의 식별자"),
+                                        fieldWithPath("answers[].member.name").type(JsonFieldType.STRING).description("유저의 이름"),
+                                        fieldWithPath("answers[].count").type(JsonFieldType.OBJECT).description("댓글 개수 목록"),
+                                        fieldWithPath("answers[].count.comments").type(JsonFieldType.NUMBER).description("총 댓글 개수"),
+                                        fieldWithPath("answers[].createdAt").type(JsonFieldType.STRING).description("답변글 생성시간"),
+                                        fieldWithPath("answers[].updatedAt").type(JsonFieldType.STRING).description("답변글 수정시간")
                                 )
                         )
                 ));
     }
 
     private static AnswerResponseDto.Answers createDummyAnswers(
-                   LocalDateTime timeStamp, Long answerId, String answerContent, Long userId, String userName, Integer commentCount) {
+                   LocalDateTime timeStamp, Long answerId, String answerContent, Long memberId, String memberName, Integer commentCount) {
         AnswerResponseDto.Answers answers = new AnswerResponseDto.Answers();
         answers.setId(answerId);
         answers.setContent(answerContent);
 
-        AnswerResponseDto.Answers.User user = new AnswerResponseDto.Answers.User();
-        user.setId(userId);
-        user.setName(userName);
-        answers.setUser(user);
+        AnswerResponseDto.Answers.Member member = new AnswerResponseDto.Answers.Member();
+        member.setId(memberId);
+        member.setName(memberName);
+        answers.setMember(member);
 
         AnswerResponseDto.Answers.Count count = new AnswerResponseDto.Answers.Count();
         count.setComments(commentCount);
