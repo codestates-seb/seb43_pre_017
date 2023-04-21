@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EvaluationAnswerService {
-    public EvaluationAnswer createEvaluationAnswer(EvaluationAnswer evaluation) {
+    public EvaluationAnswer createEvaluationAnswer(EvaluationAnswer evaluationAnswer) {
         return null;
     }
 
