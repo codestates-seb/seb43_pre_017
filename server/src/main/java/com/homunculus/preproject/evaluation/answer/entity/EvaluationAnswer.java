@@ -17,13 +17,14 @@ public class EvaluationAnswer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long evaluationId;
+    private String evaluationAnswerScore;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "USERDETAILS_ID")
+    @JoinColumn(name = "MEMBERDETAILS_ID")
     private MemberDetails memberDetails;
 
     @ManyToOne
