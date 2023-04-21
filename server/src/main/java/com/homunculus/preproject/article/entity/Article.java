@@ -36,7 +36,7 @@ public class Article extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBERDETAILS_ID")
     private MemberDetails memberDetails;
 
