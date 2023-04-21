@@ -62,6 +62,7 @@ class AnswerControllerTest {
         final String postContent = "등록할 답변글 내용";
         final String responseContent = "답변을 등록했습니다.";
         final Long articleId = 1L;
+        final Long answerId = 1L;
 
         AnswerDto.Post post = new AnswerDto.Post();
         post.setContent(postContent);
@@ -70,7 +71,10 @@ class AnswerControllerTest {
         given(mapper.answerPostDtoToAnswer(any())).willReturn(new Answer());
 
         AnswerSimpleResponseDto responseDto = new AnswerSimpleResponseDto();
+        responseDto.setArticleId(articleId);
+        responseDto.setAnswerId(answerId);
         responseDto.setMessage(responseContent);
+        given(mapper.answerToAnswerSimpleResponseDto(any(), any())).willReturn(responseDto);
 
         given(answerService.createAnswer(any())).willReturn(new Answer());
 
@@ -102,6 +106,8 @@ class AnswerControllerTest {
                         ),
                         responseFields(
                                 List.of(
+                                        fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
+                                        fieldWithPath("answerId").type(JsonFieldType.NUMBER).description("답변글 식별자"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
                                 )
                         )
@@ -124,7 +130,10 @@ class AnswerControllerTest {
         given(mapper.answerPatchDtoToAnswer(any())).willReturn(new Answer());
 
         AnswerSimpleResponseDto responseDto = new AnswerSimpleResponseDto();
+        responseDto.setArticleId(articleId);
+        responseDto.setAnswerId(answerId);
         responseDto.setMessage(responseContent);
+        given(mapper.answerToAnswerSimpleResponseDto(any(), any())).willReturn(responseDto);
 
         given(answerService.updateAnswer(any())).willReturn(new Answer());
 
@@ -156,6 +165,8 @@ class AnswerControllerTest {
                         ),
                         responseFields(
                                 List.of(
+                                        fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
+                                        fieldWithPath("answerId").type(JsonFieldType.NUMBER).description("답변글 식별자"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
                                 )
                         )
@@ -292,9 +303,12 @@ class AnswerControllerTest {
         final String responseContent = "답변을 삭제했습니다.";
 
         AnswerSimpleResponseDto responseDto = new AnswerSimpleResponseDto();
+        responseDto.setArticleId(articleId);
+        responseDto.setAnswerId(answerId);
         responseDto.setMessage(responseContent);
+        given(mapper.answerToAnswerSimpleResponseDto(any(), any())).willReturn(responseDto);
 
-        doNothing().when(answerService).deleteAnswer(anyLong(), anyLong());
+        given(answerService.deleteAnswer(anyLong(), anyLong())).willReturn(new Answer());
 
         // when
         ResultActions actions =
@@ -316,6 +330,8 @@ class AnswerControllerTest {
                         ),
                         responseFields(
                                 List.of(
+                                        fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
+                                        fieldWithPath("answerId").type(JsonFieldType.NUMBER).description("답변글 식별자"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
                                 )
                         )

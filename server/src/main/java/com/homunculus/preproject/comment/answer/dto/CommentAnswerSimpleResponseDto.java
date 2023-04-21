@@ -8,5 +8,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class CommentAnswerSimpleResponseDto {
+    private Long id;
     private String message;
 }

@@ -381,6 +381,7 @@ class ArticleControllerTest {
                                         fieldWithPath("member").type(JsonFieldType.OBJECT).description("질문글 등록 유저 정보"),
                                         fieldWithPath("member.id").type(JsonFieldType.NUMBER).description("유저 식별자"),
                                         fieldWithPath("member.name").type(JsonFieldType.STRING).description("유저 이름"),
+                                        fieldWithPath("count").type(JsonFieldType.OBJECT).description("질문에 대한 개수 목록"),
                                         fieldWithPath("count.comment").type(JsonFieldType.NUMBER).description("질문에 대한 댓글 개수"),
                                         fieldWithPath("count.answer").type(JsonFieldType.NUMBER).description("질문에 대한 답변글 개수")
                                 )

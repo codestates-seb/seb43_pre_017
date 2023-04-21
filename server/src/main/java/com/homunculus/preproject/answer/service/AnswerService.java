@@ -21,5 +21,5 @@ public class AnswerService {
         return null;
     }
 
-    public void deleteAnswer(Long articleId, Long answerId) {   }
+    public Answer deleteAnswer(Long articleId, Long answerId) { return null;  }
 }
