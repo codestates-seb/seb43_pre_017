@@ -6,13 +6,18 @@ import com.homunculus.preproject.comment.answer.dto.CommentAnswerSimpleResponseD
 import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerResponseDto;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CommentAnswerMapper {
+    @Mapping(source = "answerId", target = "answer.answerId")
     CommentAnswer commentAnswerPostDtoToCommentAnswer(CommentAnswerDto.Post commentDtoPost);
+
+    @Mapping(source = "answerId", target = "answer.answerId")
+    @Mapping(source = "commentId", target = "commentAnswerId")
     CommentAnswer commentAnswerPatchDtoToCommentAnswer(CommentAnswerDto.Patch commentDtoPatch);
     default CommentAnswerResponseDto commentAnswersToCommentAnswerResponseDto(Long answerId, List<CommentAnswer> commentAnswers) {
         CommentAnswerResponseDto result = new CommentAnswerResponseDto();
