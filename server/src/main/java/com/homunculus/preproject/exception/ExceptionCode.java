@@ -3,12 +3,11 @@ package com.homunculus.preproject.exception;
 import lombok.Getter;
 
 public enum ExceptionCode {
-
-    USER_NOT_FOUND(404, "User not found"),
+    MEMBER_NOT_FOUND(404, "Member not found"),
     ARTICLE_NOT_FOUND(404, "Article not found"),
-    USER_EXISTS(409, "User exists"),
+    MEMBER_EXISTS(409, "Member exists"),
     NOT_IMPLEMENTATION(501, "Not Implementation"),
-    INVALID_USER_STATUS(400, "Invalid user status");
+    INVALID_MEMBER_STATUS(400, "Invalid Member status");
 
     @Getter
     private int status;

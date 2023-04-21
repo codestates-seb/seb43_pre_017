@@ -23,7 +23,7 @@ public class CommentAnswerResponseDto {
     public static class Comments {
         private Long id;
         private String content;
-        private User user;
+        private Member member;
 
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
@@ -31,7 +31,7 @@ public class CommentAnswerResponseDto {
         @Getter
         @Setter
         @NoArgsConstructor
-        public static class User {
+        public static class Member {
             private Long id;
             private String name;
         }

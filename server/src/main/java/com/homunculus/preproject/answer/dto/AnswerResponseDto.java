@@ -24,7 +24,7 @@ public class AnswerResponseDto {
     public static class Answers {
         private Long id;
         private String content;
-        private User user;
+        private Member member;
         private Count count;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;    // todo : 필드명 주의
@@ -32,7 +32,7 @@ public class AnswerResponseDto {
         @Getter
         @Setter
         @NoArgsConstructor
-        public static class User {
+        public static class Member {
             private Long id;
             private String name;
         }
