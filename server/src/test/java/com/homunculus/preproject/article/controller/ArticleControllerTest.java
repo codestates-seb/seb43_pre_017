@@ -305,11 +305,11 @@ class ArticleControllerTest {
         // given
         final LocalDateTime timeStamp = LocalDateTime.now();
 
-
         final String articleMessage = "질문글 조회를 완료했습니다.";
         final Long articleId = 1L;
         final String articleTitle = "질문글 제목";
         final String articleContent = "질문글 내용";
+        final Integer evaluationScore = 54321;
 
         final Long memberId = 1L;
         final String memberName = "유저";
@@ -329,59 +329,54 @@ class ArticleControllerTest {
 
 
         ArticleResponseDetailsDto responseDto = new ArticleResponseDetailsDto();
+        responseDto.setMessage(articleMessage);
+
+        ArticleResponseDetailsDto.Article article = new ArticleResponseDetailsDto.Article();
+        article.setId(articleId);
+        article.setTitle(articleTitle);
+        article.setContent(articleContent);
+        article.setEvaluationScore(evaluationScore);
+        article.setCreatedAt(timeStamp);
+        article.setUpdatedAt(timeStamp);
+        responseDto.setArticle(article);
+
+        ArticleResponseDetailsDto.Member member = new ArticleResponseDetailsDto.Member();
+        member.setId(memberId);
+        member.setName(memberName);
+        responseDto.setMember(member);
+
+        List<ArticleResponseDetailsDto.Comments> commentArticles = new ArrayList<>();
         {
-            responseDto.setMessage(articleMessage);
+            ArticleResponseDetailsDto.Comments comment1 = new ArticleResponseDetailsDto.Comments();
+            comment1.setId(commentArticleId1);
+            comment1.setContent(commentArticleContent1);
+            comment1.setCreatedAt(timeStamp);
+            comment1.setUpdatedAt(timeStamp);
+            commentArticles.add(comment1);
 
-            ArticleResponseDetailsDto.Article article = new ArticleResponseDetailsDto.Article();
-            {
-                article.setId(articleId);
-                article.setTitle(articleTitle);
-                article.setContent(articleContent);
-                article.setCreatedAt(timeStamp);
-                article.setUpdatedAt(timeStamp);
-            }
-            responseDto.setArticle(article);
-
-            ArticleResponseDetailsDto.Member member = new ArticleResponseDetailsDto.Member();
-            {
-                member.setId(memberId);
-                member.setName(memberName);
-            }
-            responseDto.setMember(member);
-
-            List<ArticleResponseDetailsDto.Comments> commentArticles = new ArrayList<>();
-            {
-                ArticleResponseDetailsDto.Comments comment1 = new ArticleResponseDetailsDto.Comments();
-                comment1.setId(commentArticleId1);
-                comment1.setContent(commentArticleContent1);
-                comment1.setCreatedAt(timeStamp);
-                comment1.setUpdatedAt(timeStamp);
-                commentArticles.add(comment1);
-
-                ArticleResponseDetailsDto.Comments comment2 = new ArticleResponseDetailsDto.Comments();
-                comment2.setId(commentArticleId2);
-                comment2.setContent(commentArticleContent2);
-                comment2.setCreatedAt(timeStamp);
-                comment2.setUpdatedAt(timeStamp);
-                commentArticles.add(comment2);
-            }
-            responseDto.setComments(commentArticles);
-
-            List<ArticleResponseDetailsDto.Answers> answers = new ArrayList<>();
-            {
-                answers.add(createDummyAnswer(
-                        timeStamp, answerId1, answerContent1,
-                        commentAnswerId1_1, commentAnswerContent1_1,
-                        commentAnswerId1_2, commentAnswerContent1_2
-                ));
-                answers.add(createDummyAnswer(
-                        timeStamp, answerId2, answerContent2,
-                        commentAnswerId2_1, commentAnswerContent2_1,
-                        commentAnswerId2_2, commentAnswerContent2_2
-                ));
-            }
-            responseDto.setAnswers(answers);
+            ArticleResponseDetailsDto.Comments comment2 = new ArticleResponseDetailsDto.Comments();
+            comment2.setId(commentArticleId2);
+            comment2.setContent(commentArticleContent2);
+            comment2.setCreatedAt(timeStamp);
+            comment2.setUpdatedAt(timeStamp);
+            commentArticles.add(comment2);
         }
+        responseDto.setComments(commentArticles);
+
+        List<ArticleResponseDetailsDto.Answers> answers = new ArrayList<>();
+        {
+            answers.add(createDummyAnswer(
+                    timeStamp, answerId1, answerContent1,
+                    commentAnswerId1_1, commentAnswerContent1_1,
+                    commentAnswerId1_2, commentAnswerContent1_2
+            ));
+            answers.add(createDummyAnswer(
+                    timeStamp, answerId2, answerContent2,
+                    commentAnswerId2_1, commentAnswerContent2_1,
+                    commentAnswerId2_2, commentAnswerContent2_2
+            ));
+        }
+        responseDto.setAnswers(answers);
 
         given(articleService.findArticle(anyLong())).willReturn(new Article());
 
@@ -421,7 +416,7 @@ class ArticleControllerTest {
                                         fieldWithPath("article.id").type(JsonFieldType.NUMBER).description("질문글 식별자"),
                                         fieldWithPath("article.title").type(JsonFieldType.STRING).description("질문글 제목"),
                                         fieldWithPath("article.content").type(JsonFieldType.STRING).description("질문글 내용"),
-                                        fieldWithPath("article.evaluationScore").type(JsonFieldType.STRING).description("질문글 추천점수"),
+                                        fieldWithPath("article.evaluationScore").type(JsonFieldType.NUMBER).description("질문글 추천점수"),
                                         fieldWithPath("article.createdAt").type(JsonFieldType.STRING).description("질문글 생성시간"),
                                         fieldWithPath("article.updatedAt").type(JsonFieldType.STRING).description("질문글 수정시간"),
                                         fieldWithPath("member").type(JsonFieldType.OBJECT).description("질문글 등록 유저 정보"),

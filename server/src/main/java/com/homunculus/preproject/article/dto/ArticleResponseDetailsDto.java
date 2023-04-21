@@ -25,6 +25,7 @@ public class ArticleResponseDetailsDto {
         private Long id;
         private String title;
         private String content;
+        private Integer evaluationScore;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
     }
