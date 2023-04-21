@@ -1,4 +1,7 @@
+import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import StyledLogin, {
   StyledLoginContainer,
   StyledGoogleBtn,
@@ -13,11 +16,12 @@ import StyledLogin, {
 } from "./style";
 
 /** 2023/04/18 - 로그인 페이지 작성  - by JHH0906 */
-const Login = () => {
+const login = (setLogin) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailMessage, setEmailMessage] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
+  const navigate = useNavigate();
 
   /** 2023/04/19 이메일 유효성 검사 이벤트  -by JHH0906 */
   const handleEmailChange = (e) => {
@@ -28,7 +32,9 @@ const Login = () => {
     setPassword(e.target.value);
   };
   /** 2023/04/19 이메일 비밀번호 유효성 검사  -by JHH0906 */
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     if (email.length < 1) {
       setEmailMessage("Email cannot be empty.");
     } else if (!email.includes("@")) {
@@ -40,9 +46,42 @@ const Login = () => {
       setPasswordMessage("Password cannot be empty.");
     } else {
       setPasswordMessage(null);
+      return;
     }
-    return;
+    const header = {
+      headers: {
+        "Content-Type": `application/json`,
+      },
+    };
+
+    const reqbody = JSON.stringify({
+      email: email,
+      password: password,
+    });
+    axios.defaults.withCredentials = true;
+    axios
+      .post("/api/login", { reqbody, header })
+      .then((res) => {
+        if (res.status === 200) {
+          const accessToken = res.headers.get("Authorization");
+          const refreshToken = res.headers.get("refresh");
+          localStorage.setItem("access_token", accessToken);
+          localStorage.setItem("refresh_token", refreshToken);
+        }
+        return res;
+      })
+      .then((res) => {
+        console.log(res.data);
+        setLogin(true);
+        navigate("/");
+      })
+      .catch(() => {
+        alert("실패");
+        setEmail("");
+        setPassword("");
+      });
   };
+
   return (
     <StyledLogin>
       <StyledLogo href="/">
@@ -69,6 +108,7 @@ const Login = () => {
           onChange={handleEmailChange}
         ></StyledLoginInput>
         {emailMessage ? <div className="emailError">{emailMessage}</div> : null}
+
         <StyledTitle>
           Password <StyledForgotLink>Forgot password?</StyledForgotLink>
         </StyledTitle>
@@ -93,4 +133,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default login;

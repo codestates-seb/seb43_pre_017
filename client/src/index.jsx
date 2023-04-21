@@ -16,7 +16,7 @@ import Layout from "./Layout";
 
 // component
 import Home from "./pages/Home";
-import Login from "./pages/Login";
+import Login from "./pages/login";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
