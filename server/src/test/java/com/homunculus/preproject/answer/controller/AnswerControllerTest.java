@@ -166,7 +166,7 @@ class AnswerControllerTest {
     @DisplayName("Answer 조회 테스트")
     void getAllAnswers() throws Exception {
         // given
-        final LocalDateTime timeStamp = LocalDateTime.of(2023,4,19,21,0,0);
+        final LocalDateTime timeStamp = LocalDateTime.now();
 
         final String answerMessage = "답변글 조회를 완료했습니다.";
         final Long articleId = 1L;
