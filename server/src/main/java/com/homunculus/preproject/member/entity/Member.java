@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -30,6 +32,14 @@ public class Member extends Auditable {
 
     @OneToOne(mappedBy = "member")
     private MemberDetails memberDetails;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles = new ArrayList<>();
+
+    public enum MemberRole {
+        ROLE_USER,
+        ROLE_ADMIN
+    }
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)

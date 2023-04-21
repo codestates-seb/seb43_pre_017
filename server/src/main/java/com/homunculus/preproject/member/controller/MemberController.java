@@ -28,7 +28,7 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberMapper mapper;
 
-    @PostMapping(MEMBER_DEFAULT_URL)
+    @PostMapping("/api/signup")
     public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post memberDtoPost) {
         Member member = memberService.createMember(mapper.memberPostDtoToMember(memberDtoPost));
 
