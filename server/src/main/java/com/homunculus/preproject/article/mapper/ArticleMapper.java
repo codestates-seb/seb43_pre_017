@@ -73,6 +73,7 @@ public interface ArticleMapper {
 
         return result;
     }
+
     default ArticleResponseDto articlesToArticleResponseDto(List<Article> articles) {
         ArticleResponseDto result = new ArticleResponseDto();
 
