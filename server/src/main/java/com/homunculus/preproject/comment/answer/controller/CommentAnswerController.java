@@ -66,7 +66,7 @@ public class CommentAnswerController {
         List<CommentAnswer> commentAnswers = pageCommentAnswers.getContent();
 
         return new ResponseEntity<>(
-                mapper.commentAnswersToCommentAnswerResponseDto(commentAnswers),
+                mapper.commentAnswersToCommentAnswerResponseDto(answerId, commentAnswers),
                 HttpStatus.OK);
     }
 

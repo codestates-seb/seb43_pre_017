@@ -6,17 +6,43 @@ import com.homunculus.preproject.comment.answer.dto.CommentAnswerSimpleResponseD
 import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerResponseDto;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CommentAnswerMapper {
+    @Mapping(source = "answerId", target = "answer.answerId")
     CommentAnswer commentAnswerPostDtoToCommentAnswer(CommentAnswerDto.Post commentDtoPost);
+
+    @Mapping(source = "answerId", target = "answer.answerId")
+    @Mapping(source = "commentId", target = "commentAnswerId")
     CommentAnswer commentAnswerPatchDtoToCommentAnswer(CommentAnswerDto.Patch commentDtoPatch);
-    default CommentAnswerResponseDto commentAnswersToCommentAnswerResponseDto(List<CommentAnswer> commentAnswers) {
+    default CommentAnswerResponseDto commentAnswersToCommentAnswerResponseDto(Long answerId, List<CommentAnswer> commentAnswers) {
         CommentAnswerResponseDto result = new CommentAnswerResponseDto();
         result.setMessage("댓글들 조회를 완료했습니다.");
         result.setMessageCount(commentAnswers.size());
+        result.setAnswerId(answerId);
+
+        List<CommentAnswerResponseDto.Comments> resultComments = new ArrayList<>();
+        {
+            for(CommentAnswer src : commentAnswers) {
+                CommentAnswerResponseDto.Comments comment = new CommentAnswerResponseDto.Comments();
+                comment.setId(src.getCommentAnswerId());
+                comment.setContent(src.getContent());
+
+                CommentAnswerResponseDto.Comments.Member member = new CommentAnswerResponseDto.Comments.Member();
+                member.setId(src.getMember().getMemberId());
+                member.setName(src.getMember().getName());
+                comment.setMember(member);
+
+                comment.setCreatedAt(src.getCreatedAt());
+                comment.setUpdatedAt(src.getUpdatedAt());
+                resultComments.add(comment);
+            }
+        }
+        result.setComments(resultComments);
 
         return result;
     }

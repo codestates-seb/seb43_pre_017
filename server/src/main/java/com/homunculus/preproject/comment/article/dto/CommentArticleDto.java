@@ -21,8 +21,8 @@ public class CommentArticleDto {
     @Setter
     @NoArgsConstructor
     public static class Patch {
+        private Long articleId;
         private Long commentId;
-        private Long answerId;
         private String content;
     }
 }

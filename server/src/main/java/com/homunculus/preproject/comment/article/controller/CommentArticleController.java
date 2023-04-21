@@ -48,7 +48,7 @@ public class CommentArticleController {
                                               @PathVariable("articleId") @Positive Long articleId,
                                               @PathVariable("commentId") @Positive Long commentId) {
         commentArticleDtoPatch.setCommentId(commentId);
-        commentArticleDtoPatch.setAnswerId(articleId);
+        commentArticleDtoPatch.setArticleId(articleId);
         CommentArticle commentArticle = mapper.commentArticlePatchDtoToCommentArticle(commentArticleDtoPatch);
         CommentArticle updatedCommentArticle = commentArticleService.updateCommentArticle(commentArticle);
 
@@ -65,10 +65,10 @@ public class CommentArticleController {
         Page<CommentArticle> pageCommentArticles = commentArticleService.findCommentArticles(articleId, page - 1, size);
         List<CommentArticle> commentArticles = pageCommentArticles.getContent();
 
-        CommentArticleResponseDto responseDto = mapper.commentArticlesToCommentArticleResponseDto(commentArticles);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        return new ResponseEntity<>(
+                mapper.commentArticlesToCommentArticleResponseDto(articleId, commentArticles),
+                HttpStatus.OK);
     }
-
 
     @DeleteMapping(COMMENT_ARTICLE_DEFAULT_URL + "/{articleId}" + COMMENT_ARTICLE_DEFAULT_URL_DETAIL + "/{commentId}")
     public ResponseEntity deleteCommentArticle(@PathVariable("articleId") @Positive Long articleId,
