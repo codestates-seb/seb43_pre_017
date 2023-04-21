@@ -45,8 +45,8 @@ public class CommentAnswerController {
 
     @PatchMapping(COMMENT_ANSWER_DEFAULT_URL + "/{answerId}" + COMMENT_ANSWER_DEFAULT_URL_DETAIL + "/{commentId}")
     public ResponseEntity patchCommentAnswer(@Valid @RequestBody CommentAnswerDto.Patch commentAnswerDtoPatch,
-                                       @PathVariable("answerId") @Positive Long answerId,
-                                       @PathVariable("commentId") @Positive Long commentId) {
+                                             @PathVariable("answerId") @Positive Long answerId,
+                                             @PathVariable("commentId") @Positive Long commentId) {
         commentAnswerDtoPatch.setCommentId(commentId);
         commentAnswerDtoPatch.setAnswerId(answerId);
         CommentAnswer commentAnswer = mapper.commentAnswerPatchDtoToCommentAnswer(commentAnswerDtoPatch);
@@ -60,8 +60,8 @@ public class CommentAnswerController {
 
     @GetMapping(COMMENT_ANSWER_DEFAULT_URL + "/{answerId}" + COMMENT_ANSWER_ALL_MAPPING_URL)
     public ResponseEntity getAllCommentAnswers(@PathVariable("answerId") @Positive Long answerId,
-                                        @RequestParam("page") @Positive Integer page,
-                                        @RequestParam("size") @Positive Integer size) {
+                                               @RequestParam("page") @Positive Integer page,
+                                               @RequestParam("size") @Positive Integer size) {
         Page<CommentAnswer> pageCommentAnswers = commentAnswerService.findCommentAnswers(answerId,page - 1, size);
         List<CommentAnswer> commentAnswers = pageCommentAnswers.getContent();
 

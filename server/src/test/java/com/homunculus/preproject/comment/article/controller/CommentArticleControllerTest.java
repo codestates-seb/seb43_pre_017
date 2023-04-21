@@ -63,6 +63,7 @@ class CommentArticleControllerTest {
         final String postContent = "등록할 댓글 내용";
         final String responseContent = "댓글을 등록했습니다.";
         final Long articleId = 1L;
+        final Long commentId = 1L;
 
         CommentArticleDto.Post post = new CommentArticleDto.Post();
         post.setContent(postContent);
@@ -72,6 +73,9 @@ class CommentArticleControllerTest {
 
         CommentArticleSimpleResponseDto responseDto = new CommentArticleSimpleResponseDto();
         responseDto.setMessage(responseContent);
+        responseDto.setArticleId(articleId);
+        responseDto.setCommentId(commentId);
+        given(mapper.commentArticleToCommentArticleSimpleResponseDto(any(), any())).willReturn(responseDto);
 
         given(commentArticleService.createCommentArticle(any())).willReturn(new CommentArticle());
 
@@ -103,6 +107,8 @@ class CommentArticleControllerTest {
                         ),
                         responseFields(
                                 List.of(
+                                        fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
+                                        fieldWithPath("commentId").type(JsonFieldType.NUMBER).description("질문글의 댓글 식별자"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
                                 )
                         )
@@ -128,6 +134,9 @@ class CommentArticleControllerTest {
 
         CommentArticleSimpleResponseDto responseDto = new CommentArticleSimpleResponseDto();
         responseDto.setMessage(responseContent);
+        responseDto.setArticleId(articleId);
+        responseDto.setCommentId(commentId);
+        given(mapper.commentArticleToCommentArticleSimpleResponseDto(any(), any())).willReturn(responseDto);
 
         given(commentArticleService.updateCommentArticle(any())).willReturn(new CommentArticle());
 
@@ -159,6 +168,8 @@ class CommentArticleControllerTest {
                         ),
                         responseFields(
                                 List.of(
+                                        fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
+                                        fieldWithPath("commentId").type(JsonFieldType.NUMBER).description("질문글의 댓글 식별자"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
                                 )
                         )
@@ -280,8 +291,11 @@ class CommentArticleControllerTest {
 
         CommentArticleSimpleResponseDto responseDto = new CommentArticleSimpleResponseDto();
         responseDto.setMessage(responseContent);
+        responseDto.setArticleId(articleId);
+        responseDto.setCommentId(commentId);
+        given(mapper.commentArticleToCommentArticleSimpleResponseDto(any(), any())).willReturn(responseDto);
 
-        doNothing().when(commentArticleService).deleteCommentArticle(anyLong(), anyLong());
+        given(commentArticleService.deleteCommentArticle(anyLong(), anyLong())).willReturn(new CommentArticle());
 
         // when
         ResultActions actions =
@@ -303,6 +317,8 @@ class CommentArticleControllerTest {
                         ),
                         responseFields(
                                 List.of(
+                                        fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
+                                        fieldWithPath("commentId").type(JsonFieldType.NUMBER).description("질문글의 댓글 식별자"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
                                 )
                         )

@@ -16,9 +16,7 @@ public class CommentArticleService {
         return null;
     }
 
-    public void deleteCommentArticle(Long answerId, Long commentId) {
-    }
+    public CommentArticle deleteCommentArticle(Long answerId, Long commentId) { return null; }
 
-    public Page<CommentArticle> findCommentArticles(Long articleId, Integer page, Integer size) {return null;
-    }
+    public Page<CommentArticle> findCommentArticles(Long articleId, Integer page, Integer size) { return null; }
 }
