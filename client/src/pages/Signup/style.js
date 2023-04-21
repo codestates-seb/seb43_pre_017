@@ -7,11 +7,27 @@ const StyledSignup = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  .passwordError {
+    width: 240px;
+    font-size: 12px;
+    display: flex;
+    position: absolute;
+    margin-top: 152px;
+    color: red;
+  }
+  .emailError {
+    width: 240px;
+    font-size: 12px;
+    display: flex;
+    position: absolute;
+
+    color: red;
+  }
 `;
 /** 2023/04/21 - 회원가입 페이지 컨테이너 - by JHH0906 */
 export const StyledSignupContainer = styled.div`
   width: 280px;
-  height: 360px;
+  height: 380px;
   display: flex;
   flex-direction: column;
   background: white;
@@ -54,6 +70,7 @@ export const StyledTitle = styled.div`
   font-weight: 700;
   display: flex;
   justify-content: space-between;
+  margin-bottom: 2px;
 `;
 /** 2023/04/21 - 회원가입 페이지 텍스트,인풋 컨테이너 - by JHH0906 */
 export const StyledInputContainer = styled.div`
@@ -71,14 +88,15 @@ export const StyledSignupInput = styled.input`
   border-radius: 4px;
   border: 1px solid ${({ theme }) => theme.colors.gray300};
   background: white;
-  margin: 10px;
   cursor: pointer;
+  margin-bottom: 24px;
 `;
 /** 2023/04/21 - 회원가입 페이지 유효성 텍스트 - by JHH0906 */
 export const StyledValid = styled.div`
   width: 240px;
   color: gray;
   font-size: 12px;
+  margin-top: 8px;
 `;
 /** 2023/04/21 - 회원가입 페이지 회원가입 버튼 - by JHH0906 */
 export const StyledSignupBtn = styled.button`

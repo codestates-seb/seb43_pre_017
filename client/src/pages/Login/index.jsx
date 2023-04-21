@@ -46,7 +46,6 @@ const login = (setLogin) => {
       setPasswordMessage("Password cannot be empty.");
     } else {
       setPasswordMessage(null);
-      return;
     }
 
     const header = {
