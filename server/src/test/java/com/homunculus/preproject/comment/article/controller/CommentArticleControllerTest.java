@@ -127,7 +127,7 @@ class CommentArticleControllerTest {
         CommentArticleDto.Patch patch = new CommentArticleDto.Patch();
         patch.setContent(patchContent);
         String content = gson.toJson(patch);
-        patch.setAnswerId(articleId);
+        patch.setArticleId(articleId);
         patch.setCommentId(commentId);
 
         given(mapper.commentArticlePatchDtoToCommentArticle(any())).willReturn(new CommentArticle());

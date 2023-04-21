@@ -48,7 +48,7 @@ public class CommentArticleController {
                                               @PathVariable("articleId") @Positive Long articleId,
                                               @PathVariable("commentId") @Positive Long commentId) {
         commentArticleDtoPatch.setCommentId(commentId);
-        commentArticleDtoPatch.setAnswerId(articleId);
+        commentArticleDtoPatch.setArticleId(articleId);
         CommentArticle commentArticle = mapper.commentArticlePatchDtoToCommentArticle(commentArticleDtoPatch);
         CommentArticle updatedCommentArticle = commentArticleService.updateCommentArticle(commentArticle);
 
