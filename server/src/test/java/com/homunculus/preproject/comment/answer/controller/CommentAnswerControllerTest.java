@@ -242,13 +242,13 @@ class CommentAnswerControllerTest {
                                         fieldWithPath("messageCount").type(JsonFieldType.NUMBER).description("댓글 개수"),
                                         fieldWithPath("answerId").type(JsonFieldType.NUMBER).description("답변글 식별자"),
                                         fieldWithPath("comments").type(JsonFieldType.ARRAY).description("답변글의 댓글 목록"),
-                                        fieldWithPath("comments[0].id").type(JsonFieldType.NUMBER).description("댓글 식별자"),
-                                        fieldWithPath("comments[0].content").type(JsonFieldType.STRING).description("댓글 내용"),
-                                        fieldWithPath("comments[0].member").type(JsonFieldType.OBJECT).description("댓글 작성한 유저"),
-                                        fieldWithPath("comments[0].member.id").type(JsonFieldType.NUMBER).description("유저의 식별자"),
-                                        fieldWithPath("comments[0].member.name").type(JsonFieldType.STRING).description("유저의 이름"),
-                                        fieldWithPath("comments[0].createdAt").type(JsonFieldType.STRING).description("댓글 생성시간"),
-                                        fieldWithPath("comments[0].updatedAt").type(JsonFieldType.STRING).description("댓글 수정시간")
+                                        fieldWithPath("comments[].id").type(JsonFieldType.NUMBER).description("댓글 식별자"),
+                                        fieldWithPath("comments[].content").type(JsonFieldType.STRING).description("댓글 내용"),
+                                        fieldWithPath("comments[].member").type(JsonFieldType.OBJECT).description("댓글 작성한 유저"),
+                                        fieldWithPath("comments[].member.id").type(JsonFieldType.NUMBER).description("유저의 식별자"),
+                                        fieldWithPath("comments[].member.name").type(JsonFieldType.STRING).description("유저의 이름"),
+                                        fieldWithPath("comments[].createdAt").type(JsonFieldType.STRING).description("댓글 생성시간"),
+                                        fieldWithPath("comments[].updatedAt").type(JsonFieldType.STRING).description("댓글 수정시간")
                                 )
                         )
                 ));
