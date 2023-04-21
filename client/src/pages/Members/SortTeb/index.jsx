@@ -1,7 +1,27 @@
-import { StyledSortTeb } from "./style";
+import {
+  StyledSortTeb,
+  StyledNewsetTeb,
+  StyledArticleTeb,
+  StyledAnswerTeb,
+} from "./style";
 
 const SortTeb = () => {
-  return <StyledSortTeb></StyledSortTeb>;
+  return (
+    <StyledSortTeb>
+      <StyledNewsetTeb>New Set</StyledNewsetTeb>
+
+      <a href="/">
+        <StyledArticleTeb>Article</StyledArticleTeb>
+      </a>
+
+      <StyledAnswerTeb>Answer</StyledAnswerTeb>
+    </StyledSortTeb>
+  );
 };
 
+const NewsetTeb = () => {
+  return (
+    
+  )
+}
 export default SortTeb;
