@@ -46,7 +46,6 @@ const login = (setLogin) => {
       setPasswordMessage("Password cannot be empty.");
     } else {
       setPasswordMessage(null);
-      return;
     }
     const header = {
       headers: {
@@ -127,7 +126,7 @@ const login = (setLogin) => {
       </StyledLoginContainer>
       <StyledSignup>
         Don’t have an account?
-        <StyledSignupLink href="/login">Sign up</StyledSignupLink>
+        <StyledSignupLink href="/signup">Sign up</StyledSignupLink>
       </StyledSignup>
     </StyledLogin>
   );
