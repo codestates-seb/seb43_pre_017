@@ -56,6 +56,7 @@ class EvaluationAnswerControllerTest {
         // given
         final String responseContent = "평가를 등록했습니다.";
         final Long answerId = 1L;
+        final Long evaluationId = 1L;
         final String score = "+1";
 
         EvaluationAnswerDto.Post post = new EvaluationAnswerDto.Post();
@@ -66,6 +67,9 @@ class EvaluationAnswerControllerTest {
 
         EvaluationAnswerSimpleResponseDto responseDto = new EvaluationAnswerSimpleResponseDto();
         responseDto.setMessage(responseContent);
+        responseDto.setAnswerId(answerId);
+        responseDto.setEvaluationId(evaluationId);
+        given(mapper.evaluationAnswerToevaluationAnswerSimpleResponseDto(any(), any())).willReturn(responseDto);
 
         given(evaluationAnswerService.createEvaluationAnswer(any())).willReturn(new EvaluationAnswer());
 
@@ -97,6 +101,8 @@ class EvaluationAnswerControllerTest {
                         ),
                         responseFields(
                                 List.of(
+                                        fieldWithPath("answerId").type(JsonFieldType.NUMBER).description("답변글 식별자"),
+                                        fieldWithPath("evaluationId").type(JsonFieldType.NUMBER).description("답변글 추천 식별자"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
                                 )
                         )
@@ -113,8 +119,11 @@ class EvaluationAnswerControllerTest {
 
         EvaluationAnswerSimpleResponseDto responseDto = new EvaluationAnswerSimpleResponseDto();
         responseDto.setMessage(responseContent);
+        responseDto.setAnswerId(answerId);
+        responseDto.setEvaluationId(evaluationId);
+        given(mapper.evaluationAnswerToevaluationAnswerSimpleResponseDto(any(), any())).willReturn(responseDto);
 
-        doNothing().when(evaluationAnswerService).deleteEvaluationAnswer(anyLong(), anyLong());
+        given(evaluationAnswerService.deleteEvaluationAnswer(anyLong(), anyLong())).willReturn(new EvaluationAnswer());
 
         // when
         ResultActions actions =
@@ -136,6 +145,8 @@ class EvaluationAnswerControllerTest {
                         ),
                         responseFields(
                                 List.of(
+                                        fieldWithPath("answerId").type(JsonFieldType.NUMBER).description("답변글 식별자"),
+                                        fieldWithPath("evaluationId").type(JsonFieldType.NUMBER).description("답변글 추천 식별자"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
                                 )
                         )

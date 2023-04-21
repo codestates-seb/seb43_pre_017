@@ -9,6 +9,5 @@ public class EvaluationAnswerService {
         return null;
     }
 
-    public void deleteEvaluationAnswer(Long answerId, Long evaluationId) {
-    }
+    public EvaluationAnswer deleteEvaluationAnswer(Long answerId, Long evaluationId) { return null; }
 }
