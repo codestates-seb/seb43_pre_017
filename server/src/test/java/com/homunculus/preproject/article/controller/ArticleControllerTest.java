@@ -314,19 +314,8 @@ class ArticleControllerTest {
         final Long memberId = 1L;
         final String memberName = "유저";
 
-        final Long commentArticleId1 = 1L;      final String commentArticleContent1 = "질문의 댓글1";
-        final Long commentArticleId2 = 2L;      final String commentArticleContent2 = "질문의 댓글2";
-
-        final Long answerId1 = 1L;
-        final String answerContent1 = "답변1의 내용";
-        final Long commentAnswerId1_1 = 1L;     final String commentAnswerContent1_1 = "답변1의 댓글1";
-        final Long commentAnswerId1_2 = 2L;     final String commentAnswerContent1_2 = "답변1의 댓글2";
-
-        final Long answerId2 = 2L;
-        final String answerContent2 = "답변2의 내용";
-        final Long commentAnswerId2_1 = 3L;     final String commentAnswerContent2_1 = "답변2의 댓글1";
-        final Long commentAnswerId2_2 = 4L;     final String commentAnswerContent2_2 = "답변2의 댓글2";
-
+        final Integer commentArticleCount = 55;
+        final Integer answerCount = 998;
 
         ArticleResponseDetailsDto responseDto = new ArticleResponseDetailsDto();
         responseDto.setMessage(articleMessage);
@@ -345,38 +334,11 @@ class ArticleControllerTest {
         member.setName(memberName);
         responseDto.setMember(member);
 
-        List<ArticleResponseDetailsDto.Comments> commentArticles = new ArrayList<>();
-        {
-            ArticleResponseDetailsDto.Comments comment1 = new ArticleResponseDetailsDto.Comments();
-            comment1.setId(commentArticleId1);
-            comment1.setContent(commentArticleContent1);
-            comment1.setCreatedAt(timeStamp);
-            comment1.setUpdatedAt(timeStamp);
-            commentArticles.add(comment1);
+        ArticleResponseDetailsDto.Count count = new ArticleResponseDetailsDto.Count();
+        count.setComment(commentArticleCount);
+        count.setAnswer(answerCount);
+        responseDto.setCount(count);
 
-            ArticleResponseDetailsDto.Comments comment2 = new ArticleResponseDetailsDto.Comments();
-            comment2.setId(commentArticleId2);
-            comment2.setContent(commentArticleContent2);
-            comment2.setCreatedAt(timeStamp);
-            comment2.setUpdatedAt(timeStamp);
-            commentArticles.add(comment2);
-        }
-        responseDto.setComments(commentArticles);
-
-        List<ArticleResponseDetailsDto.Answers> answers = new ArrayList<>();
-        {
-            answers.add(createDummyAnswer(
-                    timeStamp, answerId1, answerContent1,
-                    commentAnswerId1_1, commentAnswerContent1_1,
-                    commentAnswerId1_2, commentAnswerContent1_2
-            ));
-            answers.add(createDummyAnswer(
-                    timeStamp, answerId2, answerContent2,
-                    commentAnswerId2_1, commentAnswerContent2_1,
-                    commentAnswerId2_2, commentAnswerContent2_2
-            ));
-        }
-        responseDto.setAnswers(answers);
 
         given(articleService.findArticle(anyLong())).willReturn(new Article());
 
@@ -397,12 +359,9 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.article.title").value(responseDto.getArticle().getTitle()))
                 .andExpect(jsonPath("$.article.content").value(responseDto.getArticle().getContent()))
                 .andExpect(jsonPath("$.member.id").value(responseDto.getMember().getId()))
-                .andExpect(jsonPath("$.member.name").value(responseDto.getMember().getName()));
-
-        expectComments(responseDto.getComments(), 0, actions);
-        expectComments(responseDto.getComments(), 1, actions);
-        expectAnswers(responseDto.getAnswers(), 0, actions);
-        expectAnswers(responseDto.getAnswers(), 1, actions);
+                .andExpect(jsonPath("$.member.name").value(responseDto.getMember().getName()))
+                .andExpect(jsonPath("$.count.comment").value(responseDto.getCount().getComment()))
+                .andExpect(jsonPath("$.count.answer").value(responseDto.getCount().getAnswer()));
 
         actions
                 .andDo(document(
@@ -422,72 +381,12 @@ class ArticleControllerTest {
                                         fieldWithPath("member").type(JsonFieldType.OBJECT).description("질문글 등록 유저 정보"),
                                         fieldWithPath("member.id").type(JsonFieldType.NUMBER).description("유저 식별자"),
                                         fieldWithPath("member.name").type(JsonFieldType.STRING).description("유저 이름"),
-                                        fieldWithPath("comments").type(JsonFieldType.ARRAY).description("질문에 대한 답변글 목록"),
-                                        fieldWithPath("comments[].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
-                                        fieldWithPath("comments[].content").type(JsonFieldType.STRING).description("답변글 내용"),
-                                        fieldWithPath("comments[].createdAt").type(JsonFieldType.STRING).description("답변글 생성시간"),
-                                        fieldWithPath("comments[].updatedAt").type(JsonFieldType.STRING).description("답변글 수정시간"),
-                                        fieldWithPath("answers").type(JsonFieldType.ARRAY).description("질문의 답변글 목록"),
-                                        fieldWithPath("answers[].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
-                                        fieldWithPath("answers[].content").type(JsonFieldType.STRING).description("답변글 내용"),
-                                        fieldWithPath("answers[].comments").type(JsonFieldType.ARRAY).description("답변글의 댓글 목록"),
-                                        fieldWithPath("answers[].createdAt").type(JsonFieldType.STRING).description("답변의 생성시간"),
-                                        fieldWithPath("answers[].updatedAt").type(JsonFieldType.STRING).description("답변의 수정시간"),
-                                        fieldWithPath("answers[].comments[].id").type(JsonFieldType.NUMBER).description("댓글의 식별자"),
-                                        fieldWithPath("answers[].comments[].content").type(JsonFieldType.STRING).description("댓글의 내용"),
-                                        fieldWithPath("answers[].comments[].createdAt").type(JsonFieldType.STRING).description("댓글의 생성시간"),
-                                        fieldWithPath("answers[].comments[].updatedAt").type(JsonFieldType.STRING).description("댓글의 수정시간")
+                                        fieldWithPath("count.comment").type(JsonFieldType.NUMBER).description("질문에 대한 댓글 개수"),
+                                        fieldWithPath("count.answer").type(JsonFieldType.NUMBER).description("질문에 대한 답변글 개수")
                                 )
                         )
                 ));
     }
-
-    private static ArticleResponseDetailsDto.Answers createDummyAnswer(LocalDateTime timeStamp,
-                                                                       Long answerId, String answerContent,
-                                                                       Long commentAnswerId1, String commentAnswerContent1,
-                                                                       Long commentAnswerId2, String commentAnswerContent2) {
-        ArticleResponseDetailsDto.Answers answer = new ArticleResponseDetailsDto.Answers();
-        answer.setId(answerId);
-        answer.setContent(answerContent);
-        answer.setCreatedAt(timeStamp);
-        answer.setUpdatedAt(timeStamp);
-
-        List<ArticleResponseDetailsDto.Answers.Comments> commentAnswers = new ArrayList<>();
-        {
-            commentAnswers.add(createDummyCommentAnswer(timeStamp, commentAnswerId1, commentAnswerContent1));
-            commentAnswers.add(createDummyCommentAnswer(timeStamp, commentAnswerId2, commentAnswerContent2));
-        }
-        answer.setComments(commentAnswers);
-        return answer;
-    }
-
-    private static ArticleResponseDetailsDto.Answers.Comments createDummyCommentAnswer(LocalDateTime timeStamp,
-                                                                                       Long commentAnswerId1_1, String commentAnswerContent1_1) {
-        ArticleResponseDetailsDto.Answers.Comments comment = new ArticleResponseDetailsDto.Answers.Comments();
-        comment.setId(commentAnswerId1_1);
-        comment.setContent(commentAnswerContent1_1);
-        comment.setCreatedAt(timeStamp);
-        comment.setUpdatedAt(timeStamp);
-        return comment;
-    }
-
-
-    private void expectComments(List<ArticleResponseDetailsDto.Comments> comments, Integer index, ResultActions actions) throws Exception {
-        actions
-                .andExpect(jsonPath("$.comments[" + index + "].id").value(comments.get(index).getId()))
-                .andExpect(jsonPath("$.comments[" + index + "].content").value(comments.get(index).getContent()));
-    }
-
-    private void expectAnswers(List<ArticleResponseDetailsDto.Answers> answers, Integer index, ResultActions actions) throws Exception {
-        actions
-                .andExpect(jsonPath("$.answers[" + index + "].id").value(answers.get(index).getId()))
-                .andExpect(jsonPath("$.answers[" + index + "].content").value(answers.get(index).getContent()))
-                .andExpect(jsonPath("$.answers[" + index + "].comments[0].id").value(answers.get(index).getComments().get(0).getId()))
-                .andExpect(jsonPath("$.answers[" + index + "].comments[0].content").value(answers.get(index).getComments().get(0).getContent()))
-                .andExpect(jsonPath("$.answers[" + index + "].comments[1].id").value(answers.get(index).getComments().get(1).getId()))
-                .andExpect(jsonPath("$.answers[" + index + "].comments[1].content").value(answers.get(index).getComments().get(1).getContent()));
-    }
-
 
     @Test
     @DisplayName("Article 삭제 테스트")

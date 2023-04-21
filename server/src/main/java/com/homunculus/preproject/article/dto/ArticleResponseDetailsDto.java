@@ -15,8 +15,7 @@ public class ArticleResponseDetailsDto {
     private Article article;
     private Member member;
 
-    private List<Comments> comments;
-    private List<Answers> answers;
+    private Count count;
 
     @Getter
     @Setter
@@ -41,32 +40,8 @@ public class ArticleResponseDetailsDto {
     @Getter
     @Setter
     @NoArgsConstructor
-    public static class Comments {
-        private Long id;
-        private String content;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    public static class Answers {
-        private Long id;
-        private String content;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
-
-        private List<Comments> comments;
-
-        @Getter
-        @Setter
-        @NoArgsConstructor
-        public static class Comments {
-            private Long id;
-            private String content;
-            private LocalDateTime createdAt;
-            private LocalDateTime updatedAt;
-        }
+    public static class Count {
+        private Integer comment;
+        private Integer answer;
     }
 }

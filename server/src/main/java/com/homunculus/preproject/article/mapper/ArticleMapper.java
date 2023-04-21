@@ -25,6 +25,7 @@ public interface ArticleMapper {
         resultArticle.setId(article.getArticleId());
         resultArticle.setTitle(article.getTitle());
         resultArticle.setContent(article.getContent());
+        // resultArticle.setEvaluationScore(); todo:추천점수
         resultArticle.setCreatedAt(article.getCreatedAt());
         resultArticle.setUpdatedAt(article.getUpdatedAt());
         result.setArticle(resultArticle);
@@ -34,42 +35,10 @@ public interface ArticleMapper {
         resultMember.setName(article.getMember().getName());
         result.setMember(resultMember);
 
-        List<ArticleResponseDetailsDto.Comments> resultComments = new ArrayList<>();
-        {
-            for(CommentArticle src : article.getCommentArticles()) {
-                ArticleResponseDetailsDto.Comments comment = new ArticleResponseDetailsDto.Comments();
-                comment.setId(src.getCommentId());
-                comment.setContent(src.getContent());
-                comment.setCreatedAt(src.getCreatedAt());
-                comment.setUpdatedAt(src.getUpdatedAt());
-                resultComments.add(comment);
-            }
-        }
-        result.setComments(resultComments);
-
-        List<ArticleResponseDetailsDto.Answers> resultAnswers = new ArrayList<>();
-        {
-            for(Answer src : article.getAnswers()) {
-                ArticleResponseDetailsDto.Answers answer = new ArticleResponseDetailsDto.Answers();
-                answer.setId(src.getAnswerId());
-                answer.setContent(src.getContent());
-                answer.setCreatedAt(src.getCreatedAt());
-                answer.setUpdatedAt(src.getUpdatedAt());
-
-                List<ArticleResponseDetailsDto.Answers.Comments> comments = new ArrayList<>();
-                {
-                    for(CommentAnswer srcComment : src.getCommentAnswers()) {
-                        ArticleResponseDetailsDto.Answers.Comments comment = new ArticleResponseDetailsDto.Answers.Comments();
-                        comment.setId(srcComment.getCommentId());
-                        comment.setContent(srcComment.getContent());
-                        comment.setCreatedAt(srcComment.getCreatedAt());
-                        comment.setUpdatedAt(srcComment.getUpdatedAt());
-                    }
-                }
-                resultAnswers.add(answer);
-            }
-        }
-        result.setAnswers(resultAnswers);
+        ArticleResponseDetailsDto.Count count = new ArticleResponseDetailsDto.Count();
+        count.setComment(article.getCommentArticles().size());
+        count.setAnswer(article.getAnswers().size());
+        result.setCount(count);
 
         return result;
     }
@@ -86,8 +55,7 @@ public interface ArticleMapper {
                 article.setTitle(src.getTitle());
                 article.setContent(src.getContent());
 
-                // todo : 추천 점수
-                //article.setEvaluationScore(src.getEvaluationScore());
+                // article.setEvaluationScore(src.getEvaluationScore());    // todo : 추천 점수
                 article.setCreatedAt(src.getCreatedAt());
                 article.setUpdatedAt(src.getUpdatedAt());
 
@@ -96,10 +64,9 @@ public interface ArticleMapper {
                 member.setName(src.getMember().getName());
                 article.setMember(member);
 
-                // todo : count 구현
                 ArticleResponseDto.Articles.Count count = new ArticleResponseDto.Articles.Count();
-//                count.setComments(src.getCommentArticleCount());
-//                count.setAnswers(src.getAnswerCount());
+                count.setComments(src.getCommentArticles().size());
+                count.setAnswers(src.getAnswers().size());
                 article.setCount(count);
 
                 resultArticles.add(article);
