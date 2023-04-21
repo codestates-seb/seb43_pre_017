@@ -4,8 +4,8 @@ import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.audit.Auditable;
 import com.homunculus.preproject.comment.article.entity.CommentArticle;
 import com.homunculus.preproject.evaluation.article.entity.EvaluationArticle;
-import com.homunculus.preproject.user.entity.User;
-import com.homunculus.preproject.user.entity.UserDetails;
+import com.homunculus.preproject.member.entity.Member;
+import com.homunculus.preproject.member.entity.MemberDetails;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,12 +33,12 @@ public class Article extends Auditable {
     private Long viewCount;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID")
-    private User user;
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "USERDETAILS_ID")
-    private UserDetails userDetails;
+    @JoinColumn(name = "MEMBERDETAILS_ID")
+    private MemberDetails memberDetails;
 
     @OneToMany(mappedBy = "article")
     private List<Answer> answers = new ArrayList<>();

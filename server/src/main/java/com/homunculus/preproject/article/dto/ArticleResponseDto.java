@@ -26,7 +26,7 @@ public class ArticleResponseDto {
         private String content;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
-        private User user;
+        private Member member;
         private Count count;
 
         @Getter
@@ -41,7 +41,7 @@ public class ArticleResponseDto {
     @Getter
     @Setter
     @NoArgsConstructor
-    public static class User {
+    public static class Member {
         private Long id;
         private String name;
     }

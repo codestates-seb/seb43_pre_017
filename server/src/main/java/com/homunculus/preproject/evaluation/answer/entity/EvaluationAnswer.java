@@ -1,8 +1,8 @@
 package com.homunculus.preproject.evaluation.answer.entity;
 
 import com.homunculus.preproject.answer.entity.Answer;
-import com.homunculus.preproject.user.entity.User;
-import com.homunculus.preproject.user.entity.UserDetails;
+import com.homunculus.preproject.member.entity.Member;
+import com.homunculus.preproject.member.entity.MemberDetails;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,11 +20,11 @@ public class EvaluationAnswer {
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
-    private User user;
+    private Member member;
 
     @ManyToOne
     @JoinColumn(name = "USERDETAILS_ID")
-    private UserDetails userDetails;
+    private MemberDetails memberDetails;
 
     @ManyToOne
     @JoinColumn(name = "ANSWER_ID")

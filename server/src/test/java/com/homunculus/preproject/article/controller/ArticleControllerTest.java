@@ -66,7 +66,6 @@ class ArticleControllerTest {
         final String postTitle = "등록할 질문글 제목";
         final String postContent = "등록할 질문글 내용";
         final String responseContent = "질문을 등록했습니다.";
-        final Long articleId = 1L;
 
         ArticleDto.Post post = new ArticleDto.Post();
         post.setTitle(postTitle);
@@ -177,14 +176,14 @@ class ArticleControllerTest {
 
         final Long articleId1 = 1L;
         final Integer evaluationScore = 32500;
-        final Integer commentCount1 = 99;              final Integer answerCount1 = 5;
-        final String articleTitle1 = "질문글 제목1";     final String articleContent1 = "질문글 내용1";
-        final Long userId1 = 1L;        final String userName1 = "유저1";
+        final Integer commentCount1 = 99;               final Integer answerCount1 = 5;
+        final String articleTitle1 = "질문글 제목1";      final String articleContent1 = "질문글 내용1";
+        final Long memberId1 = 1L;                      final String memberName1 = "유저1";
 
         final Long articleId2 = 2L;
-        final Integer commentCount2 = 20;              final Integer answerCount2 = 9;
-        final String articleTitle2 = "질문글 제목2";     final String articleContent2 = "질문글 내용2";
-        final Long userId2 = 3L;        final String userName2 = "유저2";
+        final Integer commentCount2 = 20;               final Integer answerCount2 = 9;
+        final String articleTitle2 = "질문글 제목2";      final String articleContent2 = "질문글 내용2";
+        final Long memberId2 = 3L;                      final String memberName2 = "유저2";
 
         ArticleResponseDto responseDto = new ArticleResponseDto();
         {
@@ -194,11 +193,11 @@ class ArticleControllerTest {
             List<ArticleResponseDto.Articles> articles = new ArrayList<>();
             articles.add(createDummyArticles(timeStamp,
                     articleId1, articleTitle1, articleContent1,
-                    userId1, userName1, commentCount1, answerCount1
+                    memberId1, memberName1, commentCount1, answerCount1
             ));
             articles.add(createDummyArticles(timeStamp,
                     articleId2, articleTitle2, articleContent2,
-                    userId2, userName2, commentCount2, answerCount2
+                    memberId2, memberName2, commentCount2, answerCount2
             ));
             responseDto.setMessageCount(articles.size());
             responseDto.setArticles(articles);
@@ -265,7 +264,7 @@ class ArticleControllerTest {
 
     private static ArticleResponseDto.Articles createDummyArticles(LocalDateTime timeStamp,
                                                             Long articleId, String articleTitle, String articleContent,
-                                                            Long userId, String userName,
+                                                            Long memberId, String memberName,
                                                             Integer commentCount, Integer answerCount) {
         ArticleResponseDto.Articles articles = new ArticleResponseDto.Articles();
         articles.setId(articleId);
@@ -274,10 +273,10 @@ class ArticleControllerTest {
         articles.setCreatedAt(timeStamp);
         articles.setUpdatedAt(timeStamp);
 
-        ArticleResponseDto.User user = new ArticleResponseDto.User();
-        user.setId(userId);
-        user.setName(userName);
-        articles.setUser(user);
+        ArticleResponseDto.Member member = new ArticleResponseDto.Member();
+        member.setId(memberId);
+        member.setName(memberName);
+        articles.setMember(member);
 
         ArticleResponseDto.Articles.Count count = new ArticleResponseDto.Articles.Count();
         count.setComments(commentCount);
@@ -292,8 +291,8 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.articles[" + index + "].id").value(articles.get(index).getId()))
                 .andExpect(jsonPath("$.articles[" + index + "].title").value(articles.get(index).getTitle()))
                 .andExpect(jsonPath("$.articles[" + index + "].content").value(articles.get(index).getContent()))
-                .andExpect(jsonPath("$.articles[" + index + "].user.id").value(articles.get(index).getUser().getId()))
-                .andExpect(jsonPath("$.articles[" + index + "].user.name").value(articles.get(index).getUser().getName()))
+                .andExpect(jsonPath("$.articles[" + index + "].user.id").value(articles.get(index).getMember().getId()))
+                .andExpect(jsonPath("$.articles[" + index + "].user.name").value(articles.get(index).getMember().getName()))
                 .andExpect(jsonPath("$.articles[" + index + "].count.comments").value(articles.get(index).getCount().getComments()))
                 .andExpect(jsonPath("$.articles[" + index + "].count.answers").value(articles.get(index).getCount().getAnswers()));
     }
@@ -310,8 +309,8 @@ class ArticleControllerTest {
         final String articleTitle = "질문글 제목";
         final String articleContent = "질문글 내용";
 
-        final Long userId = 1L;
-        final String userName = "유저";
+        final Long memberId = 1L;
+        final String memberName = "유저";
 
         final Long commentArticleId1 = 1L;      final String commentArticleContent1 = "질문의 댓글1";
         final Long commentArticleId2 = 2L;      final String commentArticleContent2 = "질문의 댓글2";
@@ -341,12 +340,12 @@ class ArticleControllerTest {
             }
             responseDto.setArticle(article);
 
-            ArticleResponseDetailsDto.User user = new ArticleResponseDetailsDto.User();
+            ArticleResponseDetailsDto.Member member = new ArticleResponseDetailsDto.Member();
             {
-                user.setId(userId);
-                user.setName(userName);
+                member.setId(memberId);
+                member.setName(memberName);
             }
-            responseDto.setUser(user);
+            responseDto.setMember(member);
 
             List<ArticleResponseDetailsDto.Comments> commentArticles = new ArrayList<>();
             {
@@ -400,8 +399,8 @@ class ArticleControllerTest {
                 .andExpect(jsonPath("$.article.id").value(responseDto.getArticle().getId()))
                 .andExpect(jsonPath("$.article.title").value(responseDto.getArticle().getTitle()))
                 .andExpect(jsonPath("$.article.content").value(responseDto.getArticle().getContent()))
-                .andExpect(jsonPath("$.user.id").value(responseDto.getUser().getId()))
-                .andExpect(jsonPath("$.user.name").value(responseDto.getUser().getName()));
+                .andExpect(jsonPath("$.user.id").value(responseDto.getMember().getId()))
+                .andExpect(jsonPath("$.user.name").value(responseDto.getMember().getName()));
 
         expectComments(responseDto.getComments(), 0, actions);
         expectComments(responseDto.getComments(), 1, actions);
