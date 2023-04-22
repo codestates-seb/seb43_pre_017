@@ -15,26 +15,26 @@ import java.util.Collection;
 @Component
 public class CustomBeanUtils {
 
-    public static <T> void checkAllowedMember (T object, ExceptionCode code) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Member connectedMember = (Member) authentication.getPrincipal();
-
-        try {
-            Field memberField = object.getClass().getDeclaredField("member");
-            memberField.setAccessible(true);
-
-            if (memberField.getType().equals(Member.class)) {
-                Member member = (Member) memberField.get(object);
-                if (member.getEmail().equals(connectedMember.getEmail())) {
-                    throw new BusinessLogicException(code);
-                }
-            } else {
-                throw new BusinessLogicException(ExceptionCode.MEMBER_FIELD_NOT_FOUND);
-            }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new BusinessLogicException(ExceptionCode.MEMBER_FIELD_NOT_FOUND);
-        }
-    }
+//    public static <T> void checkAllowedMember (T object, ExceptionCode code) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        Member connectedMember = (Member) authentication.getPrincipal();
+//
+//        try {
+//            Field memberField = object.getClass().getDeclaredField("member");
+//            memberField.setAccessible(true);
+//
+//            if (memberField.getType().equals(Member.class)) {
+//                Member member = (Member) memberField.get(object);
+//                if (member.getEmail().equals(connectedMember.getEmail())) {
+//                    throw new BusinessLogicException(code);
+//                }
+//            } else {
+//                throw new BusinessLogicException(ExceptionCode.MEMBER_FIELD_NOT_FOUND);
+//            }
+//        } catch (NoSuchFieldException | IllegalAccessException e) {
+//            throw new BusinessLogicException(ExceptionCode.MEMBER_FIELD_NOT_FOUND);
+//        }
+//    }
 
     public static <T> T copyNonNullProperties(T source, T destination) {
         if (source == null || destination == null || source.getClass() != destination.getClass()) {

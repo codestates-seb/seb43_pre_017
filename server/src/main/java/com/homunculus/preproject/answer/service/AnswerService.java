@@ -2,36 +2,48 @@ package com.homunculus.preproject.answer.service;
 
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.answer.repository.AnswerRepository;
+import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
 import com.homunculus.preproject.member.entity.Member;
 import com.homunculus.preproject.utils.CustomBeanUtils;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
+import java.util.Objects;
 import java.util.Optional;
 
-import static org.springframework.security.core.context.SecurityContextHolder.getContext;
-
 @Service
-@RequiredArgsConstructor
 public class AnswerService {
 
     private final AnswerRepository answerRepository;
 
+    @Autowired
+    public AnswerService(AnswerRepository answerRepository) {
+        this.answerRepository = answerRepository;
+    }
+
     public Answer createAnswer(Answer answer) {
+        String email = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        Member member = new Member();
+        member.setEmail(email);
+        answer.setMember(member);
 
         return answerRepository.save(answer);
     }
 
     public Answer updateAnswer(Answer answer) {
-        Answer findAnswer = findVerifiedAnswer(answer.getAnswerId());
+        Answer findAnswer = findVerifiedAnswer(answer);
+
+        checkAllowedMember(answer, ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED);
 
         return CustomBeanUtils.copyNonNullProperties(answer, findAnswer);
     }
@@ -44,21 +56,43 @@ public class AnswerService {
     }
 
     public Answer deleteAnswer(Long articleId, Long answerId) {
-        Answer deletedAnswer = findVerifiedAnswer(answerId);
-        if( deletedAnswer.getArticle().getArticleId() != articleId )
-            throw new BusinessLogicException(ExceptionCode.ANSWER_NOT_ACCEPTABLE);
+        // 유효성 확인
+        Answer deletedAnswer = findVerifiedAnswer(articleId, answerId);
 
-        CustomBeanUtils.checkAllowedMember(deletedAnswer, ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED);
+        // 삭제 권한 확인
+        checkAllowedMember(deletedAnswer, ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED);
 
         return null;
     }
 
-    private Answer findVerifiedAnswer(Long answerId) {
-        Optional<Answer> optionalAnswer = answerRepository.findAnswerByAnswerId(answerId);
+    public static void checkAllowedMember (Answer answer, ExceptionCode code) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Member connectedMember = (Member) authentication.getPrincipal();
+        if (answer.getMember().getEmail().equals(connectedMember.getEmail())) {
+            throw new BusinessLogicException(code);
+        }
+    }
+
+    private Answer findVerifiedAnswer(Long articleId, Long answerId) {
+        Answer answer = new Answer();
+        answer.setAnswerId(answerId);
+
+        Article article = new Article();
+        article.setArticleId(articleId);
+        answer.setArticle(article);
+
+        return findVerifiedAnswer(answer);
+    }
+
+    public Answer findVerifiedAnswer(Answer answer) {
+        Optional<Answer> optionalAnswer = answerRepository.findById(answer.getAnswerId());
 
         Answer findAnswer = optionalAnswer.orElseThrow( () ->
                 new BusinessLogicException(ExceptionCode.ANSWER_NOT_FOUND)
         );
+
+        if(!Objects.equals(findAnswer.getArticle().getArticleId(), answer.getArticle().getArticleId()))
+            throw new BusinessLogicException(ExceptionCode.ANSWER_NOT_ACCEPTABLE);
 
         return findAnswer;
     }
