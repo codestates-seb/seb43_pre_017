@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 import StyledSignup, {
   StyledSignupContainer,
@@ -18,12 +19,16 @@ const Signup = () => {
   const [emailMessage, setEmailMessage] = useState("");
   const [password, setPassword] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
+  const [name, setName] = useState("");
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
   /** 2023/04/19 비밀번호 유효성 검사 이벤트  -by JHH0906 */
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
+  };
+  const handleNameChange = (e) => {
+    setName(e.target.value);
   };
   /** 2023/04/19 이메일 비밀번호 유효성 검사  -by JHH0906 */
   const handleSubmit = async (e) => {
@@ -41,6 +46,33 @@ const Signup = () => {
     } else {
       setPasswordMessage(null);
     }
+    const reqbody = JSON.stringify({
+      name: name,
+      email: email,
+      password: password,
+    });
+    axios
+      .post("http://localhost:8080/api/signup", reqbody, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        if (res.status === 201) {
+          alert("성공");
+          window.location.href = "/login";
+          console.log(res);
+        }
+      })
+      .catch((err) => {
+        if (err.status === 409) {
+          console.log(err.data);
+          alert("이미 등록된 계정입니다!");
+          setEmail("");
+          setPassword("");
+          setName("");
+        }
+      });
   };
   return (
     <StyledSignup>
@@ -56,7 +88,12 @@ const Signup = () => {
       <StyledSignupContainer>
         <StyledInputContainer>
           <StyledTitle>Display Name</StyledTitle>
-          <StyledSignupInput></StyledSignupInput>
+          <StyledSignupInput
+            type="text"
+            name="name"
+            value={name}
+            onChange={handleNameChange}
+          ></StyledSignupInput>
           <StyledTitle>Email</StyledTitle>
           <StyledSignupInput
             type="text"
