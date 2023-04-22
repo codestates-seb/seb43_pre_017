@@ -2,7 +2,7 @@ import { StyledMembers, StyledSearchFrom } from "./style";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 //component
-import SortTeb from "./SortTeb";
+import SortTab from "./SortTab";
 import MemberBrowser from "./MemberBrowser";
 
 /** 20230421 - 유저 목록 페이지 - by sinyaenok */
@@ -28,7 +28,7 @@ const Members = () => {
           </StyledSearchFrom>
 
           {/* 유저 정렬 탭 */}
-          <SortTeb />
+          <SortTab />
         </div>
         <MemberBrowser></MemberBrowser>
       </div>
