@@ -11,11 +11,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -33,6 +35,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(EvaluationAnswerController.class)
 @MockBean(JpaMetamodelMappingContext.class)
 @AutoConfigureRestDocs
@@ -52,6 +55,7 @@ class EvaluationAnswerControllerTest {
 
     @Test
     @DisplayName("EvaluationAnswer 등록 테스트")
+    @WithMockUser(username = "유저이름", roles = "USER")
     void postCommentAnswerTest() throws Exception {
         // given
         final String responseContent = "평가를 등록했습니다.";
@@ -111,6 +115,7 @@ class EvaluationAnswerControllerTest {
 
     @Test
     @DisplayName("EvaluationAnswer 삭제 테스트")
+    @WithMockUser(username = "유저이름", roles = "USER")
     void deleteEvaluationAnswer() throws Exception {
         // given
         final Long answerId = 1L;
