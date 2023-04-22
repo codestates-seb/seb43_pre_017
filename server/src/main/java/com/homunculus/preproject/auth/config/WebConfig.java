@@ -1,4 +1,4 @@
-package com.homunculus.preproject.auth.cofig;
+package com.homunculus.preproject.auth.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
