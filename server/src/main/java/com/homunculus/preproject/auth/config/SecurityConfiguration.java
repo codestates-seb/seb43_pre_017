@@ -1,4 +1,4 @@
-package com.homunculus.preproject.auth.cofig;
+package com.homunculus.preproject.auth.config;
 
 import com.homunculus.preproject.auth.filter.JwtAuthenticationFilter;
 import com.homunculus.preproject.auth.filter.JwtVerificationFilter;
@@ -56,9 +56,13 @@ public class SecurityConfiguration {
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
+                        .antMatchers("/h2/**").permitAll()
                         .antMatchers(HttpMethod.OPTIONS).permitAll()
-                        .antMatchers(HttpMethod.POST,"/api/signup", "/api/login").permitAll()
-                        .antMatchers(HttpMethod.GET,"/api/articles", "/api/article/*/answers").permitAll()
+                        .antMatchers(HttpMethod.POST, "/api/signup", "/api/login").permitAll()
+                        .antMatchers(HttpMethod.GET, "/api/article/*", "/api/articles").permitAll()
+                        .antMatchers(HttpMethod.GET, "/api/article/*/answers").permitAll()
+                        .antMatchers(HttpMethod.GET, "/api/article/*/comments").permitAll()
+                        .antMatchers(HttpMethod.GET, "/api/answer/*/comments").permitAll()
                         .anyRequest().hasRole("USER")
                 );
 
