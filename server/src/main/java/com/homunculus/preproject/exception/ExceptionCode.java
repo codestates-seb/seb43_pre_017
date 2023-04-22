@@ -3,7 +3,8 @@ package com.homunculus.preproject.exception;
 import lombok.Getter;
 
 public enum ExceptionCode {
-    INVALID_MEMBER_STATUS(400, "Invalid Member status"),
+    INVALID_MEMBER(400, "Member is null. Something Wrong !"),
+    MEMBER_NOT_ALLOWED(403, "Member not authenticated"),
     MEMBER_NOT_FOUND(404, "Member not found"),
     MEMBER_EXISTS(409, "Member exists"),
     MEMBER_FIELD_NOT_FOUND(500, "The object does not have a member field"),

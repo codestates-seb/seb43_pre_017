@@ -5,10 +5,7 @@ import com.homunculus.preproject.answer.repository.AnswerRepository;
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
-import com.homunculus.preproject.member.entity.Member;
 import com.homunculus.preproject.utils.CustomBeanUtils;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,10 +29,6 @@ public class AnswerService {
     }
 
     public Answer createAnswer(Answer answer) {
-        String email = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        Member member = new Member();
-        member.setEmail(email);
-        answer.setMember(member);
 
         return answerRepository.save(answer);
     }
@@ -43,7 +36,7 @@ public class AnswerService {
     public Answer updateAnswer(Answer answer) {
         Answer findAnswer = findVerifiedAnswer(answer);
 
-        checkAllowedMember(answer, ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED);
+        checkAllowedMember(answer);
 
         return CustomBeanUtils.copyNonNullProperties(answer, findAnswer);
     }
@@ -60,16 +53,18 @@ public class AnswerService {
         Answer deletedAnswer = findVerifiedAnswer(articleId, answerId);
 
         // 삭제 권한 확인
-        checkAllowedMember(deletedAnswer, ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED);
+        checkAllowedMember(deletedAnswer);
 
         return null;
     }
 
-    public static void checkAllowedMember (Answer answer, ExceptionCode code) {
+    public static void checkAllowedMember (Answer answer) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Member connectedMember = (Member) authentication.getPrincipal();
-        if (answer.getMember().getEmail().equals(connectedMember.getEmail())) {
-            throw new BusinessLogicException(code);
+        User connectedUser = (User) authentication.getPrincipal();
+        if (connectedUser == null)
+            throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
+        if ( !answer.getMember().getEmail().equals(connectedUser.getUsername()) ) {
+            throw new BusinessLogicException(ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED);
         }
     }
 
