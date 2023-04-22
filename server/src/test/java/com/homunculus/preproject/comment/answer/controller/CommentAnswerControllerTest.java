@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
@@ -39,6 +41,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(CommentAnswerController.class)
 @MockBean(JpaMetamodelMappingContext.class)
 @AutoConfigureRestDocs
@@ -57,6 +60,7 @@ class CommentAnswerControllerTest {
 
     @Test
     @DisplayName("CommentAnswer 등록 테스트")
+    @WithMockUser(username = "유저이름", roles = "USER")
     void postCommentAnswerTest() throws Exception {
         // given
         final String postContent = "등록할 댓글 내용";
@@ -116,6 +120,7 @@ class CommentAnswerControllerTest {
 
     @Test
     @DisplayName("CommentAnswer 수정 테스트")
+    @WithMockUser(username = "유저이름", roles = "USER")
     void patchCommentAnswer() throws Exception {
         // given
         final String patchContent = "수정할 댓글 내용";
@@ -282,6 +287,7 @@ class CommentAnswerControllerTest {
 
     @Test
     @DisplayName("CommentAnswer 삭제 테스트")
+    @WithMockUser(username = "유저이름", roles = "USER")
     void deleteCommentAnswer() throws Exception {
         // given
         final Long answerId = 1L;

@@ -52,7 +52,7 @@ tasks.named('test') {
 }
 
 tasks.named('asciidoctor') {
-	configurations "asciidoctorExtensions"
+	configurations 'asciidoctorExtensions'
 	inputs.dir snippetsDir
 	dependsOn test
 }
