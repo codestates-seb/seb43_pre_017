@@ -14,7 +14,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,19 +39,30 @@ class AnswerServiceTest {
         final Long articleId = 1L;
         final Long answerId = 1L;
         final String content = "답변의 내용";
-        Answer answer = new Answer();
-        {
-            answer.setAnswerId(answerId);
-            answer.setContent(content);
+        Answer answer = createDummyAnswer(articleId, answerId, content, null);
 
-            Article article = new Article();
-            article.setArticleId(articleId);
-            answer.setArticle(article);
-        }
         given(answerRepository.save(answer)).willReturn(answer);
 
         //when, then
         assertDoesNotThrow(() -> answerService.createAnswer(answer));
+    }
+
+    private static Answer createDummyAnswer(Long articleId, Long answerId,
+                                            String content, String email) {
+        Answer answer = new Answer();
+
+        answer.setAnswerId(answerId);
+        answer.setContent(content);
+
+        Member member = new Member();
+        member.setEmail(email);
+        answer.setMember(member);
+
+        Article article = new Article();
+        article.setArticleId(articleId);
+        answer.setArticle(article);
+
+        return answer;
     }
 
     @Test
@@ -101,7 +111,8 @@ class AnswerServiceTest {
         given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
 
         //when, then
-        assertThrows(BusinessLogicException.class ,() -> answerService.updateAnswer(updateAnswer));
+        assertThrows(BusinessLogicException.class,
+                () -> answerService.updateAnswer(updateAnswer));
     }
 
     @Test
@@ -122,7 +133,8 @@ class AnswerServiceTest {
         given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
 
         //when, then
-        assertThrows(NullPointerException.class ,() -> answerService.updateAnswer(updateAnswer));
+        assertThrows(NullPointerException.class,
+                () -> answerService.updateAnswer(updateAnswer));
     }
 
     @Test
@@ -144,7 +156,8 @@ class AnswerServiceTest {
         given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
 
         //when, then
-        assertThrows(BusinessLogicException.class ,() -> answerService.updateAnswer(updateAnswer));
+        assertThrows(BusinessLogicException.class,
+                () -> answerService.updateAnswer(updateAnswer));
     }
 
     @Test
@@ -166,25 +179,8 @@ class AnswerServiceTest {
         given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
 
         //when, then
-        assertThrows(BusinessLogicException.class ,() -> answerService.updateAnswer(updateAnswer));
-    }
-
-    private static Answer createDummyAnswer(Long articleId, Long answerId,
-                                            String content, String email) {
-        Answer answer = new Answer();
-
-        answer.setAnswerId(answerId);
-        answer.setContent(content);
-
-        Member member = new Member();
-        member.setEmail(email);
-        answer.setMember(member);
-
-        Article article = new Article();
-        article.setArticleId(articleId);
-        answer.setArticle(article);
-
-        return answer;
+        assertThrows(BusinessLogicException.class,
+                () -> answerService.updateAnswer(updateAnswer));
     }
 
     @Test
@@ -211,7 +207,7 @@ class AnswerServiceTest {
         final String content = "기존에 있던 내용";
 
         Answer answer = createDummyAnswer(articleId, answerId, content, email);
-        given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
+        given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
 
         doNothing().when(answerRepository).deleteById(answerId);
 
@@ -227,12 +223,13 @@ class AnswerServiceTest {
         final Long articleId = 1L;
         final Long answerId = 1L;
 
-        given(answerRepository.findById(answerId)).willReturn(null);
+        given(answerRepository.findById(anyLong())).willReturn(null);
 
         doNothing().when(answerRepository).deleteById(answerId);
 
         //when, then
-        assertThrows(NullPointerException.class, () -> answerService.deleteAnswer(articleId, answerId));
+        assertThrows(NullPointerException.class,
+                () -> answerService.deleteAnswer(articleId, answerId));
     }
 
     @Test
@@ -246,12 +243,13 @@ class AnswerServiceTest {
         final String email = "email@gmail.com";
 
         Answer answer = createDummyAnswer(articleId, answerId, content, email);
-        given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
+        given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
 
         doNothing().when(answerRepository).deleteById(answerId);
 
         //when, then
-        assertThrows(BusinessLogicException.class, () -> answerService.deleteAnswer(articleId, answerId));
+        assertThrows(BusinessLogicException.class,
+                () -> answerService.deleteAnswer(articleId, answerId));
     }
 
     @Test
@@ -262,14 +260,14 @@ class AnswerServiceTest {
         final Long articleId = 1L;
         final Long answerId = 1L;
         final String content = "무언가 내용";
-        final String email = "email@gmail.com";
 
         Answer answer = createDummyAnswer(articleId, answerId, content, null);
-        given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
+        given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
 
         doNothing().when(answerRepository).deleteById(answerId);
 
         //when, then
-        assertThrows(NullPointerException.class, () -> answerService.deleteAnswer(articleId, answerId));
+        assertThrows(NullPointerException.class,
+                () -> answerService.deleteAnswer(articleId, answerId));
     }
 }
