@@ -6,7 +6,7 @@ import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
 import com.homunculus.preproject.utils.CustomBeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -19,14 +19,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AnswerService {
 
     private final AnswerRepository answerRepository;
-
-    @Autowired
-    public AnswerService(AnswerRepository answerRepository) {
-        this.answerRepository = answerRepository;
-    }
 
     public Answer createAnswer(Answer answer) {
 
@@ -36,7 +32,7 @@ public class AnswerService {
     public Answer updateAnswer(Answer answer) {
         Answer findAnswer = findVerifiedAnswer(answer);
 
-        checkAllowedMember(answer);
+        checkAllowedMember(findAnswer);
 
         return CustomBeanUtils.copyNonNullProperties(answer, findAnswer);
     }

@@ -1,24 +1,59 @@
 package com.homunculus.preproject.comment.answer.mapper;
 
+import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.comment.answer.controller.CommentAnswerController;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerDto;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerSimpleResponseDto;
 import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerResponseDto;
+import com.homunculus.preproject.member.entity.Member;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CommentAnswerMapper {
-    @Mapping(source = "answerId", target = "answer.answerId")
-    CommentAnswer commentAnswerPostDtoToCommentAnswer(CommentAnswerDto.Post commentDtoPost);
+    default CommentAnswer commentAnswerPostDtoToCommentAnswer(CommentAnswerDto.Post commentDtoPost) {
+        CommentAnswer result = new CommentAnswer();
+        result.setContent(commentDtoPost.getContent());
 
-    @Mapping(source = "answerId", target = "answer.answerId")
-    @Mapping(source = "commentId", target = "commentAnswerId")
-    CommentAnswer commentAnswerPatchDtoToCommentAnswer(CommentAnswerDto.Patch commentDtoPatch);
+        Answer resultAnswer = new Answer();
+        resultAnswer.setAnswerId(commentDtoPost.getAnswerId());
+        result.setAnswer(resultAnswer);
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = user.getUsername();
+
+        Member member = new Member();
+        member.setEmail(email);
+        result.setMember(member);
+
+        return result;
+    };
+
+    default CommentAnswer commentAnswerPatchDtoToCommentAnswer(CommentAnswerDto.Patch commentDtoPatch) {
+        CommentAnswer result = new CommentAnswer();
+        result.setCommentAnswerId(commentDtoPatch.getCommentId());
+        result.setContent(commentDtoPatch.getContent());
+
+        Answer resultAnswer = new Answer();
+        resultAnswer.setAnswerId(commentDtoPatch.getAnswerId());
+        result.setAnswer(resultAnswer);
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = user.getUsername();
+
+        Member member = new Member();
+        member.setEmail(email);
+        result.setMember(member);
+
+        return result;
+    }
+
     default CommentAnswerResponseDto commentAnswersToCommentAnswerResponseDto(Long answerId, List<CommentAnswer> commentAnswers) {
         CommentAnswerResponseDto result = new CommentAnswerResponseDto();
         result.setMessage("댓글들 조회를 완료했습니다.");
