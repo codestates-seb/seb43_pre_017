@@ -1,6 +1,5 @@
 package com.homunculus.preproject.comment.answer.repository;
 
-import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

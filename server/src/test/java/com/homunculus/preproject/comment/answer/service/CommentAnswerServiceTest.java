@@ -1,7 +1,6 @@
 package com.homunculus.preproject.comment.answer.service;
 
 import com.homunculus.preproject.answer.entity.Answer;
-import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import com.homunculus.preproject.comment.answer.repository.CommentAnswerRepository;
 import com.homunculus.preproject.exception.BusinessLogicException;

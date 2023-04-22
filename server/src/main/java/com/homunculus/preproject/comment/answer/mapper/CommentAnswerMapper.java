@@ -1,14 +1,12 @@
 package com.homunculus.preproject.comment.answer.mapper;
 
 import com.homunculus.preproject.answer.entity.Answer;
-import com.homunculus.preproject.comment.answer.controller.CommentAnswerController;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerDto;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerSimpleResponseDto;
 import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerResponseDto;
 import com.homunculus.preproject.member.entity.Member;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 
