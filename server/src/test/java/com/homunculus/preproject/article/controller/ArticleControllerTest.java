@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
@@ -42,6 +44,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(ArticleController.class)
 @MockBean(JpaMetamodelMappingContext.class)
 @AutoConfigureRestDocs
@@ -61,6 +64,7 @@ class ArticleControllerTest {
 
     @Test
     @DisplayName("Article 등록 테스트")
+    @WithMockUser(username = "유저이름", roles = "USER")
     void postArticleTest() throws Exception {
         // given
         final String postTitle = "등록할 질문글 제목";
@@ -116,6 +120,7 @@ class ArticleControllerTest {
 
     @Test
     @DisplayName("Article 수정 테스트")
+    @WithMockUser(username = "유저이름", roles = "USER")
     void patchArticle() throws Exception {
         // given
         final String patchTitle = "수정할 질문글 제목";
@@ -397,6 +402,7 @@ class ArticleControllerTest {
 
     @Test
     @DisplayName("Article 삭제 테스트")
+    @WithMockUser(username = "유저이름", roles = "USER")
     void deleteArticle() throws Exception {
         // given
         final Long articleId = 1L;
