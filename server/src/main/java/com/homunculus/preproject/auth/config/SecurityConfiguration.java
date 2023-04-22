@@ -1,4 +1,4 @@
-package com.homunculus.preproject.auth.cofig;
+package com.homunculus.preproject.auth.config;
 
 import com.homunculus.preproject.auth.filter.JwtAuthenticationFilter;
 import com.homunculus.preproject.auth.filter.JwtVerificationFilter;
