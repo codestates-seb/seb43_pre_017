@@ -4,9 +4,7 @@ import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.answer.repository.AnswerRepository;
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.exception.BusinessLogicException;
-import com.homunculus.preproject.exception.ExceptionCode;
 import com.homunculus.preproject.member.entity.Member;
-import com.homunculus.preproject.utils.CustomBeanUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,10 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.anything;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
@@ -111,7 +106,6 @@ class AnswerServiceTest {
         //given
         final Long articleId = 1L;
         final Long answerId = 1L;
-        final String email = "email@gmail.com";
 
         final String content = "답변의 내용";
         Answer answer = createDummyAnswer(articleId, answerId, content, null);
