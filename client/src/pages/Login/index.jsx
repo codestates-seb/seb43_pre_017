@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import StyledLogin, {
   StyledLoginContainer,
@@ -16,12 +15,11 @@ import StyledLogin, {
 } from "./style";
 
 /** 2023/04/18 - 로그인 페이지 작성  - by JHH0906 */
-const login = (setLogin) => {
+const login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailMessage, setEmailMessage] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
-  const navigate = useNavigate();
 
   /** 2023/04/19 이메일 유효성 검사 이벤트  -by JHH0906 */
   const handleEmailChange = (e) => {
@@ -47,37 +45,36 @@ const login = (setLogin) => {
     } else {
       setPasswordMessage(null);
     }
-    const header = {
-      headers: {
-        "Content-Type": `application/json`,
-      },
-    };
 
     const reqbody = JSON.stringify({
-      email: email,
-      password: password,
+      email,
+      password,
     });
+    // POST 요청
     axios.defaults.withCredentials = true;
     axios
-      .post("/api/login", { reqbody, header })
+      .post("http://localhost:8080/api/login", reqbody)
       .then((res) => {
-        if (res.status === 200) {
-          const accessToken = res.headers.get("Authorization");
-          const refreshToken = res.headers.get("refresh");
-          localStorage.setItem("access_token", accessToken);
-          localStorage.setItem("refresh_token", refreshToken);
-        }
-        return res;
-      })
-      .then((res) => {
-        console.log(res.data);
-        setLogin(true);
-        navigate("/");
+        const accessToken = res.data;
+        //API 요청하는 콜마다 헤더에 accessToken을 담아 보내도록 설정
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${accessToken}`;
       })
       .catch(() => {
         alert("실패");
         setEmail("");
         setPassword("");
+      });
+
+    //GET 요청
+    axios
+      .get("http://localhost:8080/api/member/{memberId}")
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 
