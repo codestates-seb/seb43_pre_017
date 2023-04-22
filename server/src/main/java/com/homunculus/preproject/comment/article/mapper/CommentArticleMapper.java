@@ -1,28 +1,59 @@
 package com.homunculus.preproject.comment.article.mapper;
 
-import com.homunculus.preproject.comment.answer.dto.CommentAnswerDto;
-import com.homunculus.preproject.comment.answer.dto.CommentAnswerResponseDto;
-import com.homunculus.preproject.comment.answer.dto.CommentAnswerSimpleResponseDto;
-import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
-import com.homunculus.preproject.comment.answer.mapper.CommentAnswerSimpleResponseMessages;
+import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.comment.article.dto.CommentArticleDto;
 import com.homunculus.preproject.comment.article.dto.CommentArticleResponseDto;
 import com.homunculus.preproject.comment.article.dto.CommentArticleSimpleResponseDto;
 import com.homunculus.preproject.comment.article.entity.CommentArticle;
+import com.homunculus.preproject.member.entity.Member;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CommentArticleMapper {
-    @Mapping(source = "articleId", target = "article.articleId")
-    CommentArticle commentArticlePostDtoToCommentArticle(CommentArticleDto.Post commentDtoPost);
+    default CommentArticle commentArticlePostDtoToCommentArticle(CommentArticleDto.Post commentDtoPost) {
+        CommentArticle result = new CommentArticle();
+        result.setContent(commentDtoPost.getContent());
+
+        Article resultArticle = new Article();
+        resultArticle.setArticleId(commentDtoPost.getArticleId());
+        result.setArticle(resultArticle);
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = user.getUsername();
+
+        Member member = new Member();
+        member.setEmail(email);
+        result.setMember(member);
+
+        return result;
+    }
 
     @Mapping(source = "articleId", target = "article.articleId")
     @Mapping(source = "commentId", target = "commentArticleId")
-    CommentArticle commentArticlePatchDtoToCommentArticle(CommentArticleDto.Patch commentDtoPatch);
+    default CommentArticle commentArticlePatchDtoToCommentArticle(CommentArticleDto.Patch commentDtoPatch) {
+        CommentArticle result = new CommentArticle();
+        result.setCommentArticleId(commentDtoPatch.getCommentId());
+        result.setContent(commentDtoPatch.getContent());
+
+        Article resultArticle = new Article();
+        resultArticle.setArticleId(commentDtoPatch.getArticleId());
+        result.setArticle(resultArticle);
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = user.getUsername();
+
+        Member member = new Member();
+        member.setEmail(email);
+        result.setMember(member);
+
+        return result;
+    }
 
     default CommentArticleResponseDto commentArticlesToCommentArticleResponseDto(Long articleId, List<CommentArticle> commentArticles) {
         CommentArticleResponseDto result = new CommentArticleResponseDto();
