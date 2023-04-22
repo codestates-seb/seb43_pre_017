@@ -55,7 +55,9 @@ public class AnswerService {
         // 삭제 권한 확인
         checkAllowedMember(deletedAnswer);
 
-        return null;
+        answerRepository.deleteById(answerId);
+
+        return deletedAnswer;
     }
 
     public static void checkAllowedMember (Answer answer) {

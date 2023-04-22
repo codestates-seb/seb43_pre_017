@@ -10,13 +10,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 
 @ExtendWith(SpringExtension.class)
 class AnswerServiceTest {
@@ -183,10 +188,88 @@ class AnswerServiceTest {
     }
 
     @Test
+    @DisplayName("답변글 조회 테스트 - 성공")
     void findAnswers() {
+        final Long articleId = 1L;
+        final Integer page = 1;
+        final Integer size = 10;
+
+        given(answerRepository.findAnswersByArticleArticleId(anyLong(), any()))
+                .willReturn(new PageImpl<>(List.of(new Answer())));
+
+        assertDoesNotThrow(() -> answerService.findAnswers(articleId, page, size));
     }
 
     @Test
+    @DisplayName("답변글 삭제 테스트 - 성공")
+    @WithMockUser(username = "email@gmail.com", roles = "USER")
     void deleteAnswer() {
+        //given
+        final Long articleId = 1L;
+        final Long answerId = 1L;
+        final String email = "email@gmail.com";
+        final String content = "기존에 있던 내용";
+
+        Answer answer = createDummyAnswer(articleId, answerId, content, email);
+        given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
+
+        doNothing().when(answerRepository).deleteById(answerId);
+
+        //when, then
+        assertDoesNotThrow(() -> answerService.deleteAnswer(articleId, answerId));
+    }
+
+    @Test
+    @DisplayName("답변글 삭제 테스트 - 답변글 없음 실패")
+    @WithMockUser(username = "email@gmail.com", roles = "USER")
+    void deleteAnswer_NotExistAnswer_Fail() {
+        //given
+        final Long articleId = 1L;
+        final Long answerId = 1L;
+
+        given(answerRepository.findById(answerId)).willReturn(null);
+
+        doNothing().when(answerRepository).deleteById(answerId);
+
+        //when, then
+        assertThrows(NullPointerException.class, () -> answerService.deleteAnswer(articleId, answerId));
+    }
+
+    @Test
+    @DisplayName("답변글 삭제 테스트 - 인증 실패")
+    @WithMockUser(username = "notEmail@gmail.com", roles = "USER")
+    void deleteAnswer_NotAuthenticated_Fail() {
+        //given
+        final Long articleId = 1L;
+        final Long answerId = 1L;
+        final String content = "무언가 내용";
+        final String email = "email@gmail.com";
+
+        Answer answer = createDummyAnswer(articleId, answerId, content, email);
+        given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
+
+        doNothing().when(answerRepository).deleteById(answerId);
+
+        //when, then
+        assertThrows(BusinessLogicException.class, () -> answerService.deleteAnswer(articleId, answerId));
+    }
+
+    @Test
+    @DisplayName("답변글 삭제 테스트 - 인증정보 없음 실패")
+    @WithMockUser(username = "", roles = "USER")
+    void deleteAnswer_NotExistAuthenticated_Fail() {
+        //given
+        final Long articleId = 1L;
+        final Long answerId = 1L;
+        final String content = "무언가 내용";
+        final String email = "email@gmail.com";
+
+        Answer answer = createDummyAnswer(articleId, answerId, content, null);
+        given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
+
+        doNothing().when(answerRepository).deleteById(answerId);
+
+        //when, then
+        assertThrows(NullPointerException.class, () -> answerService.deleteAnswer(articleId, answerId));
     }
 }
