@@ -61,6 +61,9 @@ public class AnswerService {
         User connectedUser = (User) authentication.getPrincipal();
         if (connectedUser == null)
             throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
+
+        // todo : role 추가 시 권한에 따른 등록 방식 추가해야함
+
         if ( !answer.getMember().getEmail().equals(connectedUser.getUsername()) ) {
             throw new BusinessLogicException(ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED);
         }
