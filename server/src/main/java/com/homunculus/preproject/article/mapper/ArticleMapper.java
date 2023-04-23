@@ -56,6 +56,8 @@ public interface ArticleMapper {
                 article.setId(src.getArticleId());
                 article.setTitle(src.getTitle());
                 article.setContent(src.getContent());
+                article.setEvaluationScore(src.getEvaluationScore());
+
 
                 // article.setEvaluationScore(src.getEvaluationScore());    // todo : 추천 점수
                 article.setCreatedAt(src.getCreatedAt());
