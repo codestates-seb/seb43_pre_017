@@ -65,10 +65,4 @@ public class Answer extends Auditable {
             this.status = status;
         }
     }
-
-    public void addEvaluationScore(EvaluationAnswer.EvaluationAnswerStatus status) {
-        int additionalScore = Integer.parseInt(status.getStatus());
-        int score = this.getEvaluationScore() + additionalScore;
-        this.setEvaluationScore(score);
-    }
 }

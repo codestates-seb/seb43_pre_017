@@ -185,11 +185,12 @@ class AnswerControllerTest {
 
         final String answerMessage = "답변글 조회를 완료했습니다.";
         final Long articleId = 1L;
-        final Integer evaluationScore = 999;
+        final Integer evaluationScore1 = 999;
         final Long answerId1 = 1L;      final String answerContent1 = "답변글 내용1";
         final Long memberId1 = 1L;      final String memberName1 = "유저1";
         final Integer commentCount1 = 5;
 
+        final Integer evaluationScore2 = 9;
         final Long answerId2 = 2L;      final String answerContent2 = "답변글 내용2";
         final Long memberId2 = 2L;      final String memberName2 = "유저2";
         final Integer commentCount2 = 999;
@@ -198,11 +199,10 @@ class AnswerControllerTest {
         {
             responseDto.setMessage(answerMessage);
             responseDto.setArticleId(articleId);
-            responseDto.setEvaluationScore(evaluationScore);
 
             List<AnswerResponseDto.Answers> answers = new ArrayList<>();
-            answers.add(createDummyAnswers(timeStamp, answerId1, answerContent1, memberId1, memberName1, commentCount1));
-            answers.add(createDummyAnswers(timeStamp, answerId2, answerContent2, memberId2, memberName2, commentCount2));
+            answers.add(createDummyAnswers(timeStamp, answerId1, answerContent1, memberId1, memberName1, commentCount1, evaluationScore1));
+            answers.add(createDummyAnswers(timeStamp, answerId2, answerContent2, memberId2, memberName2, commentCount2, evaluationScore2));
 
             responseDto.setMessageCount(answers.size());
             responseDto.setAnswers(answers);
@@ -232,8 +232,7 @@ class AnswerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(responseDto.getMessage()))
                 .andExpect(jsonPath("$.messageCount").value(responseDto.getMessageCount()))
-                .andExpect(jsonPath("$.articleId").value(responseDto.getArticleId()))
-                .andExpect(jsonPath("$.evaluationScore").value(responseDto.getEvaluationScore()));
+                .andExpect(jsonPath("$.articleId").value(responseDto.getArticleId()));
 
         expectAnswers(responseDto.getAnswers(), 0, actions);
         expectAnswers(responseDto.getAnswers(), 1, actions);
@@ -255,10 +254,10 @@ class AnswerControllerTest {
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지"),
                                         fieldWithPath("messageCount").type(JsonFieldType.NUMBER).description("답변글 개수"),
                                         fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
-                                        fieldWithPath("evaluationScore").type(JsonFieldType.NUMBER).description("추천 점수"),
                                         fieldWithPath("answers").type(JsonFieldType.ARRAY).description("답변글 목록"),
                                         fieldWithPath("answers[].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
                                         fieldWithPath("answers[].content").type(JsonFieldType.STRING).description("답변글 내용"),
+                                        fieldWithPath("answers[].evaluationScore").type(JsonFieldType.NUMBER).description("추천 점수"),
                                         fieldWithPath("answers[].member").type(JsonFieldType.OBJECT).description("답변글 작성한 유저의 정보"),
                                         fieldWithPath("answers[].member.id").type(JsonFieldType.NUMBER).description("유저의 식별자"),
                                         fieldWithPath("answers[].member.name").type(JsonFieldType.STRING).description("유저의 이름"),
@@ -272,10 +271,12 @@ class AnswerControllerTest {
     }
 
     private static AnswerResponseDto.Answers createDummyAnswers(
-                   LocalDateTime timeStamp, Long answerId, String answerContent, Long memberId, String memberName, Integer commentCount) {
+                   LocalDateTime timeStamp, Long answerId, String answerContent,
+                   Long memberId, String memberName, Integer commentCount, Integer evaluationScore) {
         AnswerResponseDto.Answers answers = new AnswerResponseDto.Answers();
         answers.setId(answerId);
         answers.setContent(answerContent);
+        answers.setEvaluationScore(evaluationScore);
 
         AnswerResponseDto.Answers.Member member = new AnswerResponseDto.Answers.Member();
         member.setId(memberId);

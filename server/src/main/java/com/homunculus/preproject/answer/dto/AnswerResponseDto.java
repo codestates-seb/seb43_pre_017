@@ -14,7 +14,6 @@ public class AnswerResponseDto {
     private String message;
     private Integer messageCount;
     private Long articleId;
-    private Integer evaluationScore;
 
     private List<Answers> answers;
 
@@ -24,6 +23,7 @@ public class AnswerResponseDto {
     public static class Answers {
         private Long id;
         private String content;
+        private Integer evaluationScore;
         private Member member;
         private Count count;
         private LocalDateTime createdAt;

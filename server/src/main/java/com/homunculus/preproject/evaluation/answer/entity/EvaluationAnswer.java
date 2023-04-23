@@ -46,4 +46,11 @@ public class EvaluationAnswer {
             this.status = status;
         }
     }
+
+    public void addEvaluationScore(EvaluationAnswerStatus status) {
+        Answer answer = this.getAnswer();
+        int additionalScore = Integer.parseInt(status.getStatus());
+        int score = answer.getEvaluationScore() + additionalScore;
+        answer.setEvaluationScore(score);
+    }
 }

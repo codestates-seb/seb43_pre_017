@@ -2,6 +2,7 @@ package com.homunculus.preproject.evaluation.answer.service;
 
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.answer.repository.AnswerRepository;
+import com.homunculus.preproject.answer.service.AnswerService;
 import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import com.homunculus.preproject.evaluation.answer.entity.EvaluationAnswer;
 import com.homunculus.preproject.exception.BusinessLogicException;
@@ -22,9 +23,9 @@ public class EvaluationAnswerService {
 
     public EvaluationAnswer createEvaluationAnswer(EvaluationAnswer evaluationAnswer) {
 
-        Answer findAnswer = findVerifiedEvaluationAnswer(evaluationAnswer.getAnswer().getAnswerId());
-        findAnswer.addEvaluationScore(evaluationAnswer.getEvaluationAnswerStatus());
-        answerRepository.save(findAnswer);
+        EvaluationAnswer findEvaluationAnswer = findVerifiedEvaluationAnswer(evaluationAnswer);
+        findEvaluationAnswer.addEvaluationScore(evaluationAnswer.getEvaluationAnswerStatus());
+        answerRepository.save(findEvaluationAnswer.getAnswer());
 
         return evaluationAnswer;
     }
@@ -33,25 +34,18 @@ public class EvaluationAnswerService {
         return null;
     }
 
-    private static void checkAllowedMember (Answer answer) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User connectedUser = (User) authentication.getPrincipal();
-        if (connectedUser == null)
-            throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
-        if ( !answer.getMember().getEmail().equals(connectedUser.getUsername()) ) {
-            throw new BusinessLogicException(ExceptionCode.COMMENT_MEMBER_NOT_ALLOWED);
-        }
-    }
-
-    private Answer findVerifiedEvaluationAnswer(Long answerId) {
-        Optional<Answer> optionalAnswer = answerRepository.findById(answerId);
+    private EvaluationAnswer findVerifiedEvaluationAnswer(EvaluationAnswer evaluationAnswer) {
+        Optional<Answer> optionalAnswer = answerRepository.findById(evaluationAnswer.getAnswer().getAnswerId());
         Answer findAnswer = optionalAnswer.orElseThrow( () ->
                 new BusinessLogicException(ExceptionCode.ANSWER_NOT_FOUND)
         );
 
-        checkAllowedMember(findAnswer);
+        AnswerService.checkAllowedMember(findAnswer);
 
-        return findAnswer;
+        EvaluationAnswer result = evaluationAnswer;
+        result.setAnswer(findAnswer);
+
+        return result;
     }
 
 }

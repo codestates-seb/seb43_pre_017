@@ -11,4 +11,5 @@ public class EvaluationAnswerSimpleResponseDto {
     private Long AnswerId;
     private Long evaluationId;
     private String message;
+    private Integer evaluationScore;
 }

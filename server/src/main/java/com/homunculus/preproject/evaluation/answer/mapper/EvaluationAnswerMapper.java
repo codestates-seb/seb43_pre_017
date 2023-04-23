@@ -32,6 +32,7 @@ public interface EvaluationAnswerMapper {
         responseDto.setMessage(evaluationAnswerSimpleResponseMessages.getMessage());
         responseDto.setAnswerId(evaluationAnswer.getAnswer().getAnswerId());
         responseDto.setEvaluationId(evaluationAnswer.getEvaluationAnswerId());
+        responseDto.setEvaluationScore(evaluationAnswer.getAnswer().getEvaluationScore());
 
         return responseDto;
     }
