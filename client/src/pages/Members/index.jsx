@@ -4,6 +4,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 //component
 import SortTab from "./SortTab";
 import MemberBrowser from "./MemberBrowser";
+import MemberList from "./MemberBrowser/MemberList";
 
 /** 20230421 - 유저 목록 페이지 - by sinyaenok */
 const Members = () => {
@@ -11,7 +12,7 @@ const Members = () => {
     <StyledMembers>
       <div id="main-bar">
         <h1>Members</h1>
-        <div className="d-flex ai-center js-between">
+        <div className="d-flex ai-center js-between mb24">
           {/* 유저 검색창 */}
           <StyledSearchFrom>
             <div className="search-bar">
@@ -30,7 +31,9 @@ const Members = () => {
           {/* 유저 정렬 탭 */}
           <SortTab />
         </div>
-        <MemberBrowser></MemberBrowser>
+        <MemberBrowser>
+          <MemberList />
+        </MemberBrowser>
       </div>
     </StyledMembers>
   );

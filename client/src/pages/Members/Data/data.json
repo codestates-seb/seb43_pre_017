@@ -1,0 +1,81 @@
+{
+    "members": [
+        {
+            "id":1,
+            "img":"./images/ospan-ali-6xv4A1VA1rU-unsplash.png",
+            "name":"karine",
+            "question":7,
+            "answer":3
+        },
+        {
+            "id":2,
+            "img":"./Image/member2.jpg",
+            "name":"sharin",
+            "question":10,
+            "answer":9           
+        },
+        {
+            "id":3,
+            "img":"./Image/member3.jpg",
+            "name":"dalmong",
+            "question":2,
+            "answer":5
+            
+        },{
+            "id":4,
+            "img":"./Image/member4.jpg",
+            "name":"abc",
+            "question":2,
+            "answer":5
+            
+        },{
+            "id":5,
+            "img":"./Image/member5.jpg",
+            "name":"csd",
+            "question":2,
+            "answer":5
+            
+        },{
+            "id":6,
+            "img":"./Image/member6.jpg",
+            "name":"ddd",
+            "question":2,
+            "answer":5
+            
+        },{
+            "id":7,
+            "img":"./Image/member7.jpg",
+            "name":"sdfwe",
+            "question":2,
+            "answer":5
+            
+        },{
+            "id":8,
+            "img":"./Image/member8.jpg",
+            "name":"asdfw",
+            "question":2,
+            "answer":5
+            
+        },{
+            "id":9,
+            "img":"./Image/member9.jpg",
+            "name":"fadsf",
+            "question":2,
+            "answer":5
+            
+        },{
+            "id":10,
+            "img":"./Image/member10.jpg",
+            "name":"adsf",
+            "question":2,
+            "answer":5
+            
+        },{
+            "id":11,
+            "img":"./Image/member11.jpg",
+            "name":"fasdfdsfs",
+            "question":12,
+            "answer":53   
+        }   
+    ]
+}

@@ -1,9 +1,9 @@
 import { StyledMemberBrowser } from "./style";
-import Member from "./Member";
+import MemberList from "./MemberList";
 const MemberBrowser = () => {
   return (
     <StyledMemberBrowser>
-      <Member></Member>
+      <MemberList />
     </StyledMemberBrowser>
   );
 };

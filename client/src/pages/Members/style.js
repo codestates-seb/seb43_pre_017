@@ -11,10 +11,6 @@ export const StyledMembers = styled.div`
   padding: 30px 24px 24px 24px;
   box-sizing: border-box;
 
-  #main-bar {
-    width: 100%;
-    border: 1px solid tomato;
-  }
   /* display */
   .d-flex {
     display: flex;
@@ -71,7 +67,6 @@ export const StyledMembers = styled.div`
 
   h1 {
     font-size: 26px;
-    border: 1px solid gray;
     margin-bottom: 24px;
   }
 `;
