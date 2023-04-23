@@ -1,5 +1,8 @@
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { loginAction } from "../../store/reducers";
+import { useDispatch } from "react-redux";
 
 import StyledLogin, {
   StyledLoginContainer,
@@ -20,6 +23,8 @@ const login = () => {
   const [password, setPassword] = useState("");
   const [emailMessage, setEmailMessage] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   /** 2023/04/19 이메일 유효성 검사 이벤트  -by JHH0906 */
   const handleEmailChange = (e) => {
@@ -53,28 +58,29 @@ const login = () => {
     // POST 요청
     axios.defaults.withCredentials = true;
     axios
-      .post("http://localhost:8080/api/login", reqbody)
+      .post("http://localhost:8080/api/login", reqbody, {
+        withCredentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
       .then((res) => {
-        const accessToken = res.data;
+        console.log(res);
+        const accessToken = res.headers.get("Authorization");
+        localStorage.setItem("Authorization", accessToken);
+        dispatch(loginAction(res.data));
+        navigate("/");
         //API 요청하는 콜마다 헤더에 accessToken을 담아 보내도록 설정
         axios.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${accessToken}`;
-      })
-      .catch(() => {
-        alert("실패");
-        setEmail("");
-        setPassword("");
-      });
-
-    //GET 요청
-    axios
-      .get("http://localhost:8080/api/member/{memberId}")
-      .then((res) => {
-        console.log(res.data);
+        navigate("/");
       })
       .catch((err) => {
         console.log(err);
+        alert("실패");
+        setEmail("");
+        setPassword("");
       });
   };
 
