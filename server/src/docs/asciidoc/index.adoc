@@ -7,7 +7,7 @@
 
 Homunculus <https://github.com/codestates-seb/seb43_pre_017>
 
-v1.0.3, 2023.04.21
+v1.1.0, 2023.04.23
 
 ***
 == ArticleController
@@ -359,24 +359,6 @@ include::{snippets}/post-evaluationArticle/response-fields.adoc[]
 
 
 ***
-=== 질문글에 대한 평가 삭제
-.curl-request
-include::{snippets}/delete-evaluationArticle/curl-request.adoc[]
-
-.path-parameters
-include::{snippets}/delete-evaluationArticle/path-parameters.adoc[]
-
-.http-request
-include::{snippets}/delete-evaluationArticle/http-request.adoc[]
-
-.http-response
-include::{snippets}/delete-evaluationArticle/http-response.adoc[]
-
-.response-fields
-include::{snippets}/delete-evaluationArticle/response-fields.adoc[]
-
-
-***
 == Evaluation Answer Controller
 === 답변글에 대한 평가 등록
 .curl-request
@@ -396,21 +378,3 @@ include::{snippets}/post-evaluationAnswer/http-response.adoc[]
 
 .response-fields
 include::{snippets}/post-evaluationAnswer/response-fields.adoc[]
-
-
-***
-=== 답변글에 대한 평가 삭제
-.curl-request
-include::{snippets}/delete-evaluationAnswer/curl-request.adoc[]
-
-.path-parameters
-include::{snippets}/delete-evaluationAnswer/path-parameters.adoc[]
-
-.http-request
-include::{snippets}/delete-evaluationAnswer/http-request.adoc[]
-
-.http-response
-include::{snippets}/delete-evaluationAnswer/http-response.adoc[]
-
-.response-fields
-include::{snippets}/delete-evaluationAnswer/response-fields.adoc[]
