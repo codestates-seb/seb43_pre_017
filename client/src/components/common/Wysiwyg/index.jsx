@@ -22,7 +22,7 @@ const Wysiwyg = ({ wysiwygRef, initialValue = " ", height = "50vh" }) => (
   <Editor
     ref={wysiwygRef}
     initialValue={initialValue} // 글 수정 시 사용
-    initialEditType="wysiwyg" // wysiwyg || markdown
+    initialEditType="markdown" // wysiwyg || markdown
     previewStyle="tab" // tab || vertical
     hideModeSwitch={false} // true || false
     height={height}

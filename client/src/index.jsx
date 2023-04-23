@@ -16,6 +16,7 @@ import Layout from "./Layout";
 
 // component
 import Home from "./pages/Home";
+import ArticlePage from "./pages/Article";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -33,6 +34,7 @@ root.render(
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/questions/:questionId" element={<ArticlePage />} />
             </Routes>
           </Layout>
         </BrowserRouter>
