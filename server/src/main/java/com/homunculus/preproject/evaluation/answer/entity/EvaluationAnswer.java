@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class EvaluationAnswer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long evaluationId;
+    private Long evaluationAnswerId;
     private String evaluationAnswerScore;
 
     @ManyToOne
@@ -45,5 +45,12 @@ public class EvaluationAnswer {
         EvaluationAnswerStatus(String status) {
             this.status = status;
         }
+    }
+
+    public void addEvaluationScore(EvaluationAnswerStatus status) {
+        Answer answer = this.getAnswer();
+        int additionalScore = Integer.parseInt(status.getStatus());
+        int score = answer.getEvaluationScore() + additionalScore;
+        answer.setEvaluationScore(score);
     }
 }

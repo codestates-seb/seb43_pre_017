@@ -30,6 +30,9 @@ public class Article extends Auditable {
     private String content;
 
     @Column(nullable = false)
+    private Integer evaluationScore = 0;
+
+    @Column(nullable = false)
     private Integer viewCount = 0;
 
     @ManyToOne
