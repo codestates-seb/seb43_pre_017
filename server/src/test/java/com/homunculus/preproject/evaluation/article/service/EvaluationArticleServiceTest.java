@@ -30,7 +30,7 @@ class EvaluationArticleServiceTest {
     EvaluationArticleService evaluationArticleService;
 
     @Test
-    @DisplayName("답변글 추천 성공")
+    @DisplayName("답변글 추천 - 성공")
     @WithMockUser(username = "email@gmail.com", roles = "USER")
     void createEvaluationArticle() {
         // given
@@ -57,7 +57,7 @@ class EvaluationArticleServiceTest {
         // given
         final Long articleId = 1L;
         final EvaluationArticle.EvaluationArticleStatus status =
-                EvaluationArticle.EvaluationArticleStatus.EVALUATION_ANSWER_LIKE;
+                EvaluationArticle.EvaluationArticleStatus.EVALUATION_ARTICLE_LIKE;
 
         final Integer evaluationScore = 300;
         final String email = "email@gmail.com";
@@ -78,7 +78,7 @@ class EvaluationArticleServiceTest {
         // given
         final Long articleId = 1L;
         final EvaluationArticle.EvaluationArticleStatus status =
-                EvaluationArticle.EvaluationArticleStatus.EVALUATION_ANSWER_LIKE;
+                EvaluationArticle.EvaluationArticleStatus.EVALUATION_ARTICLE_LIKE;
 
         final Integer evaluationScore = 300;
 
@@ -96,9 +96,8 @@ class EvaluationArticleServiceTest {
     @WithMockUser(username = "email@gmail.com", roles = "USER")
     void createEvaluationArticle_NotExistArticle_Fail() {
         // given
-        final Long articleId = 1L;
         final EvaluationArticle.EvaluationArticleStatus status =
-                EvaluationArticle.EvaluationArticleStatus.EVALUATION_ANSWER_LIKE;
+                EvaluationArticle.EvaluationArticleStatus.EVALUATION_ARTICLE_LIKE;
 
         final Integer evaluationScore = 300;
         final String email = "email@gmail.com";

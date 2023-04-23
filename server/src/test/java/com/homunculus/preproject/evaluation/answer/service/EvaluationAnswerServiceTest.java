@@ -15,7 +15,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.any;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -31,7 +30,7 @@ class EvaluationAnswerServiceTest {
     EvaluationAnswerService evaluationAnswerService;
 
     @Test
-    @DisplayName("답변글 추천 성공")
+    @DisplayName("답변글 추천 - 성공")
     @WithMockUser(username = "email@gmail.com", roles = "USER")
     void createEvaluationAnswer() {
         // given
@@ -97,7 +96,6 @@ class EvaluationAnswerServiceTest {
     @WithMockUser(username = "email@gmail.com", roles = "USER")
     void createEvaluationAnswer_NotExistAnswer_Fail() {
         // given
-        final Long answerId = 1L;
         final EvaluationAnswer.EvaluationAnswerStatus status =
               EvaluationAnswer.EvaluationAnswerStatus.EVALUATION_ANSWER_LIKE;
 
