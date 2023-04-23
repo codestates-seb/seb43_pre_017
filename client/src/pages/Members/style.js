@@ -69,18 +69,27 @@ export const StyledMembers = styled.div`
     font-size: 26px;
     margin-bottom: 24px;
   }
+
+  #sub-bar {
+    margin-bottom: 10px;
+    @media (max-width: 720px) {
+      flex-direction: column;
+      align-items: start;
+    }
+  }
 `;
 
 // 서치창
 export const StyledSearchFrom = styled.form`
   .search-bar {
-    width: 300px;
+    width: 250px;
     height: 45px;
     border-radius: 3px;
     border: solid 1px rgba(0, 0, 0, 0.3);
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 0 10px 10px 0;
   }
 
   .search-bar-input {

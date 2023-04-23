@@ -7,6 +7,7 @@ export const StyledSortTab = styled.div`
   border-radius: 3px;
   display: flex;
   align-items: center;
+  margin-bottom: 10px;
 `;
 
 // 탭 기본 세팅

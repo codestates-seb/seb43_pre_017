@@ -12,7 +12,7 @@ const Members = () => {
     <StyledMembers>
       <div id="main-bar">
         <h1>Members</h1>
-        <div className="d-flex ai-center js-between mb24">
+        <div id="sub-bar" className="d-flex ai-center js-between">
           {/* 유저 검색창 */}
           <StyledSearchFrom>
             <div className="search-bar">
