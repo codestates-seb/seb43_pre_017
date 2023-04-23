@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class EvaluationAnswer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long evaluationId;
+    private Long evaluationAnswerId;
     private String evaluationAnswerScore;
 
     @ManyToOne
