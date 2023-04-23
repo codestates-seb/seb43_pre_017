@@ -6,9 +6,6 @@ const StyledMain = styled.main`
   margin: 0 auto;
 
   display: flex;
-
-  /** 임시 */
-  height: 90vh;
 `;
 
 export default StyledMain;
