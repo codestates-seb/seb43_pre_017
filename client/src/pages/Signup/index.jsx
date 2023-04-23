@@ -56,6 +56,7 @@ const Signup = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        withCredentials: "include",
       })
       .then((res) => {
         if (res.status === 201) {
