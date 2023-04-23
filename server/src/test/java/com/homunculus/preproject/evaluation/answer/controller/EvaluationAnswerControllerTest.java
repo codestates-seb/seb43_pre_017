@@ -55,13 +55,13 @@ class EvaluationAnswerControllerTest {
     @Test
     @DisplayName("EvaluationAnswer 등록 테스트")
     @WithMockUser(username = "유저이름", roles = "USER")
-    void postCommentAnswerTest() throws Exception {
+    void postEvaluationAnswerTest() throws Exception {
         // given
         final String responseContent = "평가를 등록했습니다.";
         final Long answerId = 1L;
         final Long evaluationId = 1L;
         final String score = "+1";
-        final Integer resultScore = 999;
+        final Integer evaluationScore = 999;
 
         EvaluationAnswerDto.Post post = new EvaluationAnswerDto.Post();
         post.setEvaluationScore(score);
@@ -73,7 +73,7 @@ class EvaluationAnswerControllerTest {
         responseDto.setMessage(responseContent);
         responseDto.setAnswerId(answerId);
         responseDto.setEvaluationId(evaluationId);
-        responseDto.setEvaluationScore(resultScore);
+        responseDto.setEvaluationScore(evaluationScore);
         given(mapper.evaluationAnswerToevaluationAnswerSimpleResponseDto(any(), any())).willReturn(responseDto);
 
         given(evaluationAnswerService.createEvaluationAnswer(any())).willReturn(new EvaluationAnswer());

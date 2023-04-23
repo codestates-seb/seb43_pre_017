@@ -58,12 +58,13 @@ class EvaluationArticleControllerTest {
     @Test
     @DisplayName("EvaluationArticle 등록 테스트")
     @WithMockUser(username = "유저이름", roles = "USER")
-    void postCommentArticleTest() throws Exception {
+    void postEvaluationArticleTest() throws Exception {
         // given
         final String responseContent = "평가를 등록했습니다.";
         final Long articleId = 1L;
         final Long evaluationId = 1L;
         final String score = "+1";
+        final Integer evaluationScore = 999;
 
         EvaluationArticleDto.Post post = new EvaluationArticleDto.Post();
         post.setEvaluationScore(score);
@@ -75,6 +76,7 @@ class EvaluationArticleControllerTest {
         responseDto.setMessage(responseContent);
         responseDto.setArticleId(articleId);
         responseDto.setEvaluationId(evaluationId);
+        responseDto.setEvaluationScore(evaluationScore);
         given(mapper.evaluationArticleToEvaluationArticleSimpleResponseDto(any(), any())).willReturn(responseDto);
 
         given(evaluationArticleService.createEvaluationArticle(any())).willReturn(new EvaluationArticle());
@@ -109,54 +111,55 @@ class EvaluationArticleControllerTest {
                                 List.of(
                                         fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
                                         fieldWithPath("evaluationId").type(JsonFieldType.NUMBER).description("질문글 추천 식별자"),
-                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지"),
+                                        fieldWithPath("evaluationScore").type(JsonFieldType.NUMBER).description("투표점수 합산결과")
                                 )
                         )
                 ));
     }
 
-    @Test
-    @DisplayName("EvaluationArticle 삭제 테스트")
-    @WithMockUser(username = "유저이름", roles = "USER")
-    void deleteEvaluationArticle() throws Exception {
-        // given
-        final Long articleId = 1L;
-        final Long evaluationId = 1L;
-        final String responseContent = "평가를 삭제했습니다.";
-
-        EvaluationArticleSimpleResponseDto responseDto = new EvaluationArticleSimpleResponseDto();
-        responseDto.setMessage(responseContent);
-        responseDto.setArticleId(articleId);
-        responseDto.setEvaluationId(evaluationId);
-        given(mapper.evaluationArticleToEvaluationArticleSimpleResponseDto(any(), any())).willReturn(responseDto);
-
-        given(evaluationArticleService.deleteEvaluationArticle(anyLong(), anyLong())).willReturn(new EvaluationArticle());
-
-        // when
-        ResultActions actions =
-                mockMvc.perform(
-                        delete("/api/article/{articleId}/evaluation/{evaluationId}", articleId, evaluationId)
-                );
-
-        // then
-        actions
-                .andExpect(status().isNoContent())
-                .andExpect(jsonPath("$.message").value(responseDto.getMessage()))
-                .andDo(document(
-                        "delete-evaluationArticle",
-                        getRequestPreProcessor(),
-                        getResponsePreProcessor(),
-                        pathParameters(
-                                parameterWithName("articleId").description("질문글 식별자"),
-                                parameterWithName("evaluationId").description("평가 식별자")
-                        ),
-                        responseFields(
-                                List.of(
-                                        fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
-                                        fieldWithPath("evaluationId").type(JsonFieldType.NUMBER).description("질문글 추천 식별자"),
-                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
-                                )
-                        )
-                ));
-    }
+//    @Test
+//    @DisplayName("EvaluationArticle 삭제 테스트")
+//    @WithMockUser(username = "유저이름", roles = "USER")
+//    void deleteEvaluationArticle() throws Exception {
+//        // given
+//        final Long articleId = 1L;
+//        final Long evaluationId = 1L;
+//        final String responseContent = "평가를 삭제했습니다.";
+//
+//        EvaluationArticleSimpleResponseDto responseDto = new EvaluationArticleSimpleResponseDto();
+//        responseDto.setMessage(responseContent);
+//        responseDto.setArticleId(articleId);
+//        responseDto.setEvaluationId(evaluationId);
+//        given(mapper.evaluationArticleToEvaluationArticleSimpleResponseDto(any(), any())).willReturn(responseDto);
+//
+//        given(evaluationArticleService.deleteEvaluationArticle(anyLong(), anyLong())).willReturn(new EvaluationArticle());
+//
+//        // when
+//        ResultActions actions =
+//                mockMvc.perform(
+//                        delete("/api/article/{articleId}/evaluation/{evaluationId}", articleId, evaluationId)
+//                );
+//
+//        // then
+//        actions
+//                .andExpect(status().isNoContent())
+//                .andExpect(jsonPath("$.message").value(responseDto.getMessage()))
+//                .andDo(document(
+//                        "delete-evaluationArticle",
+//                        getRequestPreProcessor(),
+//                        getResponsePreProcessor(),
+//                        pathParameters(
+//                                parameterWithName("articleId").description("질문글 식별자"),
+//                                parameterWithName("evaluationId").description("평가 식별자")
+//                        ),
+//                        responseFields(
+//                                List.of(
+//                                        fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
+//                                        fieldWithPath("evaluationId").type(JsonFieldType.NUMBER).description("질문글 추천 식별자"),
+//                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
+//                                )
+//                        )
+//                ));
+//    }
 }

@@ -3,14 +3,10 @@ package com.homunculus.preproject.evaluation.answer.service;
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.answer.repository.AnswerRepository;
 import com.homunculus.preproject.answer.service.AnswerService;
-import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import com.homunculus.preproject.evaluation.answer.entity.EvaluationAnswer;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
