@@ -1,12 +1,12 @@
-package com.homunculus.preproject.evalutation.article.controller;
+package com.homunculus.preproject.evaluation.answer.controller;
 
 import com.google.gson.Gson;
-import com.homunculus.preproject.evaluation.article.controller.EvaluationArticleController;
-import com.homunculus.preproject.evaluation.article.dto.EvaluationArticleDto;
-import com.homunculus.preproject.evaluation.article.dto.EvaluationArticleSimpleResponseDto;
-import com.homunculus.preproject.evaluation.article.entity.EvaluationArticle;
-import com.homunculus.preproject.evaluation.article.mapper.EvaluationArticleMapper;
-import com.homunculus.preproject.evaluation.article.service.EvaluationArticleService;
+import com.homunculus.preproject.evaluation.answer.controller.EvaluationAnswerController;
+import com.homunculus.preproject.evaluation.answer.dto.EvaluationAnswerDto;
+import com.homunculus.preproject.evaluation.answer.dto.EvaluationAnswerSimpleResponseDto;
+import com.homunculus.preproject.evaluation.answer.entity.EvaluationAnswer;
+import com.homunculus.preproject.evaluation.answer.mapper.EvaluationAnswerMapper;
+import com.homunculus.preproject.evaluation.answer.service.EvaluationAnswerService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,64 +25,61 @@ import java.util.List;
 
 import static com.homunculus.preproject.util.ApiDocumentUtils.getRequestPreProcessor;
 import static com.homunculus.preproject.util.ApiDocumentUtils.getResponsePreProcessor;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(EvaluationArticleController.class)
+@WebMvcTest(EvaluationAnswerController.class)
 @MockBean(JpaMetamodelMappingContext.class)
 @AutoConfigureRestDocs
-class EvaluationArticleControllerTest {
+class EvaluationAnswerControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private EvaluationArticleService evaluationArticleService;
+    private EvaluationAnswerService evaluationAnswerService;
 
     @MockBean
-    private EvaluationArticleMapper mapper;
+    private EvaluationAnswerMapper mapper;
 
     @Autowired
     private Gson gson = new Gson();
 
     @Test
-    @DisplayName("EvaluationArticle 등록 테스트")
+    @DisplayName("EvaluationAnswer 등록 테스트")
     @WithMockUser(username = "유저이름", roles = "USER")
-    void postCommentArticleTest() throws Exception {
+    void postCommentAnswerTest() throws Exception {
         // given
         final String responseContent = "평가를 등록했습니다.";
-        final Long articleId = 1L;
+        final Long answerId = 1L;
         final Long evaluationId = 1L;
         final String score = "+1";
 
-        EvaluationArticleDto.Post post = new EvaluationArticleDto.Post();
+        EvaluationAnswerDto.Post post = new EvaluationAnswerDto.Post();
         post.setEvaluationScore(score);
         String content = gson.toJson(post);
-        post.setArticleId(articleId);
-        given(mapper.evaluationArticlePostDtoToEvaluationArticle(any())).willReturn(new EvaluationArticle());
+        post.setAnswerId(answerId);
+        given(mapper.evaluationAnswerPostDtoToEvaluationAnswer(any())).willReturn(new EvaluationAnswer());
 
-        EvaluationArticleSimpleResponseDto responseDto = new EvaluationArticleSimpleResponseDto();
+        EvaluationAnswerSimpleResponseDto responseDto = new EvaluationAnswerSimpleResponseDto();
         responseDto.setMessage(responseContent);
-        responseDto.setArticleId(articleId);
+        responseDto.setAnswerId(answerId);
         responseDto.setEvaluationId(evaluationId);
-        given(mapper.evaluationArticleToEvaluationArticleSimpleResponseDto(any(), any())).willReturn(responseDto);
+        given(mapper.evaluationAnswerToevaluationAnswerSimpleResponseDto(any(), any())).willReturn(responseDto);
 
-        given(evaluationArticleService.createEvaluationArticle(any())).willReturn(new EvaluationArticle());
+        given(evaluationAnswerService.createEvaluationAnswer(any())).willReturn(new EvaluationAnswer());
 
         // when
         ResultActions actions =
                 mockMvc.perform(
-                        post("/api/article/{articleId}/evaluation", articleId)
+                        post("/api/answer/{answerId}/evaluation", answerId)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(content)
@@ -94,11 +91,11 @@ class EvaluationArticleControllerTest {
 //                .andExpect(header().string("Authorization", is(startsWith("bearer "))))     // todo : Security 적용 시 토큰 추가해야함
                 .andExpect(jsonPath("$.message").value(responseDto.getMessage()))
                 .andDo(document(
-                        "post-evaluationArticle",
+                        "post-evaluationAnswer",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         pathParameters(
-                                parameterWithName("articleId").description("질문글 식별자")
+                                parameterWithName("answerId").description("답변글 식별자")
                         ),
                         requestFields(
                                 List.of(
@@ -107,8 +104,8 @@ class EvaluationArticleControllerTest {
                         ),
                         responseFields(
                                 List.of(
-                                        fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
-                                        fieldWithPath("evaluationId").type(JsonFieldType.NUMBER).description("질문글 추천 식별자"),
+                                        fieldWithPath("answerId").type(JsonFieldType.NUMBER).description("답변글 식별자"),
+                                        fieldWithPath("evaluationId").type(JsonFieldType.NUMBER).description("답변글 추천 식별자"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
                                 )
                         )
@@ -116,26 +113,26 @@ class EvaluationArticleControllerTest {
     }
 
     @Test
-    @DisplayName("EvaluationArticle 삭제 테스트")
+    @DisplayName("EvaluationAnswer 삭제 테스트")
     @WithMockUser(username = "유저이름", roles = "USER")
-    void deleteEvaluationArticle() throws Exception {
+    void deleteEvaluationAnswer() throws Exception {
         // given
-        final Long articleId = 1L;
+        final Long answerId = 1L;
         final Long evaluationId = 1L;
         final String responseContent = "평가를 삭제했습니다.";
 
-        EvaluationArticleSimpleResponseDto responseDto = new EvaluationArticleSimpleResponseDto();
+        EvaluationAnswerSimpleResponseDto responseDto = new EvaluationAnswerSimpleResponseDto();
         responseDto.setMessage(responseContent);
-        responseDto.setArticleId(articleId);
+        responseDto.setAnswerId(answerId);
         responseDto.setEvaluationId(evaluationId);
-        given(mapper.evaluationArticleToEvaluationArticleSimpleResponseDto(any(), any())).willReturn(responseDto);
+        given(mapper.evaluationAnswerToevaluationAnswerSimpleResponseDto(any(), any())).willReturn(responseDto);
 
-        given(evaluationArticleService.deleteEvaluationArticle(anyLong(), anyLong())).willReturn(new EvaluationArticle());
+        given(evaluationAnswerService.deleteEvaluationAnswer(anyLong(), anyLong())).willReturn(new EvaluationAnswer());
 
         // when
         ResultActions actions =
                 mockMvc.perform(
-                        delete("/api/article/{articleId}/evaluation/{evaluationId}", articleId, evaluationId)
+                        delete("/api/answer/{answerId}/evaluation/{evaluationId}", answerId, evaluationId)
                 );
 
         // then
@@ -143,17 +140,17 @@ class EvaluationArticleControllerTest {
                 .andExpect(status().isNoContent())
                 .andExpect(jsonPath("$.message").value(responseDto.getMessage()))
                 .andDo(document(
-                        "delete-evaluationArticle",
+                        "delete-evaluationAnswer",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         pathParameters(
-                                parameterWithName("articleId").description("질문글 식별자"),
+                                parameterWithName("answerId").description("답변글 식별자"),
                                 parameterWithName("evaluationId").description("평가 식별자")
                         ),
                         responseFields(
                                 List.of(
-                                        fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
-                                        fieldWithPath("evaluationId").type(JsonFieldType.NUMBER).description("질문글 추천 식별자"),
+                                        fieldWithPath("answerId").type(JsonFieldType.NUMBER).description("답변글 식별자"),
+                                        fieldWithPath("evaluationId").type(JsonFieldType.NUMBER).description("답변글 추천 식별자"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
                                 )
                         )
