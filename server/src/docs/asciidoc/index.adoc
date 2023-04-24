@@ -179,7 +179,6 @@ include::{snippets}/getAll-answers/http-response.adoc[]
 
 
 ***
-== AnswerController
 === 답변 채택
 .curl-request
 include::{snippets}/post-answer-accept/curl-request.adoc[]
