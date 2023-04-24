@@ -1,6 +1,7 @@
 // style
 import { StyledNavBar, StyledLoginBtn, StyledSignupBtn } from "./style";
 
+import { Link } from "react-router-dom";
 /** 2023/04/12 - NarBar 컴포넌트 - by 1-blue */
 const NavBar = () => {
   return (
@@ -15,7 +16,7 @@ const NavBar = () => {
 const LoginBtn = () => {
   return (
     <StyledLoginBtn>
-      <a href="/login">Log in</a>
+      <Link to="/login">Log in</Link>
     </StyledLoginBtn>
   );
 };
@@ -24,7 +25,7 @@ const LoginBtn = () => {
 const SignupBtn = () => {
   return (
     <StyledSignupBtn>
-      <a href="/signup">Sign up</a>
+      <Link to="/signup">Sign up</Link>
     </StyledSignupBtn>
   );
 };
