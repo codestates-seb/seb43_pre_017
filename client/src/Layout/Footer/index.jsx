@@ -19,6 +19,7 @@ import StyledFoorter, {
 const Footer = () => {
   if (window.location.pathname === "/Login") return null;
   if (window.location.pathname === "/signup") return null;
+  if (window.location.pathname === "/Logout") return null;
   return (
     <StyledFoorter>
       <StyledLogo>
