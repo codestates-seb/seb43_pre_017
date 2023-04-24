@@ -19,6 +19,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Layout from "./Layout";
 
 // component
+import ToastMessage from "./components/ToastMessage";
 import Home from "./pages/Home";
 import ArticlePage from "./pages/Article";
 import NotFound from "./pages/NotFound";
@@ -42,6 +43,8 @@ root.render(
           transition={Flip}
           pauseOnFocusLoss={false}
         />
+
+        <ToastMessage />
 
         {/* 라우팅 ( react-router ) */}
         <BrowserRouter>

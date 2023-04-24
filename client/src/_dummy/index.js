@@ -37,8 +37,8 @@ export const fetchDummyArticle = async () =>
           name: "유저",
         },
         count: {
-          answers: 2,
-          comments: 4,
+          answer: 2,
+          comment: 4,
         },
       });
     }, 500),
@@ -109,7 +109,7 @@ export const fetchDummyAnswersOfArticle = async () =>
               name: "강아지",
             },
             count: {
-              comments: 5,
+              comment: 5,
             },
             evaluationScore: 111,
             createdAt: "2023-04-19T21:00:00",
@@ -123,7 +123,7 @@ export const fetchDummyAnswersOfArticle = async () =>
               name: "고양이",
             },
             count: {
-              comments: 999,
+              comment: 999,
             },
             evaluationScore: 222,
             createdAt: "2023-04-19T21:00:00",

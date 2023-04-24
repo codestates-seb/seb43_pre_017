@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+
+// util
+import { dateOrTimeFormat } from "../../../utils";
 
 // style
 import StyledObjectFooter from "./style";
 
 /** 2023/04/19 - 하단 버튼들 - by 1-blue */
-const ObjectFooter = ({ articleId, member, onDeleteObject }) => (
+const ObjectFooter = ({ articleId, member, onDeleteObject, updatedAt }) => (
   <StyledObjectFooter>
     {/* share, edit */}
     <div className="buttons">
@@ -12,7 +16,7 @@ const ObjectFooter = ({ articleId, member, onDeleteObject }) => (
         type="button"
         onClick={() => {
           navigator.clipboard.writeText(window.location.href);
-          alert("클립보드에 링크가 복사되었습니다.");
+          toast.success("링크가 복사되었습니다.");
         }}
       >
         Share
@@ -28,7 +32,10 @@ const ObjectFooter = ({ articleId, member, onDeleteObject }) => (
       <Link to={`/users/${member.id}`}>
         <div className="avatar" />
       </Link>
-      <Link to={`/users/${member.id}`}>{member.name}</Link>
+      <div>
+        <Link to={`/users/${member.id}`}>{member.name}</Link>
+        <time>{dateOrTimeFormat(updatedAt)}</time>
+      </div>
     </div>
   </StyledObjectFooter>
 );

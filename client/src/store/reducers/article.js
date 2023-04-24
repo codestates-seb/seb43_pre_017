@@ -7,8 +7,8 @@ import {
   articleThunkService,
   commentThunkService,
   commentsThunkService,
+  evaluationThunkService,
 } from "../thunks";
-import { evaluationThunkService } from "../thunks/evaluation";
 
 const initialState = {
   // 특정 article 데이터

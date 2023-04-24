@@ -26,6 +26,7 @@ const Article = ({
   member,
   comments,
   count,
+  updatedAt,
 }) => {
   const dispatch = useDispatch();
 
@@ -70,7 +71,7 @@ const Article = ({
   }, []);
 
   /** 2023/04/21 - 더 가져올 수 있는 댓글의 개수 - by 1-blue */
-  const commentCount = count.comments - comments.length;
+  const commentCount = count.comment - comments.length;
 
   return (
     // like / content / share,edit / author / comment
@@ -93,6 +94,7 @@ const Article = ({
           articleId={articleId}
           member={member}
           onDeleteObject={onDeleteArticle}
+          updatedAt={updatedAt}
         />
 
         {/* comment */}

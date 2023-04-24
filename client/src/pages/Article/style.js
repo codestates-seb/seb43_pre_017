@@ -56,6 +56,33 @@ const StyledArticlePage = styled.article`
     }
   }
 
+  /* 답변 페이지네이션 */
+  & > .pagination {
+    display: flex;
+    flex-flow: column nowrap;
+
+    & > span {
+      margin-bottom: 10px;
+    }
+
+    & > ul > a {
+      padding: 0 0.36em;
+      border: 1px solid ${({ theme }) => theme.colors.gray400};
+      border-radius: 0.2em;
+      color: ${({ theme }) => theme.colors.gray500};
+
+      &[data-p="p"] {
+        background-color: ${({ theme }) => theme.colors.blue400};
+        color: #fff;
+        border: 1px solid ${({ theme }) => theme.colors.blue400};
+      }
+
+      & > * + * {
+        margin-left: 0.6em;
+      }
+    }
+  }
+
   & hr {
     border: 1px solid ${({ theme }) => theme.colors.gray300};
     margin: 1.4em 0;

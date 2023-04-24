@@ -1,4 +1,5 @@
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 // redux
 import { commentThunkService } from "../../../store/thunks";
@@ -21,7 +22,7 @@ const ObjectCommentForm = ({ type, articleId, answerId }) => {
 
     const content = textRef.current.value.trim();
 
-    if (!content) return alert("댓글을 입력해주세요!");
+    if (!content) return toast.error("댓글을 입력해주세요!");
 
     // article의 댓글
     if (type === "article") {
