@@ -73,6 +73,9 @@ include::{snippets}/delete-article/response-fields.adoc[]
 .curl-request
 include::{snippets}/getAll-articles/curl-request.adoc[]
 
+.request-parameters
+include::{snippets}/getAll-articles/request-parameters.adoc[]
+
 .http-request
 include::{snippets}/getAll-articles/http-request.adoc[]
 
