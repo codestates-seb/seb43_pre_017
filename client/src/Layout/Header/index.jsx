@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 // Nav
 import Nav from "../NavBar";
 
@@ -35,18 +36,18 @@ const Logo = () => {
   return (
     <StyledLogo>
       {/* 큰 로고 */}
-      <a href="/">
+      <Link to="/">
         <img src={LogoImg} alt="스택오버플로우 로고" className="Logo-img" />
-      </a>
+      </Link>
 
       {/* 작은 로고 */}
-      <a href="/">
+      <Link to="/">
         <img
           src={MinLogoImg}
           alt="스택오버플로우 로고"
           className="MinLogo-img"
         />
-      </a>
+      </Link>
     </StyledLogo>
   );
 };

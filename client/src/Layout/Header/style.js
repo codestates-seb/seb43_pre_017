@@ -57,9 +57,9 @@ export const StyledSearchFrom = styled.form`
   padding: 7px 10px;
   display: flex;
   height: 100%;
-  /* flex-grow: 1; */
   align-items: center;
   width: 87em;
+  background-color: #fff;
   //input을 감싸는 div
   .search-bar {
     width: 100%;
