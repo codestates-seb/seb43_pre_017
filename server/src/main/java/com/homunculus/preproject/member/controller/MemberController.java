@@ -30,6 +30,11 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberMapper mapper;
 
+    @GetMapping("/")
+    public ResponseEntity home(){
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
     @PostMapping("/api/signup")
     public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post memberDtoPost) {
         Member member = mapper.memberPostDtoToMember(memberDtoPost);
