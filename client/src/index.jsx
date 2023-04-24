@@ -20,6 +20,7 @@ import Layout from "./Layout";
 
 // component
 import Home from "./pages/Home";
+import Profile from "./pages/Profile";
 import Members from "./pages/Members";
 import Login from "./pages/login";
 import Signup from "./pages/Signup";
@@ -52,6 +53,7 @@ root.render(
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/members" element={<Members />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
