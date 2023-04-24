@@ -11,13 +11,21 @@ import store from "./store";
 import theme from "./style/theme";
 import { GlobalStyle } from "./style/global";
 
+// react-toastify
+import { Flip, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 // layout
 import Layout from "./Layout";
 
 // component
 import Home from "./pages/Home";
 import Login from "./pages/login";
+<<<<<<< HEAD
 import Logout from "./pages/logout";
+=======
+import NotFound from "./pages/NotFound";
+>>>>>>> fe
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -29,6 +37,16 @@ root.render(
         {/* global */}
         <GlobalStyle />
 
+        {/* toast message */}
+        <ToastContainer
+          theme="dark"
+          hideProgressBar
+          autoClose={1500}
+          position="top-center"
+          transition={Flip}
+          pauseOnFocusLoss={false}
+        />
+
         {/* 라우팅 ( react-router ) */}
         <BrowserRouter>
           {/* 전체 레이아웃 ( 네비게이션, 컨텐츠, 푸터 ) */}
@@ -36,7 +54,11 @@ root.render(
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
+<<<<<<< HEAD
               <Route path="/logout" element={<Logout />} />
+=======
+              <Route path="*" element={<NotFound />} />
+>>>>>>> fe
             </Routes>
           </Layout>
         </BrowserRouter>
