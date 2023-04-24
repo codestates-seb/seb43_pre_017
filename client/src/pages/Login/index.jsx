@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginAction } from "../../store/reducers";
+import { loginAction, useStore } from "../../store/reducers";
 import { useDispatch } from "react-redux";
 
 import StyledLogin, {
@@ -25,6 +25,7 @@ const login = () => {
   const [passwordMessage, setPasswordMessage] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { Userdata } = useStore();
 
   /** 2023/04/19 이메일 유효성 검사 이벤트  -by JHH0906 */
   const handleEmailChange = (e) => {
@@ -61,7 +62,6 @@ const login = () => {
       },
     };
     // POST 요청
-
     axios
       .post(
         "http://ec2-13-125-208-253.ap-northeast-2.compute.amazonaws.com:8080/api/login",
@@ -72,19 +72,37 @@ const login = () => {
         console.log(res);
         const accessToken = res.headers.get("Authorization");
         localStorage.setItem("Authorization", accessToken);
-        dispatch(loginAction(res.data));
-        navigate("/");
+        Userdata(res.data);
+        localStorage.setItem("username", res.data.email);
         //API 요청하는 콜마다 헤더에 accessToken을 담아 보내도록 설정
         axios.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${accessToken}`;
+        dispatch(loginAction(res.data));
+        navigate("/");
       })
+
       .catch((err) => {
         console.log(err);
         alert("실패");
         setEmail("");
         setPassword("");
       });
+    // axios
+    //   .get(
+    //     "http://ec2-13-125-208-253.ap-northeast-2.compute.amazonaws.com:8080/api/login",
+    //     {
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //     },
+    //   )
+    //   .then((res) => console.log(res))
+    //   .then((data) => {
+    //     localStorage.setItem("userId", data.data.userid);
+    //     localStorage.setItem("name", data.data.name);
+    //     localStorage.setItem("createdAt", data.data.username);
+    //   });
   };
 
   return (

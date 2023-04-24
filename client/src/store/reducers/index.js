@@ -1,17 +1,15 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import create from "zustand";
-
+import { create } from "zustand";
 // reducers
-import userReducer from "./user";
+import articleReducer from "./article";
 
 /** 2023/04/12 - root reducer - by 1-blue */
 const rootReducer = combineReducers({
-  user: userReducer,
+  article: articleReducer,
 });
-/** 2023/04/24 - useStore reducer - by 1-blue */
 export const useStore = create((set) => ({
   Userdata: {
-    id: localStorage.getItem("userid"),
+    email: localStorage.getItem("username"),
   },
   setUserdata: (data) => set({ Userdata: data }),
 }));
