@@ -14,9 +14,12 @@ export const StyledHeader = styled.header`
 
 /** 2023/04/17 - 헤더 속 엘레먼트들을 감싸는 컴포넌트 - by sinyaenok*/
 export const StyledContaier = styled.div`
+  height: 100%;
+  width: 83vw;
+  margin: 0 auto;
   display: flex;
   align-items: center;
-  height: 100%;
+  justify-content: center;
 `;
 
 /** 2023/04/17 - stackoverflow 로고 - by sinyaenok*/
@@ -54,9 +57,9 @@ export const StyledSearchFrom = styled.form`
   padding: 7px 10px;
   display: flex;
   height: 100%;
-  flex: 1;
+  /* flex-grow: 1; */
   align-items: center;
-
+  width: 87em;
   //input을 감싸는 div
   .search-bar {
     width: 100%;

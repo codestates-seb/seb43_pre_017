@@ -1,23 +1,31 @@
 // style
-import { StyledNavBar } from "./style";
+import { StyledNavBar, StyledLoginBtn, StyledSignupBtn } from "./style";
 
 /** 2023/04/12 - NarBar 컴포넌트 - by 1-blue */
-const NavBar = () => (
-  <StyledNavBar>
-    {/* 로그인 버튼 */}
-    <a href="/login">
-      <div id="login-btn" className="header-btn">
-        Log in
-      </div>
-    </a>
+const NavBar = () => {
+  return (
+    <StyledNavBar>
+      <LoginBtn />
+      <SignupBtn />
+    </StyledNavBar>
+  );
+};
 
-    {/* 회원가입 버튼 */}
-    <a href="/signup">
-      <div id="signup-btn" className="header-btn">
-        Sign up
-      </div>
-    </a>
-  </StyledNavBar>
-);
+/** 2023/04/23 - 로그인 버튼 - by sinyaenok */
+const LoginBtn = () => {
+  return (
+    <StyledLoginBtn>
+      <a href="/login">Log in</a>
+    </StyledLoginBtn>
+  );
+};
 
+/** 2023/04/23 - 회원가입 버튼 - by sinyaenok */
+const SignupBtn = () => {
+  return (
+    <StyledSignupBtn>
+      <a href="/signup">Sign up</a>
+    </StyledSignupBtn>
+  );
+};
 export default NavBar;
