@@ -24,6 +24,7 @@ public class AnswerResponseDto {
         private Long id;
         private String content;
         private Integer evaluationScore;
+        private Boolean isAccepted;
         private Member member;
         private Count count;
         private LocalDateTime createdAt;

@@ -28,6 +28,8 @@ public class CommentArticleService {
 
     public CommentArticle createCommentArticle(CommentArticle comment) {
 
+        checkAllowedMember(null);
+
         return commentArticleRepository.save(comment);
     }
 
@@ -62,6 +64,9 @@ public class CommentArticleService {
         User connectedUser = (User) authentication.getPrincipal();
         if (connectedUser == null)
             throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
+
+        if ( commentArticle == null )    return;
+
         if ( !commentArticle.getMember().getEmail().equals(connectedUser.getUsername()) ) {
             throw new BusinessLogicException(ExceptionCode.COMMENT_MEMBER_NOT_ALLOWED);
         }
@@ -87,7 +92,7 @@ public class CommentArticleService {
         );
 
         if(!Objects.equals(findComment.getArticle().getArticleId(), comment.getArticle().getArticleId()))
-            throw new BusinessLogicException(ExceptionCode.COMMENT_ARTICLE_NOT_ACCEPTABLE);
+            throw new BusinessLogicException(ExceptionCode.COMMENT_ARTICLE_NOT_MATCHED);
 
         return findComment;
     }
