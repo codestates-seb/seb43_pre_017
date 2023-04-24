@@ -21,6 +21,7 @@ import Layout from "./Layout";
 // component
 import Home from "./pages/Home";
 import Login from "./pages/login";
+import Signup from "./pages/Signup";
 import Logout from "./pages/logout";
 import NotFound from "./pages/NotFound";
 
@@ -51,6 +52,7 @@ root.render(
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
               <Route path="/logout" element={<Logout />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
