@@ -21,7 +21,6 @@ import Layout from "./Layout";
 // component
 import Home from "./pages/Home";
 import Login from "./pages/login";
-<<<<<<< HEAD
 import Logout from "./pages/logout";
 import NotFound from "./pages/NotFound";
 
