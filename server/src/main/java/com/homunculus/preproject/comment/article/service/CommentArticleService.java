@@ -14,11 +14,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CommentArticleService {
 
@@ -47,6 +49,7 @@ public class CommentArticleService {
         return deletedComment;
     }
 
+    @Transactional(readOnly = true)
     public Page<CommentArticle> findCommentArticles(Long articleId, Integer page, Integer size) {
         return commentArticleRepository.findCommentArticlesByArticleArticleId(
                 articleId,
@@ -75,6 +78,7 @@ public class CommentArticleService {
         return findVerifiedArticle(comment);
     }
 
+    @Transactional(readOnly = true)
     public CommentArticle findVerifiedArticle(CommentArticle comment) {
         Optional<CommentArticle> optionalComment = commentArticleRepository.findById(comment.getCommentArticleId());
 

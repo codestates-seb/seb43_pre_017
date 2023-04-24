@@ -79,6 +79,7 @@ public class MemberService {
         return memberRepository.save(findMember);
     }
 
+    @Transactional(readOnly = true)
     public Page<Member> findMembers(int page, int size) {
         return memberRepository.findAll(PageRequest.of(page, size,
                 Sort.by("memberId").descending()));

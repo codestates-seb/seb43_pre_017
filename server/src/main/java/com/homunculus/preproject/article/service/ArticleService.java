@@ -13,10 +13,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ArticleService {
 
@@ -38,10 +40,12 @@ public class ArticleService {
         return articleRepository.save(findArticle);
     }
 
+    @Transactional(readOnly = true)
     public Article findArticle(Long articleId) {
         return findVerifiedArticle(articleId);
     }
 
+    @Transactional(readOnly = true)
     public Page<Article> findArticles(int page, int size) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("articleId").descending());
@@ -73,6 +77,7 @@ public class ArticleService {
     }
 
     // 이미 등록된 질문인지 검증
+    @Transactional(readOnly = true)
     public Article findVerifiedArticle(long articleId) {
         Optional<Article> optionalArticle =
                 articleRepository.findById(articleId);
