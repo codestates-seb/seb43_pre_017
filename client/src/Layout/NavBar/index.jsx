@@ -16,7 +16,9 @@ const NavBar = () => {
 const LoginBtn = () => {
   return (
     <StyledLoginBtn>
-      <Link to="/login">Log in</Link>
+      <Link to="/login" className="loginink">
+        Log in
+      </Link>
     </StyledLoginBtn>
   );
 };
@@ -25,7 +27,9 @@ const LoginBtn = () => {
 const SignupBtn = () => {
   return (
     <StyledSignupBtn>
-      <Link to="/signup">Sign up</Link>
+      <Link to="/signup" className="signuplink">
+        Sign up
+      </Link>
     </StyledSignupBtn>
   );
 };

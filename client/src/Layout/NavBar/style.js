@@ -19,7 +19,7 @@ export const StyledLoginBtn = styled.div`
   :hover {
     background-color: ${({ theme }) => theme.colors.blue200};
   }
-  Link {
+  .loginink {
     padding: 8px 10px;
     color: ${({ theme }) => theme.colors.blue800};
     :hover {
@@ -41,7 +41,7 @@ export const StyledSignupBtn = styled.div`
   :hover {
     background-color: ${({ theme }) => theme.colors.blue600};
   }
-  Link {
+  .signuplink {
     padding: 8px 10px;
     color: ${({ theme }) => theme.colors.slate50};
     :hover {
