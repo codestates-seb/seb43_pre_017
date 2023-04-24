@@ -12,6 +12,7 @@ import StyledSignup, {
   StyledSignupLink,
   StyledLogin,
 } from "./style";
+import { useNavigate } from "react-router-dom";
 
 /** 2023/04/21 - 회원가입 페이지 작성  - by JHH0906 */
 const Signup = () => {
@@ -20,6 +21,7 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
   const [name, setName] = useState("");
+  const navigate = useNavigate();
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -48,31 +50,31 @@ const Signup = () => {
     }
     const reqbody = JSON.stringify({
       name: name,
-      email: email,
+      username: email,
       password: password,
     });
     axios
-      .post("http://localhost:8080/api/signup", reqbody, {
-        headers: {
-          "Content-Type": "application/json",
+      .post(
+        "http://ec2-13-125-208-253.ap-northeast-2.compute.amazonaws.com:8080//api/signup",
+        reqbody,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: "true",
         },
-        withCredentials: "include",
-      })
+      )
       .then((res) => {
-        if (res.status === 201) {
-          alert("성공");
-          window.location.href = "/login";
-          console.log(res);
-        }
+        alert("성공");
+        navigate("/login");
+        console.log(res);
       })
       .catch((err) => {
-        if (err.status === 409) {
-          console.log(err.data);
-          alert("이미 등록된 계정입니다!");
-          setEmail("");
-          setPassword("");
-          setName("");
-        }
+        console.log(err.data);
+        alert("실패");
+        setEmail("");
+        setPassword("");
+        setName("");
       });
   };
   return (
@@ -126,7 +128,7 @@ const Signup = () => {
       </StyledSignupContainer>
       <StyledLogin>
         Already have an account?
-        <StyledSignupLink href="/Login"> Log in</StyledSignupLink>
+        <StyledSignupLink href="/login"> Log in</StyledSignupLink>
       </StyledLogin>
     </StyledSignup>
   );

@@ -52,18 +52,22 @@ const login = () => {
     }
 
     const reqbody = JSON.stringify({
-      email,
+      username: email,
       password,
     });
+    const headers = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
     // POST 요청
-    axios.defaults.withCredentials = true;
+
     axios
-      .post("http://localhost:8080/api/login", reqbody, {
-        withCredentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      .post(
+        "http://ec2-13-125-208-253.ap-northeast-2.compute.amazonaws.com:8080/api/login",
+        reqbody,
+        headers,
+      )
       .then((res) => {
         console.log(res);
         const accessToken = res.headers.get("Authorization");

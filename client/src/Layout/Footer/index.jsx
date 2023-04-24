@@ -1,4 +1,6 @@
 // style
+import { useLocation } from "react-router-dom";
+
 import StyledFoorter, {
   StyledLogo,
   StyledStackoverflow,
@@ -17,9 +19,10 @@ import StyledFoorter, {
 
 /** 2023/04/12 - 푸터를 감싸는 컴포넌트 - by 1-blue */
 const Footer = () => {
-  if (window.location.pathname === "/Login") return null;
-  if (window.location.pathname === "/signup") return null;
-  if (window.location.pathname === "/Logout") return null;
+  const { pathname } = useLocation();
+  if (pathname === "/login") return null;
+  if (pathname === "/signup") return null;
+  if (pathname === "/logout") return null;
   return (
     <StyledFoorter>
       <StyledLogo>
