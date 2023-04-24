@@ -71,7 +71,7 @@ export const StyledMembers = styled.div`
   }
 
   #sub-bar {
-    margin-bottom: 10px;
+    margin-bottom: 30px;
     @media (max-width: 720px) {
       flex-direction: column;
       align-items: start;

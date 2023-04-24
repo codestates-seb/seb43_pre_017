@@ -4,7 +4,6 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 //component
 import SortTab from "./SortTab";
 import MemberBrowser from "./MemberBrowser";
-import MemberList from "./MemberBrowser/MemberList";
 
 /** 20230421 - 유저 목록 페이지 - by sinyaenok */
 const Members = () => {
@@ -31,9 +30,7 @@ const Members = () => {
           {/* 유저 정렬 탭 */}
           <SortTab />
         </div>
-        <MemberBrowser>
-          <MemberList />
-        </MemberBrowser>
+        <MemberBrowser />
       </div>
     </StyledMembers>
   );
