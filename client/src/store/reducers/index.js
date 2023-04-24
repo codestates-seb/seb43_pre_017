@@ -1,12 +1,20 @@
 import { combineReducers } from "@reduxjs/toolkit";
+import create from "zustand";
 
 // reducers
-import articleReducer from "./article";
+import userReducer from "./user";
 
 /** 2023/04/12 - root reducer - by 1-blue */
 const rootReducer = combineReducers({
-  article: articleReducer,
+  user: userReducer,
 });
+/** 2023/04/24 - useStore reducer - by 1-blue */
+export const useStore = create((set) => ({
+  Userdata: {
+    id: localStorage.getItem("userid"),
+  },
+  setUserdata: (data) => set({ Userdata: data }),
+}));
 /** 2023/04/23 - Action reducer - by 1-blue */
 export const LOG_IN = "LOG_IN";
 export const LOG_OUT = "LOG_OUT";
