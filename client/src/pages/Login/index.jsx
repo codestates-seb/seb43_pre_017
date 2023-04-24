@@ -74,7 +74,6 @@ const login = () => {
         axios.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${accessToken}`;
-        navigate("/");
       })
       .catch((err) => {
         console.log(err);

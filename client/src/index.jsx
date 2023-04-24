@@ -21,6 +21,7 @@ import Layout from "./Layout";
 // component
 import Home from "./pages/Home";
 import Login from "./pages/login";
+import Logout from "./pages/logout";
 import NotFound from "./pages/NotFound";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -50,6 +51,7 @@ root.render(
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/logout" element={<Logout />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>
