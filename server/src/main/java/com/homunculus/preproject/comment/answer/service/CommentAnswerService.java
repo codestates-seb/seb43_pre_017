@@ -28,6 +28,8 @@ public class CommentAnswerService {
 
     public CommentAnswer createCommentAnswer(CommentAnswer comment) {
 
+        checkAllowedMember(null);
+
         return commentAnswerRepository.save(comment);
     }
 
@@ -62,6 +64,9 @@ public class CommentAnswerService {
         User connectedUser = (User) authentication.getPrincipal();
         if (connectedUser == null)
             throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
+
+        if ( commentAnswer == null )    return;
+
         if ( !commentAnswer.getMember().getEmail().equals(connectedUser.getUsername()) ) {
             throw new BusinessLogicException(ExceptionCode.COMMENT_MEMBER_NOT_ALLOWED);
         }

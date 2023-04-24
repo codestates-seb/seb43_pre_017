@@ -33,6 +33,7 @@ public class AnswerService {
     public Answer createAnswer(Answer answer) {
 
         findVerifiedArticle(answer.getArticle().getArticleId());
+        checkAllowedMember(null, false);
 
         return answerRepository.save(answer);
     }
@@ -42,7 +43,9 @@ public class AnswerService {
 
         checkAllowedMember(findAnswer.getMember(), false);
 
-        return CustomBeanUtils.copyNonNullProperties(answer, findAnswer);
+        CustomBeanUtils.copyNonNullProperties(answer, findAnswer);
+
+        return answerRepository.save(findAnswer);
     }
 
     public Page<Answer> findAnswers(Long articleId, Integer page, Integer size) {
@@ -71,6 +74,9 @@ public class AnswerService {
             throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
 
         // todo : role 추가 시 권한에 따른 등록 방식 추가해야함
+
+        // 로그인 여부만 체크하기 위함
+        if ( member == null )   return;
 
         if ( !member.getEmail().equals(connectedUser.getUsername()) ) {
             if(isArticleChecking)   throw new BusinessLogicException(ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED);

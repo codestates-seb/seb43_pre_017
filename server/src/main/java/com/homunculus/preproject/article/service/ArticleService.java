@@ -4,6 +4,7 @@ import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.article.repository.ArticleRepository;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
+import com.homunculus.preproject.utils.CustomBeanUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,17 +26,17 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     public Article createArticle(Article article) {
 
+        // 로그인 한 유저인지만 체크
+        checkAllowedMember(null);
+
         return articleRepository.save(article);
     }
 
     public Article updateArticle(Article article) {
         Article findArticle = findVerifiedArticle(article.getArticleId());
+        checkAllowedMember(findArticle);
 
-        Optional.ofNullable(article.getTitle())
-                .ifPresent(title -> findArticle.setTitle(title));
-        Optional.ofNullable(article.getContent())
-                .ifPresent(content -> findArticle.setContent(content));
-
+        CustomBeanUtils.copyNonNullProperties(article, findArticle);
 
         return articleRepository.save(findArticle);
     }
@@ -70,6 +71,10 @@ public class ArticleService {
             throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
 
         // todo : role 추가 시 권한에 따른 등록 방식 추가해야함
+
+        if ( article == null ) {
+            return;
+        }
 
         if ( !article.getMember().getEmail().equals(connectedUser.getUsername()) ) {
             throw new BusinessLogicException(ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED);
