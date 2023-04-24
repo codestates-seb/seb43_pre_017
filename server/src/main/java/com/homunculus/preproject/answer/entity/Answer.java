@@ -30,7 +30,7 @@ public class Answer extends Auditable {
     private Integer evaluationScore = 0;
 
     @Column(nullable = false)
-    private Boolean accepted = false;
+    private Boolean isAccepted = false;
 
     @ManyToOne
     @JoinColumn(name = "ARTICLE_ID")

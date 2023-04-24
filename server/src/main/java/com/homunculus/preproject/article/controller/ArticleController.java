@@ -61,8 +61,9 @@ public class ArticleController {
 
     @GetMapping(ARTICLE_ALL_MAPPING_URL)
     public ResponseEntity getArticle(@RequestParam @Positive int page,
-                                     @RequestParam @Positive int size) {
-        Page<Article> pageArticles = articleService.findArticles(page - 1, size);
+                                     @RequestParam @Positive int size,
+                                     @RequestParam String type) {
+        Page<Article> pageArticles = articleService.findArticles(page - 1, size, type);
         List<Article> articles = pageArticles.getContent();
 
         return new ResponseEntity<>(mapper.articlesToArticleResponseDto(articles), HttpStatus.OK);

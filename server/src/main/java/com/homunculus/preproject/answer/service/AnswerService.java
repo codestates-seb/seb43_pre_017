@@ -3,8 +3,10 @@ package com.homunculus.preproject.answer.service;
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.answer.repository.AnswerRepository;
 import com.homunculus.preproject.article.entity.Article;
+import com.homunculus.preproject.article.repository.ArticleRepository;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
+import com.homunculus.preproject.member.entity.Member;
 import com.homunculus.preproject.utils.CustomBeanUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,13 +22,16 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class AnswerService {
 
+    private final ArticleRepository articleRepository;
     private final AnswerRepository answerRepository;
 
     public Answer createAnswer(Answer answer) {
+
+        findVerifiedArticle(answer.getArticle().getArticleId());
+        checkAllowedMember(null, false);
 
         return answerRepository.save(answer);
     }
@@ -34,11 +39,13 @@ public class AnswerService {
     public Answer updateAnswer(Answer answer) {
         Answer findAnswer = findVerifiedAnswer(answer);
 
-        checkAllowedMember(findAnswer);
+        checkAllowedMember(findAnswer.getMember(), false);
 
-        return CustomBeanUtils.copyNonNullProperties(answer, findAnswer);
+        CustomBeanUtils.copyNonNullProperties(answer, findAnswer);
+
+        return answerRepository.save(findAnswer);
     }
-    @Transactional(readOnly = true)
+
     public Page<Answer> findAnswers(Long articleId, Integer page, Integer size) {
         return answerRepository.findAnswersByArticleArticleId(
                 articleId,
@@ -51,14 +58,14 @@ public class AnswerService {
         Answer deletedAnswer = findVerifiedAnswer(articleId, answerId);
 
         // 삭제 권한 확인
-        checkAllowedMember(deletedAnswer);
+        checkAllowedMember(deletedAnswer.getMember(), false);
 
         answerRepository.deleteById(answerId);
 
         return deletedAnswer;
     }
 
-    public static void checkAllowedMember (Answer answer) {
+    public static void checkAllowedMember (Member member, boolean isArticleChecking) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User connectedUser = (User) authentication.getPrincipal();
         if (connectedUser == null)
@@ -66,8 +73,12 @@ public class AnswerService {
 
         // todo : role 추가 시 권한에 따른 등록 방식 추가해야함
 
-        if ( !answer.getMember().getEmail().equals(connectedUser.getUsername()) ) {
-            throw new BusinessLogicException(ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED);
+        // 로그인 여부만 체크하기 위함
+        if ( member == null )   return;
+
+        if ( !member.getEmail().equals(connectedUser.getUsername()) ) {
+            if(isArticleChecking)   throw new BusinessLogicException(ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED);
+            else                    throw new BusinessLogicException(ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED);
         }
     }
 
@@ -82,7 +93,6 @@ public class AnswerService {
         return findVerifiedAnswer(answer);
     }
 
-    @Transactional(readOnly = true)
     public Answer findVerifiedAnswer(Answer answer) {
         Optional<Answer> optionalAnswer = answerRepository.findById(answer.getAnswerId());
 
@@ -90,9 +100,38 @@ public class AnswerService {
                 new BusinessLogicException(ExceptionCode.ANSWER_NOT_FOUND)
         );
 
+        if(!Objects.equals(findAnswer.getAnswerId(), answer.getAnswerId()))
+            throw new BusinessLogicException(ExceptionCode.ANSWER_NOT_MATCHED);
+
         if(!Objects.equals(findAnswer.getArticle().getArticleId(), answer.getArticle().getArticleId()))
-            throw new BusinessLogicException(ExceptionCode.ANSWER_NOT_ACCEPTABLE);
+            throw new BusinessLogicException(ExceptionCode.ARTICLE_NOT_MATCHED);
 
         return findAnswer;
+    }
+
+    @Transactional(readOnly = true)
+    public Article findVerifiedArticle(long articleId) {
+        Optional<Article> optionalArticle =
+                articleRepository.findById(articleId);
+        Article findArticle =
+                optionalArticle.orElseThrow(() ->
+                        new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
+        return findArticle;
+    }
+
+    public Answer acceptAnswer(Long articleId, Long answerId) {
+        // 데이터가 유효한지 검증
+        findVerifiedArticle(articleId);
+        Answer findAnswer = findVerifiedAnswer(articleId, answerId);
+
+        checkAllowedMember(findAnswer.getArticle().getMember(), true);
+
+        // 유효한 데이터를 처리
+        if(findAnswer.getIsAccepted())
+            throw new BusinessLogicException(ExceptionCode.ANSWER_NOT_ACCEPTABLE);
+        else
+            findAnswer.setIsAccepted(true);
+
+        return answerRepository.save(findAnswer);
     }
 }

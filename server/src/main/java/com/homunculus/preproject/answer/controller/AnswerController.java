@@ -43,6 +43,16 @@ public class AnswerController {
                 HttpStatus.CREATED);
     }
 
+    @PostMapping(ANSWER_DEFAULT_URL + "/{articleId}" + ANSWER_DEFAULT_URL_DETAIL + "/{answerId}/acceptance")
+    public ResponseEntity postAnswerAccepted (@PathVariable("articleId") @Positive Long articleId,
+                                              @PathVariable("answerId") @Positive Long answerId) {
+        Answer acceptedAnswer = answerService.acceptAnswer(articleId, answerId);
+
+        return new ResponseEntity<>(
+                mapper.answerToAnswerAcceptanceResponseDto(acceptedAnswer, AnswerSimpleResponseMessages.ANSWER_MESSAGE_ACCEPTED),
+                HttpStatus.CREATED);
+    }
+
     @PatchMapping(ANSWER_DEFAULT_URL + "/{articleId}" + ANSWER_DEFAULT_URL_DETAIL + "/{answerId}")
     public ResponseEntity patchAnswer(@PathVariable("articleId") @Positive Long articleId,
                                       @PathVariable("answerId") @Positive Long answerId,
