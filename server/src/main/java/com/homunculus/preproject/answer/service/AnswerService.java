@@ -3,6 +3,7 @@ package com.homunculus.preproject.answer.service;
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.answer.repository.AnswerRepository;
 import com.homunculus.preproject.article.entity.Article;
+import com.homunculus.preproject.article.repository.ArticleRepository;
 import com.homunculus.preproject.article.service.ArticleService;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
@@ -15,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -23,12 +25,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AnswerService {
 
+    private final ArticleRepository articleRepository;
     private final AnswerRepository answerRepository;
-    private final ArticleService articleService;
 
     public Answer createAnswer(Answer answer) {
 
-        articleService.findVerifiedArticle(answer.getArticle().getArticleId());
+        findVerifiedArticle(answer.getArticle().getArticleId());
 
         return answerRepository.save(answer);
     }
@@ -95,5 +97,15 @@ public class AnswerService {
             throw new BusinessLogicException(ExceptionCode.ANSWER_NOT_ACCEPTABLE);
 
         return findAnswer;
+    }
+
+    @Transactional(readOnly = true)
+    public Article findVerifiedArticle(long articleId) {
+        Optional<Article> optionalArticle =
+                articleRepository.findById(articleId);
+        Article findArticle =
+                optionalArticle.orElseThrow(() ->
+                        new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
+        return findArticle;
     }
 }

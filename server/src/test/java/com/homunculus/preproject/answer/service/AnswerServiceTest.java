@@ -3,6 +3,8 @@ package com.homunculus.preproject.answer.service;
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.answer.repository.AnswerRepository;
 import com.homunculus.preproject.article.entity.Article;
+import com.homunculus.preproject.article.repository.ArticleRepository;
+import com.homunculus.preproject.article.service.ArticleService;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.member.entity.Member;
 import org.junit.jupiter.api.DisplayName;
@@ -28,6 +30,9 @@ class AnswerServiceTest {
     @Mock
     private AnswerRepository answerRepository;
 
+    @Mock
+    private ArticleRepository articleRepository;
+
     @InjectMocks
     private AnswerService answerService;
 
@@ -39,12 +44,34 @@ class AnswerServiceTest {
         final Long articleId = 1L;
         final Long answerId = 1L;
         final String content = "답변의 내용";
-        Answer answer = createDummyAnswer(articleId, answerId, content, null);
+        final String email = "email@gmail.com";
+        Answer answer = createDummyAnswer(articleId, answerId, content, email);
+        Article article = answer.getArticle();
 
         given(answerRepository.save(answer)).willReturn(answer);
+        given(articleRepository.findById(anyLong())).willReturn(Optional.of(article));
 
         //when, then
         assertDoesNotThrow(() -> answerService.createAnswer(answer));
+    }
+
+    @Test
+    @DisplayName("답변글 생성 - 질문글 없음 실패")
+    @WithMockUser(username = "email@gmail.com", roles = "USER")
+    void createAnswerTest_authentication_Fail() {
+        //given
+        final Long articleId = 1L;
+        final Long answerId = 1L;
+        final String content = "답변의 내용";
+        Answer answer = createDummyAnswer(null, answerId, content, null);
+        Article article = answer.getArticle();
+
+        given(answerRepository.save(answer)).willReturn(answer);
+        given(articleRepository.findById(anyLong())).willReturn(Optional.of(article));
+
+        //when, then
+        assertThrows(NullPointerException.class,
+                () -> answerService.createAnswer(answer));
     }
 
     private static Answer createDummyAnswer(Long articleId, Long answerId,
