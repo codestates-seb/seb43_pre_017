@@ -87,7 +87,7 @@ public class CommentAnswerService {
         );
 
         if(!Objects.equals(findComment.getAnswer().getAnswerId(), comment.getAnswer().getAnswerId()))
-            throw new BusinessLogicException(ExceptionCode.COMMENT_ANSWER_NOT_ACCEPTABLE);
+            throw new BusinessLogicException(ExceptionCode.COMMENT_ANSWER_NOT_MATCHED);
 
         return findComment;
     }

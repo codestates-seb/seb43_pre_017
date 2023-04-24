@@ -87,7 +87,7 @@ public class CommentArticleService {
         );
 
         if(!Objects.equals(findComment.getArticle().getArticleId(), comment.getArticle().getArticleId()))
-            throw new BusinessLogicException(ExceptionCode.COMMENT_ARTICLE_NOT_ACCEPTABLE);
+            throw new BusinessLogicException(ExceptionCode.COMMENT_ARTICLE_NOT_MATCHED);
 
         return findComment;
     }

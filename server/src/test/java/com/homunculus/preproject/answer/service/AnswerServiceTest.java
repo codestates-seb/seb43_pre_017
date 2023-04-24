@@ -80,12 +80,17 @@ class AnswerServiceTest {
         answer.setAnswerId(answerId);
         answer.setContent(content);
 
-        Member member = new Member();
-        member.setEmail(email);
-        answer.setMember(member);
+        Member member1 = new Member();
+        member1.setEmail(email);
+        answer.setMember(member1);
 
         Article article = new Article();
         article.setArticleId(articleId);
+
+        Member member2 = new Member();
+        member2.setEmail(email);
+        article.setMember(member2);
+
         answer.setArticle(article);
 
         return answer;
@@ -295,5 +300,160 @@ class AnswerServiceTest {
         //when, then
         assertThrows(NullPointerException.class,
                 () -> answerService.deleteAnswer(articleId, answerId));
+    }
+
+    @Test
+    @DisplayName("답변글 채택 - 예외 뜨지 않음 성공")
+    @WithMockUser(username = "email@gmail.com", roles = "USER")
+    void acceptAnswer() {
+        // given
+        final Long articleId = 1L;
+        final Long answerId = 1L;
+        final String content = "답변글 내용";
+        final Boolean accepted = false;
+        final String email = "email@gmail.com";
+
+        Answer answer = createDummyAnswer(articleId, answerId, content, email, accepted);
+        given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
+        given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
+        given(answerRepository.save(answer)).willReturn(answer);
+
+        // when, then
+        assertDoesNotThrow( () -> answerService.acceptAnswer(articleId, answerId) );
+    }
+
+    @Test
+    @DisplayName("답변글 채택 - accepted 파라미터 false 성공")
+    @WithMockUser(username = "email@gmail.com", roles = "USER")
+    void acceptAnswer_acceptedParamFalse_success() {
+        // given
+        final Long articleId = 1L;
+        final Long answerId = 1L;
+        final String content = "답변글 내용";
+        final Boolean accepted = false;
+        final String email = "email@gmail.com";
+
+        Answer answer = createDummyAnswer(articleId, answerId, content, email, accepted);
+        given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
+        given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
+        given(answerRepository.save(answer)).willReturn(answer);
+
+        // when, then
+        Answer acceptedAnswer = answerService.acceptAnswer(articleId, answerId);
+
+        assertEquals(true, acceptedAnswer.getAccepted());
+    }
+
+    @Test
+    @DisplayName("답변글 채택 - accepted 파라미터 true 실패")
+    @WithMockUser(username = "email@gmail.com", roles = "USER")
+    void acceptAnswer_acceptedParamTrue_Fail() {
+        // given
+        final Long articleId = 1L;
+        final Long answerId = 1L;
+        final String content = "답변글 내용";
+        final Boolean accepted = true;
+        final String email = "email@gmail.com";
+
+        Answer answer = createDummyAnswer(articleId, answerId, content, email, accepted);
+        given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
+        given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
+        given(answerRepository.save(answer)).willReturn(answer);
+
+        // when, then
+        assertThrows(BusinessLogicException.class, () ->
+                answerService.acceptAnswer(articleId, answerId) );
+    }
+
+    @Test
+    @DisplayName("답변글 채택 - article 없음 실패")
+    @WithMockUser(username = "email@gmail.com", roles = "USER")
+    void acceptAnswer_NotExistArticle_Fail() {
+        // given
+        final Long articleId = 1L;
+        final Long answerId = 1L;
+        final String content = "답변글 내용";
+        final Boolean accepted = false;
+        final String email = "email@gmail.com";
+
+        Answer answer = createDummyAnswer(null, answerId, content, email, accepted);
+        given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
+        given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
+        given(answerRepository.save(answer)).willReturn(answer);
+
+        // when, then
+        assertThrows(BusinessLogicException.class, () ->
+                answerService.acceptAnswer(articleId, answerId) );
+    }
+
+    @Test
+    @DisplayName("답변글 채택 - answer 매칭 실패")
+    @WithMockUser(username = "email@gmail.com", roles = "USER")
+    void acceptAnswer_NotExistAnswer_Fail() {
+        // given
+        final Long articleId = 1L;
+        final Long answerId = 1L;
+        final String content = "답변글 내용";
+        final Boolean accepted = false;
+        final String email = "email@gmail.com";
+
+        Answer answer = createDummyAnswer(articleId, answerId, content, email, accepted);
+        given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
+        given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
+        given(answerRepository.save(answer)).willReturn(answer);
+
+        // when, then
+        assertThrows(BusinessLogicException.class, () ->
+                answerService.acceptAnswer(articleId, 0L) );
+    }
+
+    @Test
+    @DisplayName("답변글 채택 - 질문글 인증 실패")
+    @WithMockUser(username = "notEmail@gmail.com", roles = "USER")
+    void acceptAnswer_Authentication_Fail() {
+        // given
+        final Long articleId = 1L;
+        final Long answerId = 1L;
+        final String content = "답변글 내용";
+        final Boolean accepted = false;
+        final String email = "email@gmail.com";
+
+        Answer answer = createDummyAnswer(articleId, answerId, content, email, accepted);
+        given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
+        given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
+        given(answerRepository.save(answer)).willReturn(answer);
+
+        // when, then
+        assertThrows(BusinessLogicException.class, () ->
+                answerService.acceptAnswer(articleId, answerId) );
+    }
+
+    @Test
+    @DisplayName("답변글 채택 - 질문글 매칭 실패")
+    @WithMockUser(username = "email@gmail.com", roles = "USER")
+    void acceptAnswer_DoesNotMatchArticle_Fail() {
+        // given
+        final Long articleId = 1L;
+        final Long answerId = 1L;
+        final String content = "답변글 내용";
+        final Boolean accepted = false;
+        final String email = "email@gmail.com";
+
+        Answer answer = createDummyAnswer(articleId, answerId, content, email, accepted);
+        given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
+        given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
+        given(answerRepository.save(answer)).willReturn(answer);
+
+        // when, then
+        assertThrows(BusinessLogicException.class, () ->
+                answerService.acceptAnswer(0L, answerId) );
+    }
+
+    private static Answer createDummyAnswer(Long articleId, Long answerId,
+                                            String content, String email, boolean accepted) {
+        Answer answer = createDummyAnswer(articleId, answerId, content, email);
+        answer.setAccepted(accepted);
+
+        return answer;
     }
 }
