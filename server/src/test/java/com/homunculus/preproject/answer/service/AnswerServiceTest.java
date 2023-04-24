@@ -4,7 +4,6 @@ import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.answer.repository.AnswerRepository;
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.article.repository.ArticleRepository;
-import com.homunculus.preproject.article.service.ArticleService;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.member.entity.Member;
 import org.junit.jupiter.api.DisplayName;
