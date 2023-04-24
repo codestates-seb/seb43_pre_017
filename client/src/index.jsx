@@ -23,9 +23,7 @@ import Home from "./pages/Home";
 import Login from "./pages/login";
 <<<<<<< HEAD
 import Logout from "./pages/logout";
-=======
 import NotFound from "./pages/NotFound";
->>>>>>> fe
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -54,11 +52,8 @@ root.render(
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
-<<<<<<< HEAD
               <Route path="/logout" element={<Logout />} />
-=======
               <Route path="*" element={<NotFound />} />
->>>>>>> fe
             </Routes>
           </Layout>
         </BrowserRouter>
