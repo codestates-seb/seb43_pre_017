@@ -1,11 +1,11 @@
 import { combineReducers } from "@reduxjs/toolkit";
 
 // reducers
-import userReducer from "./user";
+import articleReducer from "./article";
 
 /** 2023/04/12 - root reducer - by 1-blue */
 const rootReducer = combineReducers({
-  user: userReducer,
+  article: articleReducer,
 });
 /** 2023/04/23 - Action reducer - by 1-blue */
 export const LOG_IN = "LOG_IN";
