@@ -20,6 +20,7 @@ import Layout from "./Layout";
 
 // component
 import Home from "./pages/Home";
+import Login from "./pages/login";
 import NotFound from "./pages/NotFound";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -48,6 +49,7 @@ root.render(
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>

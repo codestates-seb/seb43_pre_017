@@ -10,6 +10,7 @@ import StyledSideBar, { StyledLink } from "./style";
 const SideBar = () => {
   const { pathname } = useLocation();
 
+  if (window.location.pathname === "/Login") return null;
   return (
     <StyledSideBar>
       <>
