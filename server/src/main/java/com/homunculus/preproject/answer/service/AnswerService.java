@@ -1,11 +1,9 @@
 package com.homunculus.preproject.answer.service;
 
-import ch.qos.logback.core.joran.spi.ElementSelector;
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.answer.repository.AnswerRepository;
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.article.repository.ArticleRepository;
-import com.homunculus.preproject.article.service.ArticleService;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
 import com.homunculus.preproject.member.entity.Member;
@@ -129,10 +127,10 @@ public class AnswerService {
         checkAllowedMember(findAnswer.getArticle().getMember(), true);
 
         // 유효한 데이터를 처리
-        if(findAnswer.getAccepted())
+        if(findAnswer.getIsAccepted())
             throw new BusinessLogicException(ExceptionCode.ANSWER_NOT_ACCEPTABLE);
         else
-            findAnswer.setAccepted(true);
+            findAnswer.setIsAccepted(true);
 
         return answerRepository.save(findAnswer);
     }

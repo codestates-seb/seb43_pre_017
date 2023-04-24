@@ -336,7 +336,7 @@ class AnswerServiceTest {
         // when, then
         Answer acceptedAnswer = answerService.acceptAnswer(articleId, answerId);
 
-        assertEquals(true, acceptedAnswer.getAccepted());
+        assertEquals(true, acceptedAnswer.getIsAccepted());
     }
 
     @Test
@@ -447,7 +447,7 @@ class AnswerServiceTest {
     private static Answer createDummyAnswer(Long articleId, Long answerId,
                                             String content, String email, boolean accepted) {
         Answer answer = createDummyAnswer(articleId, answerId, content, email);
-        answer.setAccepted(accepted);
+        answer.setIsAccepted(accepted);
 
         return answer;
     }

@@ -1,6 +1,7 @@
 package com.homunculus.preproject.answer.controller;
 
 import com.google.gson.Gson;
+import com.homunculus.preproject.answer.dto.AnswerAcceptanceResponseDto;
 import com.homunculus.preproject.answer.dto.AnswerDto;
 import com.homunculus.preproject.answer.dto.AnswerResponseDto;
 import com.homunculus.preproject.answer.dto.AnswerSimpleResponseDto;
@@ -184,6 +185,7 @@ class AnswerControllerTest {
         final LocalDateTime timeStamp = LocalDateTime.now();
 
         final String answerMessage = "답변글 조회를 완료했습니다.";
+        final Boolean isAccepted = false;
         final Long articleId = 1L;
         final Integer evaluationScore1 = 999;
         final Long answerId1 = 1L;      final String answerContent1 = "답변글 내용1";
@@ -201,8 +203,8 @@ class AnswerControllerTest {
             responseDto.setArticleId(articleId);
 
             List<AnswerResponseDto.Answers> answers = new ArrayList<>();
-            answers.add(createDummyAnswers(timeStamp, answerId1, answerContent1, memberId1, memberName1, commentCount1, evaluationScore1));
-            answers.add(createDummyAnswers(timeStamp, answerId2, answerContent2, memberId2, memberName2, commentCount2, evaluationScore2));
+            answers.add(createDummyAnswers(timeStamp, answerId1, answerContent1, memberId1, memberName1, commentCount1, evaluationScore1, isAccepted));
+            answers.add(createDummyAnswers(timeStamp, answerId2, answerContent2, memberId2, memberName2, commentCount2, evaluationScore2, isAccepted));
 
             responseDto.setMessageCount(answers.size());
             responseDto.setAnswers(answers);
@@ -258,6 +260,7 @@ class AnswerControllerTest {
                                         fieldWithPath("answers[].id").type(JsonFieldType.NUMBER).description("답변글 식별자"),
                                         fieldWithPath("answers[].content").type(JsonFieldType.STRING).description("답변글 내용"),
                                         fieldWithPath("answers[].evaluationScore").type(JsonFieldType.NUMBER).description("추천 점수"),
+                                        fieldWithPath("answers[].isAccepted").type(JsonFieldType.BOOLEAN).description("채택 여부"),
                                         fieldWithPath("answers[].member").type(JsonFieldType.OBJECT).description("답변글 작성한 유저의 정보"),
                                         fieldWithPath("answers[].member.id").type(JsonFieldType.NUMBER).description("유저의 식별자"),
                                         fieldWithPath("answers[].member.name").type(JsonFieldType.STRING).description("유저의 이름"),
@@ -272,11 +275,12 @@ class AnswerControllerTest {
 
     private static AnswerResponseDto.Answers createDummyAnswers(
                    LocalDateTime timeStamp, Long answerId, String answerContent,
-                   Long memberId, String memberName, Integer commentCount, Integer evaluationScore) {
+                   Long memberId, String memberName, Integer commentCount, Integer evaluationScore, Boolean isAccepted) {
         AnswerResponseDto.Answers answers = new AnswerResponseDto.Answers();
         answers.setId(answerId);
         answers.setContent(answerContent);
         answers.setEvaluationScore(evaluationScore);
+        answers.setIsAccepted(isAccepted);
 
         AnswerResponseDto.Answers.Member member = new AnswerResponseDto.Answers.Member();
         member.setId(memberId);
@@ -343,4 +347,70 @@ class AnswerControllerTest {
                         )
                 ));
     }
+
+    @Test
+    @DisplayName("Answer 채택 테스트")
+    @WithMockUser(username = "유저이름", roles = "USER")
+    void postAnswerAcceptTest() throws Exception {
+        // given
+        final String responseContent = "답변을 채택했습니다.";
+        final Long articleId = 1L;
+        final Long answerId = 1L;
+        final String postContent = "답변글의 내용";
+        final boolean isAccepted = false;
+
+        AnswerDto.Post post = new AnswerDto.Post();
+        post.setContent(postContent);
+        String content = gson.toJson(post);
+        post.setArticleId(articleId);
+        given(mapper.answerPostDtoToAnswer(any())).willReturn(new Answer());
+
+        AnswerAcceptanceResponseDto responseDto = new AnswerAcceptanceResponseDto();
+        responseDto.setArticleId(articleId);
+        responseDto.setAnswerId(answerId);
+        responseDto.setMessage(responseContent);
+        responseDto.setIsAccepted(isAccepted);
+        given(mapper.answerToAnswerAcceptanceResponseDto(any(), any())).willReturn(responseDto);
+
+        given(answerService.createAnswer(any())).willReturn(new Answer());
+
+        // when
+        ResultActions actions =
+                mockMvc.perform(
+                        post("/api/article/{articleId}/answer/{answerId}/acceptance", articleId, answerId)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(content)
+                );
+
+        // then
+        actions
+                .andExpect(status().isCreated())
+//                .andExpect(header().string("Authorization", is(startsWith("bearer "))))     // todo : Security 적용 시 토큰 추가해야함
+                .andExpect(jsonPath("$.message").value(responseDto.getMessage()))
+                .andDo(document(
+                        "post-answer-accept",
+                        getRequestPreProcessor(),
+                        getResponsePreProcessor(),
+                        pathParameters(
+                                parameterWithName("articleId").description("질문글 식별자"),
+                                parameterWithName("answerId").description("답변글 식별자")
+                        ),
+                        requestFields(
+                                List.of(
+                                        fieldWithPath("content").type(JsonFieldType.STRING).description("답변글 내용")
+                                )
+                        ),
+                        responseFields(
+                                List.of(
+                                        fieldWithPath("articleId").type(JsonFieldType.NUMBER).description("질문글 식별자"),
+                                        fieldWithPath("answerId").type(JsonFieldType.NUMBER).description("답변글 식별자"),
+                                        fieldWithPath("isAccepted").type(JsonFieldType.BOOLEAN).description("채택 여부").description("true = 채택, false = 채택되지 않음"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메세지")
+                                )
+                        )
+                ));
+    }
+
+
 }

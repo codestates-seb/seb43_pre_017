@@ -7,7 +7,7 @@
 
 Homunculus <https://github.com/codestates-seb/seb43_pre_017>
 
-v1.1.0, 2023.04.23
+v1.1.1, 2023.04.24
 
 ***
 == ArticleController
@@ -176,6 +176,23 @@ include::{snippets}/getAll-answers/response-fields.adoc[]
 
 .http-response
 include::{snippets}/getAll-answers/http-response.adoc[]
+
+
+***
+== AnswerController
+=== 답변 채택
+.curl-request
+include::{snippets}/post-answer-accept/curl-request.adoc[]
+
+.path-parameters
+include::{snippets}/post-answer-accept/path-parameters.adoc[]
+
+.http-response
+include::{snippets}/post-answer-accept/http-response.adoc[]
+
+.response-fields
+include::{snippets}/post-answer-accept/response-fields.adoc[]
+
 
 
 ***

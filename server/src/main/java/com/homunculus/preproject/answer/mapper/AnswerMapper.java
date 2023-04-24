@@ -1,5 +1,6 @@
 package com.homunculus.preproject.answer.mapper;
 
+import com.homunculus.preproject.answer.dto.AnswerAcceptanceResponseDto;
 import com.homunculus.preproject.answer.dto.AnswerDto;
 import com.homunculus.preproject.answer.dto.AnswerResponseDto;
 import com.homunculus.preproject.answer.dto.AnswerSimpleResponseDto;
@@ -66,6 +67,7 @@ public interface AnswerMapper {
                 answer.setId(src.getAnswerId());
                 answer.setContent(src.getContent());
                 answer.setEvaluationScore(src.getEvaluationScore());
+                answer.setIsAccepted(src.getIsAccepted());
 
                 AnswerResponseDto.Answers.Member member = new AnswerResponseDto.Answers.Member();
                 member.setId(src.getMember().getMemberId());
@@ -92,6 +94,16 @@ public interface AnswerMapper {
         responseDto.setMessage(answerSimpleResponseMessages.getMessage());
         responseDto.setArticleId(answer.getArticle().getArticleId());
         responseDto.setAnswerId(answer.getAnswerId());
+
+        return responseDto;
+    }
+
+    default AnswerAcceptanceResponseDto answerToAnswerAcceptanceResponseDto(Answer answer, AnswerSimpleResponseMessages answerAcceptanceResponseDto) {
+        AnswerAcceptanceResponseDto responseDto = new AnswerAcceptanceResponseDto();
+        responseDto.setMessage(answerAcceptanceResponseDto.getMessage());
+        responseDto.setArticleId(answer.getArticle().getArticleId());
+        responseDto.setAnswerId(answer.getAnswerId());
+        responseDto.setIsAccepted(answer.getIsAccepted());
 
         return responseDto;
     }

@@ -49,7 +49,7 @@ public class AnswerController {
         Answer acceptedAnswer = answerService.acceptAnswer(articleId, answerId);
 
         return new ResponseEntity<>(
-                mapper.answerToAnswerSimpleResponseDto(acceptedAnswer, AnswerSimpleResponseMessages.ANSWER_MESSAGE_ACCEPTED),
+                mapper.answerToAnswerAcceptanceResponseDto(acceptedAnswer, AnswerSimpleResponseMessages.ANSWER_MESSAGE_ACCEPTED),
                 HttpStatus.CREATED);
     }
 
