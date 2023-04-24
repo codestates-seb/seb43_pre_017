@@ -1,6 +1,7 @@
 package com.homunculus.preproject.exception;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 public enum ExceptionCode {
     INVALID_MEMBER(400, "Member is null. Something Wrong !"),
@@ -25,6 +26,7 @@ public enum ExceptionCode {
 
     EVALUATION_MEMBER_NOT_ALLOWED(403, "Evaluation is not authored by the corresponding Member"),
 
+    REQUESTED_RANGE_NOT_SATISFIABLE(416, "조회 타입이 맞지 않습니다. 가능타입: 조회순, 평가순, 최신순, 기본"),
     NOT_IMPLEMENTATION(501, "Not Implementation"),
     ;
 
