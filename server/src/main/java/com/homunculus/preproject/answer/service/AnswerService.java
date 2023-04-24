@@ -3,6 +3,7 @@ package com.homunculus.preproject.answer.service;
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.answer.repository.AnswerRepository;
 import com.homunculus.preproject.article.entity.Article;
+import com.homunculus.preproject.article.service.ArticleService;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
 import com.homunculus.preproject.utils.CustomBeanUtils;
@@ -14,19 +15,20 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class AnswerService {
 
     private final AnswerRepository answerRepository;
+    private final ArticleService articleService;
 
     public Answer createAnswer(Answer answer) {
+
+        articleService.findVerifiedArticle(answer.getArticle().getArticleId());
 
         return answerRepository.save(answer);
     }
@@ -38,7 +40,7 @@ public class AnswerService {
 
         return CustomBeanUtils.copyNonNullProperties(answer, findAnswer);
     }
-    @Transactional(readOnly = true)
+
     public Page<Answer> findAnswers(Long articleId, Integer page, Integer size) {
         return answerRepository.findAnswersByArticleArticleId(
                 articleId,
@@ -82,7 +84,6 @@ public class AnswerService {
         return findVerifiedAnswer(answer);
     }
 
-    @Transactional(readOnly = true)
     public Answer findVerifiedAnswer(Answer answer) {
         Optional<Answer> optionalAnswer = answerRepository.findById(answer.getAnswerId());
 
