@@ -30,26 +30,6 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberMapper mapper;
 
-//    private enum AuthSimpleResponseMessages {
-//        AUTH_MESSAGE_POST("회원가입에 성공했습니다. \n 로그인 페이지로 이동됩니다."),
-//        AUTH_MESSAGE_LOGIN("로그인에 성공했습니다."),
-//        AUTH_MESSAGE_LOGOUT("로그아웃되었습니다. \n 메인 페이지로 이동됩니다.");
-//
-//        @Getter
-//        private final String message;
-//
-//        AuthSimpleResponseMessages(String message) {
-//            this.message = message;
-//        }
-//    }
-//
-//    public static MemberSimpleResponseDto createMemberSimpleResponseDto(MemberController.AuthSimpleResponseMessages authSimpleResponseMessages) {
-//        MemberSimpleResponseDto responseDto = new MemberSimpleResponseDto();
-//        responseDto.setMessage(authSimpleResponseMessages.getMessage());
-//
-//        return responseDto;
-//    }
-
     @PostMapping("/api/signup")
     public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post memberDtoPost) {
         Member member = mapper.memberPostDtoToMember(memberDtoPost);

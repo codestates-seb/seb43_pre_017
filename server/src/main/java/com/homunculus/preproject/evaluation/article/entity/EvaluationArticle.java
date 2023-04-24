@@ -1,6 +1,8 @@
 package com.homunculus.preproject.evaluation.article.entity;
 
+import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.article.entity.Article;
+import com.homunculus.preproject.evaluation.answer.entity.EvaluationAnswer;
 import com.homunculus.preproject.member.entity.Member;
 import com.homunculus.preproject.member.entity.MemberDetails;
 import lombok.Getter;
@@ -18,6 +20,7 @@ public class EvaluationArticle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long evaluationId;
     private String evaluationArticleScore;
+
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
@@ -32,7 +35,7 @@ public class EvaluationArticle {
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
-    private EvaluationArticleStatus evaluationAnswerStatus = EvaluationArticleStatus.EVALUATION_ARTICLE_NOTHING;
+    private EvaluationArticleStatus evaluationArticleStatus = EvaluationArticleStatus.EVALUATION_ARTICLE_NOTHING;
 
     public enum EvaluationArticleStatus {
         EVALUATION_ARTICLE_NOTHING("0"),
@@ -44,5 +47,12 @@ public class EvaluationArticle {
         EvaluationArticleStatus(String status) {
             this.status = status;
         }
+    }
+
+    public void addEvaluationScore(EvaluationArticle.EvaluationArticleStatus status) {
+        Article article = this.getArticle();
+        int additionalScore = Integer.parseInt(status.getStatus());
+        int score = article.getEvaluationScore() + additionalScore;
+        article.setEvaluationScore(score);
     }
 }

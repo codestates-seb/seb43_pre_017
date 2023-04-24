@@ -1,21 +1,24 @@
 package com.homunculus.preproject.article.service;
 
-import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.article.repository.ArticleRepository;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ArticleService {
 
@@ -37,10 +40,12 @@ public class ArticleService {
         return articleRepository.save(findArticle);
     }
 
+    @Transactional(readOnly = true)
     public Article findArticle(Long articleId) {
         return findVerifiedArticle(articleId);
     }
 
+    @Transactional(readOnly = true)
     public Page<Article> findArticles(int page, int size) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("articleId").descending());
@@ -58,7 +63,21 @@ public class ArticleService {
         return findArticle;
     }
 
+    public static void checkAllowedMember (Article article) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User connectedUser = (User) authentication.getPrincipal();
+        if (connectedUser == null)
+            throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
+
+        // todo : role 추가 시 권한에 따른 등록 방식 추가해야함
+
+        if ( !article.getMember().getEmail().equals(connectedUser.getUsername()) ) {
+            throw new BusinessLogicException(ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED);
+        }
+    }
+
     // 이미 등록된 질문인지 검증
+    @Transactional(readOnly = true)
     public Article findVerifiedArticle(long articleId) {
         Optional<Article> optionalArticle =
                 articleRepository.findById(articleId);

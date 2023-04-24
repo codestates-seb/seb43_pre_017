@@ -14,11 +14,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AnswerService {
 
@@ -36,7 +38,7 @@ public class AnswerService {
 
         return CustomBeanUtils.copyNonNullProperties(answer, findAnswer);
     }
-
+    @Transactional(readOnly = true)
     public Page<Answer> findAnswers(Long articleId, Integer page, Integer size) {
         return answerRepository.findAnswersByArticleArticleId(
                 articleId,
@@ -80,6 +82,7 @@ public class AnswerService {
         return findVerifiedAnswer(answer);
     }
 
+    @Transactional(readOnly = true)
     public Answer findVerifiedAnswer(Answer answer) {
         Optional<Answer> optionalAnswer = answerRepository.findById(answer.getAnswerId());
 

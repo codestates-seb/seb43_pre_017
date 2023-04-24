@@ -65,6 +65,7 @@ public interface AnswerMapper {
                 AnswerResponseDto.Answers answer = new AnswerResponseDto.Answers();
                 answer.setId(src.getAnswerId());
                 answer.setContent(src.getContent());
+                answer.setEvaluationScore(src.getEvaluationScore());
 
                 AnswerResponseDto.Answers.Member member = new AnswerResponseDto.Answers.Member();
                 member.setId(src.getMember().getMemberId());
