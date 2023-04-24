@@ -13,9 +13,19 @@ import StyledLogoutContainer, {
 } from "./style";
 import LogoutIcon from "./Icon";
 import Checkbox from "./checkbox";
+import { useNavigate } from "react-router-dom";
+import { logoutAction } from "../../store/reducers";
+import { useDispatch } from "react-redux";
 
 /** 2023/04/23 로그아웃 페이지 -by JHH0906 */
 const Logout = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const logouthandler = () => {
+    dispatch(logoutAction());
+    localStorage.clear();
+    navigate("/");
+  };
   return (
     <StyledLogoutContainer>
       <StyledLogoutForm>
@@ -31,7 +41,7 @@ const Logout = () => {
               <StyledCheckBoxText>Log out on all devices</StyledCheckBoxText>
             </StyledCheckBoxForm>
             <StyledBtnForm>
-              <StyledLogOutBtn>Log Out</StyledLogOutBtn>
+              <StyledLogOutBtn onClick={logouthandler}>Log Out</StyledLogOutBtn>
               <StyledLogCancelBtn>Cancel</StyledLogCancelBtn>
             </StyledBtnForm>
             <StyledBottomText>
