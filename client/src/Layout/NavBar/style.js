@@ -4,6 +4,7 @@ import styled from "styled-components";
 export const StyledNavBar = styled.nav`
   display: flex;
   align-items: center;
+  background-color: ${({ theme }) => theme.colors.gray50};
 `;
 
 // 로그인 버튼
