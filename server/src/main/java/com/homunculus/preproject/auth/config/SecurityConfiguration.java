@@ -48,6 +48,11 @@ public class SecurityConfiguration {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .formLogin().disable()
+                .logout()
+                .logoutUrl("/api/logout")
+                .logoutSuccessUrl("/")
+                .deleteCookies("JSESSIONID", "remember-me")
+                .and()
                 .httpBasic().disable()
                 .exceptionHandling()
                 .authenticationEntryPoint(new MemberAuthenticationEntryPoint())
@@ -81,6 +86,7 @@ public class SecurityConfiguration {
         configuration.setAllowCredentials(true);
         configuration.addAllowedOriginPattern("*");
 //        configuration.addAllowedOriginPattern("http://localhost:3000");
+        configuration.addExposedHeader("Authorization");
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setExposedHeaders(Arrays.asList("*"));
