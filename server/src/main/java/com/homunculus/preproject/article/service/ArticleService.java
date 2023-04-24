@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,8 +66,8 @@ public class ArticleService {
 
     public Article createArticle(Article article) {
 
-        // 로그인 한 유저인지만 체크
-        checkAllowedMember(null);
+//         로그인 한 유저인지만 체크
+//        checkAllowedMember(article);
 
         return articleRepository.save(article);
     }
@@ -111,19 +112,26 @@ public class ArticleService {
         return findArticle;
     }
 
-    public static void checkAllowedMember (Article article) {
+    public static void checkAllowedMember(Article article) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User connectedUser = (User) authentication.getPrincipal();
-        if (connectedUser == null)
+        if (authentication == null || !authentication.isAuthenticated()) {
             throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
+        }
+
+        Object principal = authentication.getPrincipal();
+        if (!(principal instanceof UserDetails)) {
+            throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
+        }
+
+        UserDetails userDetails = (UserDetails) principal;
 
         // todo : role 추가 시 권한에 따른 등록 방식 추가해야함
 
-        if ( article == null ) {
+        if (article == null) {
             return;
         }
 
-        if ( !article.getMember().getEmail().equals(connectedUser.getUsername()) ) {
+        if (!article.getMember().getEmail().equals(userDetails.getUsername())) {
             throw new BusinessLogicException(ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED);
         }
     }
