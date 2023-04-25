@@ -136,16 +136,16 @@ public class ArticleService {
 
         // todo : role 추가 시 권한에 따른 등록 방식 추가해야함
 
-        String email = userDetails.getUsername();
-        Member member = memberService.findVerifiedMemberByEmail(email);
-        article.setMember(member);
-
         // post 가 아니라면 작성자가 맞는지 체크
         if (!isPostArticle) {
             if (!article.getMember().getEmail().equals(userDetails.getUsername())) {
                 throw new BusinessLogicException(ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED);
             }
         }
+
+        String email = userDetails.getUsername();
+        Member member = memberService.findVerifiedMemberByEmail(email);
+        article.setMember(member);
     }
 
     // 이미 등록된 질문인지 검증
