@@ -34,9 +34,13 @@ public class AnswerService {
 
     public Answer createAnswer(Answer answer) {
 
-        findVerifiedArticle(answer.getArticle().getArticleId());
+        answer.setArticle(
+                findVerifiedArticle(answer.getArticle().getArticleId())
+        );
 
-        checkAllowedMember(answer.getMember(), false, true);
+        answer.setMember(
+            checkAllowedMember(answer.getMember(), false, true)
+        );
 
         return answerRepository.save(answer);
     }
@@ -73,7 +77,7 @@ public class AnswerService {
         checkAllowedMember(member, isArticleChecking, false);
     }
 
-    public void checkAllowedMember (Member member, boolean isArticleChecking, boolean isAnswerPost) {
+    public Member checkAllowedMember (Member member, boolean isArticleChecking, boolean isAnswerPost) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated())
             throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
@@ -92,7 +96,7 @@ public class AnswerService {
             }
         }
 
-        member = memberService.findVerifiedMemberByEmail(email);
+        return memberService.findVerifiedMemberByEmail(email);
     }
 
     private Answer findVerifiedAnswer(Long articleId, Long answerId) {
