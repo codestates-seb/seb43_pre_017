@@ -4,6 +4,7 @@ import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.article.repository.ArticleRepository;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.member.entity.Member;
+import com.homunculus.preproject.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +30,9 @@ class ArticleServiceTest {
     @Mock
     private ArticleRepository articleRepository;
 
+    @Mock
+    private MemberService memberService;
+
     @InjectMocks
     private ArticleService articleService;
 
@@ -44,6 +48,7 @@ class ArticleServiceTest {
         Article article = createDummyArticle(articleId, title, content, email);
 
         given(articleRepository.save(article)).willReturn(article);
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(article.getMember());
 
         //when, then
         assertDoesNotThrow(() -> articleService.createArticle(article));
@@ -81,6 +86,7 @@ class ArticleServiceTest {
 
         given(articleRepository.save(article)).willReturn(new Article());
         given(articleRepository.findById(article.getArticleId())).willReturn(Optional.of(article));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(article.getMember());
 
         //when, then
         assertDoesNotThrow( () -> articleService.updateArticle(updateArticle) );
@@ -100,6 +106,7 @@ class ArticleServiceTest {
 
         given(articleRepository.save(article)).willReturn(new Article());
         given(articleRepository.findById(article.getArticleId())).willReturn(Optional.of(article));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(article.getMember());
 
         //when, then
         assertThrows(BusinessLogicException.class, () ->
@@ -120,6 +127,7 @@ class ArticleServiceTest {
 
         given(articleRepository.save(article)).willReturn(new Article());
         given(articleRepository.findById(article.getArticleId())).willReturn(Optional.of(article));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(article.getMember());
 
         //when, then
         assertThrows(BusinessLogicException.class, () ->
@@ -139,6 +147,7 @@ class ArticleServiceTest {
 
         given(articleRepository.save(article)).willReturn(new Article());
         given(articleRepository.findById(article.getArticleId())).willReturn(Optional.of(article));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(article.getMember());
 
         //when, then
         assertThrows(NullPointerException.class,
@@ -189,6 +198,7 @@ class ArticleServiceTest {
 
         Article article = createDummyArticle(articleId, title, content, email);
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(article));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(article.getMember());
 
         doNothing().when(articleRepository).delete(article);
 
@@ -208,6 +218,7 @@ class ArticleServiceTest {
 
         Article article = createDummyArticle(articleId, title, content, email);
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(article));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(article.getMember());
 
         doNothing().when(articleRepository).delete(article);
 
@@ -228,6 +239,7 @@ class ArticleServiceTest {
 
         Article article = createDummyArticle(articleId, title, content, email);
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(article));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(article.getMember());
 
         doNothing().when(articleRepository).delete(article);
 
