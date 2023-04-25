@@ -79,15 +79,12 @@ public class AnswerService {
             throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
 
         Object principal = authentication.getPrincipal();
-        if (!(principal instanceof UserDetails))
-            throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
-
-        UserDetails userDetails = (UserDetails) principal;
+        String email = principal.toString();
 
         // todo : role 추가 시 권한에 따른 등록 방식 추가해야함
 
         if ( !isAnswerPost ) {
-            if (!member.getEmail().equals(userDetails.getUsername())) {
+            if (!member.getEmail().equals(email)) {
                 if (isArticleChecking)
                     throw new BusinessLogicException(ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED);
                 else
@@ -95,7 +92,7 @@ public class AnswerService {
             }
         }
 
-        member = memberService.findVerifiedMemberByEmail(userDetails.getUsername());
+        member = memberService.findVerifiedMemberByEmail(email);
     }
 
     private Answer findVerifiedAnswer(Long articleId, Long answerId) {
