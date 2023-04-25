@@ -6,6 +6,7 @@ import {
   StyledEditBtn,
 } from "./style";
 
+// url 연결을 위한 useParams
 import { Link, useParams } from "react-router-dom";
 
 //data
