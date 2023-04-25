@@ -32,7 +32,9 @@ public class CommentAnswerService {
 
     public CommentAnswer createCommentAnswer(CommentAnswer comment) {
 
-        checkAllowedMember(comment, true);
+        comment.setMember(
+            checkAllowedMember(comment, true)
+        );
 
         return commentAnswerRepository.save(comment);
     }
@@ -40,7 +42,9 @@ public class CommentAnswerService {
     public CommentAnswer updateCommentAnswer(CommentAnswer comment) {
         CommentAnswer findComment = findVerifiedAnswer(comment);
 
-        checkAllowedMember(findComment);
+        findComment.setMember(
+            checkAllowedMember(findComment, false)
+        );
 
         return CustomBeanUtils.copyNonNullProperties(comment, findComment);
     }
@@ -48,7 +52,7 @@ public class CommentAnswerService {
     public CommentAnswer deleteCommentAnswer(Long answerId, Long commentId) {
         CommentAnswer deletedComment = findVerifiedCommentAnswer(answerId, commentId);
 
-        checkAllowedMember(deletedComment);
+        checkAllowedMember(deletedComment, false);
 
         commentAnswerRepository.deleteById(commentId);
 
@@ -63,10 +67,7 @@ public class CommentAnswerService {
         );
     }
 
-    public void checkAllowedMember (CommentAnswer commentAnswer) {
-        checkAllowedMember(commentAnswer, false);
-    }
-    public void checkAllowedMember (CommentAnswer commentAnswer, boolean isCommentAnswerPost) {
+    public Member checkAllowedMember (CommentAnswer commentAnswer, boolean isCommentAnswerPost) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated())
             throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
@@ -80,8 +81,7 @@ public class CommentAnswerService {
             }
         }
 
-        Member member = memberService.findVerifiedMemberByEmail(email);
-        commentAnswer.setMember(member);
+        return memberService.findVerifiedMemberByEmail(email);
     }
 
     private CommentAnswer findVerifiedCommentAnswer(Long answerId, Long commentId) {
