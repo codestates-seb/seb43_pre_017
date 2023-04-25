@@ -2,9 +2,8 @@ package com.homunculus.preproject.article.service;
 
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.article.repository.ArticleRepository;
-import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.member.entity.Member;
-import com.homunculus.preproject.member.service.MemberService;
+import com.homunculus.preproject.utils.AuthenticationUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -31,7 +29,7 @@ class ArticleServiceTest {
     private ArticleRepository articleRepository;
 
     @Mock
-    private MemberService memberService;
+    private AuthenticationUtils authenticationUtils;
 
     @InjectMocks
     private ArticleService articleService;
@@ -48,7 +46,7 @@ class ArticleServiceTest {
         Article article = createDummyArticle(articleId, title, content, email);
 
         given(articleRepository.save(article)).willReturn(article);
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(article.getMember());
+        given(authenticationUtils.findMemberWithCheckAllowed(any(Member.class), anyBoolean(), any())).willReturn(article.getMember());
 
         //when, then
         assertDoesNotThrow(() -> articleService.createArticle(article));
@@ -86,52 +84,10 @@ class ArticleServiceTest {
 
         given(articleRepository.save(article)).willReturn(new Article());
         given(articleRepository.findById(article.getArticleId())).willReturn(Optional.of(article));
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(article.getMember());
+        given(authenticationUtils.findMemberWithCheckAllowed(any(Member.class), anyBoolean(), any())).willReturn(article.getMember());
 
         //when, then
         assertDoesNotThrow( () -> articleService.updateArticle(updateArticle) );
-    }
-
-    @Test
-    @DisplayName("질문글 수정 테스트 - 인증 실패")
-    @WithMockUser(username = "notEmail@gmail.com", roles = "USER")
-    void updateArticleTest_authentication_Fail() {
-        //given
-        final Long articleId = 1L;
-        final String email = "email@gmail.com";
-
-        final String title = "질문의 내용";
-        final String content = "질문의 내용";
-        Article article = createDummyArticle(articleId, title, content, email);
-
-        given(articleRepository.save(article)).willReturn(new Article());
-        given(articleRepository.findById(article.getArticleId())).willReturn(Optional.of(article));
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(article.getMember());
-
-        //when, then
-        assertThrows(BusinessLogicException.class, () ->
-                articleService.updateArticle(article) );
-    }
-
-    @Test
-    @DisplayName("질문글 수정 테스트 - 인증정보 없음 실패")
-    @WithMockUser(username = "", roles = "USER")
-    void updateArticleTest_invalidMemberAuthentication_Fail() {
-        //given
-        final Long articleId = 1L;
-        final String email = "email@gmail.com";
-
-        final String title = "질문의 내용";
-        final String content = "질문의 내용";
-        Article article = createDummyArticle(articleId, title, content, email);
-
-        given(articleRepository.save(article)).willReturn(new Article());
-        given(articleRepository.findById(article.getArticleId())).willReturn(Optional.of(article));
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(article.getMember());
-
-        //when, then
-        assertThrows(BusinessLogicException.class, () ->
-                articleService.updateArticle(article) );
     }
 
     @Test
@@ -147,7 +103,7 @@ class ArticleServiceTest {
 
         given(articleRepository.save(article)).willReturn(new Article());
         given(articleRepository.findById(article.getArticleId())).willReturn(Optional.of(article));
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(article.getMember());
+        given(authenticationUtils.findMemberWithCheckAllowed(any(Member.class), anyBoolean(), any())).willReturn(article.getMember());
 
         //when, then
         assertThrows(NullPointerException.class,
@@ -198,33 +154,12 @@ class ArticleServiceTest {
 
         Article article = createDummyArticle(articleId, title, content, email);
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(article));
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(article.getMember());
+        given(authenticationUtils.findMemberWithCheckAllowed(any(Member.class), anyBoolean(), any())).willReturn(article.getMember());
 
         doNothing().when(articleRepository).delete(article);
 
         //when, then
         assertDoesNotThrow(() -> articleService.deleteArticle(articleId));
-    }
-
-    @Test
-    @DisplayName("질문글 삭제 - 인증 실패")
-    @WithMockUser(username = "notEmail@gmail.com", roles = "USER")
-    void deleteArticle_authentication_Fail() {
-        //given
-        final Long articleId = 1L;
-        final String email = "email@gmail.com";
-        final String title = "기존에 있던 제목";
-        final String content = "기존에 있던 내용";
-
-        Article article = createDummyArticle(articleId, title, content, email);
-        given(articleRepository.findById(anyLong())).willReturn(Optional.of(article));
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(article.getMember());
-
-        doNothing().when(articleRepository).delete(article);
-
-        //when, then
-        assertThrows(BusinessLogicException.class,
-                () -> articleService.deleteArticle(articleId) );
     }
 
     @Test
@@ -239,7 +174,7 @@ class ArticleServiceTest {
 
         Article article = createDummyArticle(articleId, title, content, email);
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(article));
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(article.getMember());
+        given(authenticationUtils.findMemberWithCheckAllowed(any(Member.class), anyBoolean(), any())).willReturn(article.getMember());
 
         doNothing().when(articleRepository).delete(article);
 
@@ -247,5 +182,4 @@ class ArticleServiceTest {
         assertThrows(NullPointerException.class,
                 () -> articleService.deleteArticle(null) );
     }
-
 }
