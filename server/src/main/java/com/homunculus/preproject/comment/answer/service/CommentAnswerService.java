@@ -5,6 +5,8 @@ import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import com.homunculus.preproject.comment.answer.repository.CommentAnswerRepository;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
+import com.homunculus.preproject.member.entity.Member;
+import com.homunculus.preproject.member.service.MemberService;
 import com.homunculus.preproject.utils.CustomBeanUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,10 +28,11 @@ import java.util.Optional;
 public class CommentAnswerService {
 
     private final CommentAnswerRepository commentAnswerRepository;
+    private final MemberService memberService;
 
     public CommentAnswer createCommentAnswer(CommentAnswer comment) {
 
-        checkAllowedMember(null);
+        checkAllowedMember(comment, true);
 
         return commentAnswerRepository.save(comment);
     }
@@ -59,17 +63,29 @@ public class CommentAnswerService {
         );
     }
 
-    public static void checkAllowedMember (CommentAnswer commentAnswer) {
+    public void checkAllowedMember (CommentAnswer commentAnswer) {
+        checkAllowedMember(commentAnswer, false);
+    }
+    public void checkAllowedMember (CommentAnswer commentAnswer, boolean isCommentAnswerPost) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User connectedUser = (User) authentication.getPrincipal();
-        if (connectedUser == null)
+        if (authentication == null || !authentication.isAuthenticated())
             throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
 
-        if ( commentAnswer == null )    return;
+        Object principal = authentication.getPrincipal();
+        if (principal == null)
+            throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
 
-        if ( !commentAnswer.getMember().getEmail().equals(connectedUser.getUsername()) ) {
-            throw new BusinessLogicException(ExceptionCode.COMMENT_MEMBER_NOT_ALLOWED);
+        UserDetails userDetails = (UserDetails) principal;
+        final String email = userDetails.getUsername();
+
+        if ( !isCommentAnswerPost ) {
+            if (!commentAnswer.getMember().getEmail().equals(email)) {
+                throw new BusinessLogicException(ExceptionCode.COMMENT_MEMBER_NOT_ALLOWED);
+            }
         }
+
+        Member member = memberService.findVerifiedMemberByEmail(email);
+        commentAnswer.setMember(member);
     }
 
     private CommentAnswer findVerifiedCommentAnswer(Long answerId, Long commentId) {
