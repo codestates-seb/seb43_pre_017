@@ -63,7 +63,7 @@ public class CommentAnswerService {
     public Page<CommentAnswer> findCommentAnswers(Long answerId, Integer page, Integer size) {
         return commentAnswerRepository.findCommentAnswersByAnswerAnswerId(
                 answerId,
-                PageRequest.of(page, size, Sort.by("commentAnswerId"))
+                PageRequest.of(page, size, Sort.by("commentAnswerId").descending())
         );
     }
 

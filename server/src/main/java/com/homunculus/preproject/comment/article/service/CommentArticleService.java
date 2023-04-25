@@ -63,7 +63,7 @@ public class CommentArticleService {
     public Page<CommentArticle> findCommentArticles(Long articleId, Integer page, Integer size) {
         return commentArticleRepository.findCommentArticlesByArticleArticleId(
                 articleId,
-                PageRequest.of(page, size, Sort.by("commentAnswerId"))
+                PageRequest.of(page, size, Sort.by("commentArticleId").descending())
         );
     }
 

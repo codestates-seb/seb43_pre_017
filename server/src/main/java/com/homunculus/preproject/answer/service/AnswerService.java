@@ -58,7 +58,7 @@ public class AnswerService {
     public Page<Answer> findAnswers(Long articleId, Integer page, Integer size) {
         return answerRepository.findAnswersByArticleArticleId(
                 articleId,
-                PageRequest.of(page, size, Sort.by("answerId"))
+                PageRequest.of(page, size, Sort.by("answerId").descending())
         );
     }
 
