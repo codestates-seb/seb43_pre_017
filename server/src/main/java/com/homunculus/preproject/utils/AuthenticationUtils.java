@@ -7,6 +7,7 @@ import com.homunculus.preproject.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -23,22 +24,17 @@ public class AuthenticationUtils {
         }
 
         Object principal = authentication.getPrincipal();
-        if (!(principal instanceof UserDetails)) {
-            throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
-        }
-
-        UserDetails userDetails = (UserDetails) principal;
+        String email = principal.toString();
 
         // todo : role 추가 시 권한에 따른 등록 방식 추가해야함
 
         // post 가 아니라면 작성자가 맞는지 체크
         if (!isPostMethod) {
-            if (!member.getEmail().equals(userDetails.getUsername())) {
+            if (!member.getEmail().equals(email)) {
                 throw new BusinessLogicException(ec);
             }
         }
 
-        String email = userDetails.getUsername();
         return memberService.findVerifiedMemberByEmail(email);
     }
 }
