@@ -2,13 +2,12 @@ package com.homunculus.preproject.article.service;
 
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.article.repository.ArticleRepository;
+import com.homunculus.preproject.article.utils.ArticleServiceUtils;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
 import com.homunculus.preproject.member.entity.Member;
 import com.homunculus.preproject.member.service.MemberService;
-import com.homunculus.preproject.response.ErrorResponse;
 import com.homunculus.preproject.utils.CustomBeanUtils;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,42 +29,6 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final MemberService memberService;
 
-    private enum TypeOfGetAll {
-        ARTICLE_GET_TYPE_EVALUATION("평가순", "evaluationScore"),
-        ARTICLE_GET_TYPE_CREATED_AT("최신순", "createdAt"),
-        ARTICLE_GET_TYPE_VIEW_COUNT("조회순", "viewCount"),
-        ARTICLE_GET_TYPE_ID("기본", "articleId"),
-        ;
-
-        private @Getter String type;
-        private @Getter String orderBy;
-
-        TypeOfGetAll(String type, String orderBy) {
-            this.type = type;
-            this.orderBy = orderBy;
-        }
-    }
-
-    private String checkValidTypeOfOrderByField(String typeForSorting) {
-        if( typeForSorting == null )
-            typeForSorting = "기본";
-
-        TypeOfGetAll[] types = TypeOfGetAll.values();
-        int index = -1;
-        for (int i = 0; i < types.length; i++) {
-            if (types[i].getType().equals(typeForSorting)) {
-                index = i;
-                break;
-            }
-        }
-
-        if( index == -1 )
-            throw new BusinessLogicException(ExceptionCode.REQUESTED_RANGE_NOT_SATISFIABLE);
-
-        String orderBy = types[index].getOrderBy();
-        return orderBy;
-    }
-
     public Article createArticle(Article article) {
 
 //         로그인 한 유저인지만 체크
@@ -78,7 +40,7 @@ public class ArticleService {
 
     public Article updateArticle(Article article) {
         Article findArticle = findVerifiedArticle(article.getArticleId());
-        checkAllowedMember(findArticle);
+        checkAllowedMember(findArticle, false);
 
         CustomBeanUtils.copyNonNullProperties(article, findArticle);
 
@@ -99,26 +61,20 @@ public class ArticleService {
     @Transactional(readOnly = true)
     public Page<Article> findArticles(int page, int size, String typeForSorting) {
 
-        String orderBy = checkValidTypeOfOrderByField(typeForSorting);
+        String orderBy = ArticleServiceUtils.checkValidTypeOfOrderByField(typeForSorting);
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy).descending());
-        Page<Article> articlePage = articleRepository.findAll(pageable);
 
-        return articlePage;
+        return articleRepository.findAll(pageable);
     }
 
     public Article deleteArticle(Long articleId) {
         Article findArticle = findVerifiedArticle(articleId);
 
-        checkAllowedMember(findArticle);
+        checkAllowedMember(findArticle, false);
 
         // 특정 질문 정보 삭제
         articleRepository.delete(findArticle);
         return findArticle;
-    }
-
-    public void checkAllowedMember(Article article) {
-        // 기존에 사용하고 있던 방식은 기존방식: 전부 Post 가 아님으로 설정(false)
-        checkAllowedMember(article, false);
     }
 
     public void checkAllowedMember(Article article, boolean isPostArticle) {
