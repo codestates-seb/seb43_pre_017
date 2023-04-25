@@ -61,7 +61,7 @@ const MemberBtn = () => {
   return (
     <StyledMemberBtn>
       <Link to="/members/karine/1" className="memberlink">
-        <img src={dummy.members[2].img} alt="멤버 이미지" />
+        <img src={dummy.members[0].img} alt="멤버 이미지" />
       </Link>
     </StyledMemberBtn>
   );

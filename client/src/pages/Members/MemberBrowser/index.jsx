@@ -1,12 +1,11 @@
-import dummy from "../Data/data.json";
 import { StyledMemberBrowser, StyledMember } from "./style";
 import { Link } from "react-router-dom";
 
 /** 20230424 - 멤버들을 감싸는 컴포넌트 - by sinyaenok*/
-const MemberBrowser = () => {
+const MemberBrowser = (filteredMembers) => {
   return (
     <StyledMemberBrowser>
-      {dummy.members.map((member) => (
+      {filteredMembers.filteredMembers.map((member) => (
         <StyledMember key={member.id} id="item-container">
           {/* 멤버 이미지 */}
           <div className="item-img d-flex ai-center js-center">

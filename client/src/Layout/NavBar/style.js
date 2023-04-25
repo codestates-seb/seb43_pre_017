@@ -98,7 +98,7 @@ export const StyledMemberBtn = styled.div`
     height: 30px;
     width: 30px;
     border-radius: 3px;
-    opacity: 0.8;
+    opacity: 0.9;
     :hover {
       opacity: 1;
     }
