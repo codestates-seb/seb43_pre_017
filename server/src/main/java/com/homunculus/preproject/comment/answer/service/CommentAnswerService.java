@@ -72,11 +72,7 @@ public class CommentAnswerService {
             throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
 
         Object principal = authentication.getPrincipal();
-        if (principal == null)
-            throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
-
-        UserDetails userDetails = (UserDetails) principal;
-        final String email = userDetails.getUsername();
+        final String email = principal.toString();
 
         if ( !isCommentAnswerPost ) {
             if (!commentAnswer.getMember().getEmail().equals(email)) {
