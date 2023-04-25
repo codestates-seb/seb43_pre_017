@@ -6,6 +6,7 @@ import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.article.repository.ArticleRepository;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.member.entity.Member;
+import com.homunculus.preproject.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +33,9 @@ class AnswerServiceTest {
     @Mock
     private ArticleRepository articleRepository;
 
+    @Mock
+    private MemberService memberService;
+
     @InjectMocks
     private AnswerService answerService;
 
@@ -49,6 +53,7 @@ class AnswerServiceTest {
 
         given(answerRepository.save(answer)).willReturn(answer);
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(article));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
 
         //when, then
         assertDoesNotThrow(() -> answerService.createAnswer(answer));
@@ -67,6 +72,7 @@ class AnswerServiceTest {
 
         given(answerRepository.save(answer)).willReturn(answer);
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(article));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
 
         //when, then
         assertThrows(NullPointerException.class,
@@ -113,6 +119,7 @@ class AnswerServiceTest {
 
         given(answerRepository.save(answer)).willReturn(new Answer());
         given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
 
         //when, then
         assertDoesNotThrow( () -> answerService.updateAnswer(updateAnswer) );
@@ -135,6 +142,7 @@ class AnswerServiceTest {
 
         given(answerRepository.save(answer)).willReturn(new Answer());
         given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
 
         //when, then
         assertThrows(BusinessLogicException.class,
@@ -157,6 +165,7 @@ class AnswerServiceTest {
 
         given(answerRepository.save(answer)).willReturn(new Answer());
         given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
 
         //when, then
         assertThrows(NullPointerException.class,
@@ -180,6 +189,7 @@ class AnswerServiceTest {
 
         given(answerRepository.save(answer)).willReturn(new Answer());
         given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
 
         //when, then
         assertThrows(BusinessLogicException.class,
@@ -203,6 +213,7 @@ class AnswerServiceTest {
 
         given(answerRepository.save(answer)).willReturn(new Answer());
         given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
 
         //when, then
         assertThrows(BusinessLogicException.class,
@@ -234,6 +245,7 @@ class AnswerServiceTest {
 
         Answer answer = createDummyAnswer(articleId, answerId, content, email);
         given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
 
         doNothing().when(answerRepository).deleteById(answerId);
 
@@ -250,6 +262,7 @@ class AnswerServiceTest {
         final Long answerId = 1L;
 
         given(answerRepository.findById(anyLong())).willReturn(null);
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(new Member());
 
         doNothing().when(answerRepository).deleteById(answerId);
 
@@ -270,6 +283,7 @@ class AnswerServiceTest {
 
         Answer answer = createDummyAnswer(articleId, answerId, content, email);
         given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
 
         doNothing().when(answerRepository).deleteById(answerId);
 
@@ -289,6 +303,7 @@ class AnswerServiceTest {
 
         Answer answer = createDummyAnswer(articleId, answerId, content, null);
         given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
 
         doNothing().when(answerRepository).deleteById(answerId);
 
@@ -312,6 +327,7 @@ class AnswerServiceTest {
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
         given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
         given(answerRepository.save(answer)).willReturn(answer);
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getArticle().getMember());
 
         // when, then
         assertDoesNotThrow( () -> answerService.acceptAnswer(articleId, answerId) );
@@ -332,6 +348,7 @@ class AnswerServiceTest {
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
         given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
         given(answerRepository.save(answer)).willReturn(answer);
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getArticle().getMember());
 
         // when, then
         Answer acceptedAnswer = answerService.acceptAnswer(articleId, answerId);
@@ -354,6 +371,7 @@ class AnswerServiceTest {
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
         given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
         given(answerRepository.save(answer)).willReturn(answer);
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getArticle().getMember());
 
         // when, then
         assertThrows(BusinessLogicException.class, () ->
@@ -375,6 +393,7 @@ class AnswerServiceTest {
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
         given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
         given(answerRepository.save(answer)).willReturn(answer);
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getArticle().getMember());
 
         // when, then
         assertThrows(BusinessLogicException.class, () ->
@@ -396,6 +415,7 @@ class AnswerServiceTest {
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
         given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
         given(answerRepository.save(answer)).willReturn(answer);
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getArticle().getMember());
 
         // when, then
         assertThrows(BusinessLogicException.class, () ->
@@ -417,6 +437,7 @@ class AnswerServiceTest {
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
         given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
         given(answerRepository.save(answer)).willReturn(answer);
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getArticle().getMember());
 
         // when, then
         assertThrows(BusinessLogicException.class, () ->
@@ -438,6 +459,7 @@ class AnswerServiceTest {
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
         given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
         given(answerRepository.save(answer)).willReturn(answer);
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getArticle().getMember());
 
         // when, then
         assertThrows(BusinessLogicException.class, () ->

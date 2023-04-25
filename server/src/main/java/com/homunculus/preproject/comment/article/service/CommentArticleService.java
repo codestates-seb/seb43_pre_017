@@ -5,6 +5,8 @@ import com.homunculus.preproject.comment.article.entity.CommentArticle;
 import com.homunculus.preproject.comment.article.repository.CommentArticleRepository;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
+import com.homunculus.preproject.member.entity.Member;
+import com.homunculus.preproject.member.service.MemberService;
 import com.homunculus.preproject.utils.CustomBeanUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,10 +28,11 @@ import java.util.Optional;
 public class CommentArticleService {
 
     private final CommentArticleRepository commentArticleRepository;
+    private final MemberService memberService;
 
     public CommentArticle createCommentArticle(CommentArticle comment) {
 
-        checkAllowedMember(null);
+        checkAllowedMember(comment, true);
 
         return commentArticleRepository.save(comment);
     }
@@ -59,17 +63,29 @@ public class CommentArticleService {
         );
     }
 
-    public static void checkAllowedMember (CommentArticle commentArticle) {
+    public void checkAllowedMember (CommentArticle commentArticle) {
+        checkAllowedMember(commentArticle, false);
+    }
+    public void checkAllowedMember (CommentArticle commentArticle, boolean isCommentArticlePost) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User connectedUser = (User) authentication.getPrincipal();
-        if (connectedUser == null)
+        if (authentication == null || !authentication.isAuthenticated())
             throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
 
-        if ( commentArticle == null )    return;
+        Object principal = authentication.getPrincipal();
+        if (principal == null)
+            throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
 
-        if ( !commentArticle.getMember().getEmail().equals(connectedUser.getUsername()) ) {
-            throw new BusinessLogicException(ExceptionCode.COMMENT_MEMBER_NOT_ALLOWED);
+        UserDetails userDetails = (UserDetails) principal;
+        final String email = userDetails.getUsername();
+
+        if ( !isCommentArticlePost ) {
+            if (!commentArticle.getMember().getEmail().equals(email)) {
+                throw new BusinessLogicException(ExceptionCode.COMMENT_MEMBER_NOT_ALLOWED);
+            }
         }
+
+        Member member = memberService.findVerifiedMemberByEmail(email);
+        commentArticle.setMember(member);
     }
 
     private CommentArticle findVerifiedCommentArticle(Long articleId, Long commentId) {

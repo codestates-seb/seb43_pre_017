@@ -2,12 +2,10 @@ package com.homunculus.preproject.member.controller;
 
 import com.homunculus.preproject.member.dto.MemberDto;
 import com.homunculus.preproject.member.dto.MemberResponseDto;
-import com.homunculus.preproject.member.dto.MemberSimpleResponseDto;
 import com.homunculus.preproject.member.entity.Member;
 import com.homunculus.preproject.member.mapper.MemberMapper;
 import com.homunculus.preproject.member.service.MemberService;
 import com.homunculus.preproject.utils.UriCreator;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -32,7 +30,7 @@ public class MemberController {
 
     @GetMapping("/")
     public ResponseEntity home(){
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity("home",HttpStatus.OK);
     }
 
     @PostMapping("/api/signup")
@@ -65,7 +63,7 @@ public class MemberController {
     }
 
     @GetMapping(MEMBER_ALL_MAPPING_URL)
-    public ResponseEntity getMember(@RequestParam @Positive int page,
+    public ResponseEntity getMembers(@RequestParam @Positive int page,
                                     @RequestParam @Positive int size) {
         Page<Member> pageMembers = memberService.findMembers(page - 1, size);
         List<Member> members = pageMembers.getContent();

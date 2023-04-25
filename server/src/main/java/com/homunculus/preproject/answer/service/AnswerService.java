@@ -7,6 +7,7 @@ import com.homunculus.preproject.article.repository.ArticleRepository;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
 import com.homunculus.preproject.member.entity.Member;
+import com.homunculus.preproject.member.service.MemberService;
 import com.homunculus.preproject.utils.CustomBeanUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,9 +16,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -27,11 +30,13 @@ public class AnswerService {
 
     private final ArticleRepository articleRepository;
     private final AnswerRepository answerRepository;
+    private final MemberService memberService;
 
     public Answer createAnswer(Answer answer) {
 
         findVerifiedArticle(answer.getArticle().getArticleId());
-        checkAllowedMember(null, false);
+
+        checkAllowedMember(answer.getMember(), false, true);
 
         return answerRepository.save(answer);
     }
@@ -64,22 +69,33 @@ public class AnswerService {
 
         return deletedAnswer;
     }
+    public void checkAllowedMember (Member member, boolean isArticleChecking) {
+        checkAllowedMember(member, isArticleChecking, false);
+    }
 
-    public static void checkAllowedMember (Member member, boolean isArticleChecking) {
+    public void checkAllowedMember (Member member, boolean isArticleChecking, boolean isAnswerPost) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User connectedUser = (User) authentication.getPrincipal();
-        if (connectedUser == null)
+        if (authentication == null || !authentication.isAuthenticated())
             throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
+
+        Object principal = authentication.getPrincipal();
+        if (!(principal instanceof UserDetails))
+            throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
+
+        UserDetails userDetails = (UserDetails) principal;
 
         // todo : role 추가 시 권한에 따른 등록 방식 추가해야함
 
-        // 로그인 여부만 체크하기 위함
-        if ( member == null )   return;
-
-        if ( !member.getEmail().equals(connectedUser.getUsername()) ) {
-            if(isArticleChecking)   throw new BusinessLogicException(ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED);
-            else                    throw new BusinessLogicException(ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED);
+        if ( !isAnswerPost ) {
+            if (!member.getEmail().equals(userDetails.getUsername())) {
+                if (isArticleChecking)
+                    throw new BusinessLogicException(ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED);
+                else
+                    throw new BusinessLogicException(ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED);
+            }
         }
+
+        member = memberService.findVerifiedMemberByEmail(userDetails.getUsername());
     }
 
     private Answer findVerifiedAnswer(Long articleId, Long answerId) {
