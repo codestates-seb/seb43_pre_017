@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginAction, useStore } from "../../store/reducers";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 import StyledLogin, {
   StyledLoginContainer,
@@ -64,14 +65,16 @@ const login = () => {
     // POST 요청
     axios
       .post(
-        "http://ec2-13-125-208-253.ap-northeast-2.compute.amazonaws.com:8080/api/login",
+        "http://ec2-54-180-96-72.ap-northeast-2.compute.amazonaws.com:8080/api/login",
         reqbody,
         headers,
       )
       .then((res) => {
         console.log(res);
         const accessToken = res.headers.get("Authorization");
+        const refreshToken = res.headers.get("refresh");
         localStorage.setItem("Authorization", accessToken);
+        localStorage.setItem("refresh", refreshToken);
         Userdata(res.data);
         localStorage.setItem("username", res.data.email);
         //API 요청하는 콜마다 헤더에 accessToken을 담아 보내도록 설정
@@ -81,10 +84,10 @@ const login = () => {
         dispatch(loginAction(res.data));
         navigate("/");
       })
-
+      // 새로고침했을때 로컬스토리지에 있는 토큰을 꺼내서  axios.defaults.headers.common에 넣는 기능, axios 인터셉트
       .catch((err) => {
         console.log(err);
-        alert("실패");
+        toast.error("실패");
         setEmail("");
         setPassword("");
       });

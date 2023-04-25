@@ -1,5 +1,8 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { signupAction } from "../../store/reducers";
 import StyledSignup, {
   StyledSignupContainer,
   StyledGoggleLogo,
@@ -22,6 +25,7 @@ const Signup = () => {
   const [passwordMessage, setPasswordMessage] = useState("");
   const [name, setName] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch("");
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -48,14 +52,14 @@ const Signup = () => {
     } else {
       setPasswordMessage(null);
     }
-    const reqbody = JSON.stringify({
+    const reqbody = {
       name: name,
-      username: email,
+      email: email,
       password: password,
-    });
+    };
     axios
       .post(
-        "http://ec2-13-125-208-253.ap-northeast-2.compute.amazonaws.com:8080//api/signup",
+        "http://ec2-54-180-96-72.ap-northeast-2.compute.amazonaws.com:8080/api/signup",
         reqbody,
         {
           headers: {
@@ -65,13 +69,14 @@ const Signup = () => {
         },
       )
       .then((res) => {
-        alert("성공");
+        dispatch(signupAction());
+        toast.success("성공");
         navigate("/login");
         console.log(res);
       })
       .catch((err) => {
         console.log(err.data);
-        alert("실패");
+        toast.error("실패");
         setEmail("");
         setPassword("");
         setName("");
