@@ -5,6 +5,7 @@ import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import com.homunculus.preproject.comment.answer.repository.CommentAnswerRepository;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.member.entity.Member;
+import com.homunculus.preproject.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,8 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 
@@ -28,6 +28,9 @@ class CommentAnswerServiceTest {
 
     @Mock
     CommentAnswerRepository commentAnswerRepository;
+
+    @Mock
+    MemberService memberService;
 
     @InjectMocks
     CommentAnswerService commentAnswerService;
@@ -44,6 +47,7 @@ class CommentAnswerServiceTest {
         CommentAnswer comment = createDummyCommentAnswer(answerId, commentId, content, null);
 
         given(commentAnswerRepository.save(comment)).willReturn(comment);
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(comment.getMember());
 
         //when, then
         assertDoesNotThrow(() -> commentAnswerService.createCommentAnswer(comment));
@@ -83,6 +87,7 @@ class CommentAnswerServiceTest {
 
         given(commentAnswerRepository.save(comment)).willReturn(new CommentAnswer());
         given(commentAnswerRepository.findById(anyLong())).willReturn(Optional.of(comment));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(comment.getMember());
 
         //when
         CommentAnswer updatedComment = commentAnswerService.updateCommentAnswer(updateComment);
@@ -110,6 +115,7 @@ class CommentAnswerServiceTest {
 
         given(commentAnswerRepository.save(comment)).willReturn(new CommentAnswer());
         given(commentAnswerRepository.findById(anyLong())).willReturn(Optional.of(comment));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(comment.getMember());
 
         //when, then
         assertThrows(BusinessLogicException.class,
@@ -132,6 +138,7 @@ class CommentAnswerServiceTest {
 
         given(commentAnswerRepository.save(comment)).willReturn(new CommentAnswer());
         given(commentAnswerRepository.findById(anyLong())).willReturn(Optional.of(comment));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(comment.getMember());
 
         //when, then
         assertThrows(NullPointerException.class,
@@ -155,6 +162,7 @@ class CommentAnswerServiceTest {
 
         given(commentAnswerRepository.save(comment)).willReturn(new CommentAnswer());
         given(commentAnswerRepository.findById(anyLong())).willReturn(Optional.of(comment));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(comment.getMember());
 
         //when, then
         assertThrows(BusinessLogicException.class,
@@ -178,6 +186,7 @@ class CommentAnswerServiceTest {
 
         given(commentAnswerRepository.save(comment)).willReturn(new CommentAnswer());
         given(commentAnswerRepository.findById(anyLong())).willReturn(Optional.of(comment));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(comment.getMember());
 
         //when, then
         assertThrows(BusinessLogicException.class,
@@ -196,6 +205,7 @@ class CommentAnswerServiceTest {
 
         CommentAnswer comment = createDummyCommentAnswer(answerId, commentId, content, email);
         given(commentAnswerRepository.findById(anyLong())).willReturn(Optional.of(comment));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(comment.getMember());
 
         doNothing().when(commentAnswerRepository).deleteById(commentId);
 
@@ -212,6 +222,7 @@ class CommentAnswerServiceTest {
         final Long commentId = 1L;
 
         given(commentAnswerRepository.findById(anyLong())).willReturn(null);
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(new Member());
 
         doNothing().when(commentAnswerRepository).deleteById(commentId);
 
@@ -232,6 +243,7 @@ class CommentAnswerServiceTest {
 
         CommentAnswer comment = createDummyCommentAnswer(answerId, commentId, content, email);
         given(commentAnswerRepository.findById(anyLong())).willReturn(Optional.of(comment));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(comment.getMember());
 
         doNothing().when(commentAnswerRepository).deleteById(commentId);
 
@@ -251,6 +263,7 @@ class CommentAnswerServiceTest {
 
         CommentAnswer comment = createDummyCommentAnswer(answerId, commentId, content, null);
         given(commentAnswerRepository.findById(anyLong())).willReturn(Optional.of(comment));
+        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(comment.getMember());
 
         doNothing().when(commentAnswerRepository).deleteById(commentId);
 
