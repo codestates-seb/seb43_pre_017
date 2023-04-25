@@ -2,11 +2,13 @@ package com.homunculus.preproject.evaluation.answer.service;
 
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.answer.repository.AnswerRepository;
-import com.homunculus.preproject.answer.service.AnswerService;
 import com.homunculus.preproject.evaluation.answer.entity.EvaluationAnswer;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +40,7 @@ public class EvaluationAnswerService {
                 new BusinessLogicException(ExceptionCode.ANSWER_NOT_FOUND)
         );
 
-        AnswerService.checkAllowedMember(findAnswer);
+        checkAllowedMember();
 
         EvaluationAnswer result = evaluationAnswer;
         result.setAnswer(findAnswer);
@@ -46,4 +48,12 @@ public class EvaluationAnswerService {
         return result;
     }
 
+    public static void checkAllowedMember () {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User connectedUser = (User) authentication.getPrincipal();
+        if (connectedUser == null)
+            throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
+
+        // todo : role 추가 시 권한에 따른 등록 방식 추가해야함
+    }
 }

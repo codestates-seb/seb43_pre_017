@@ -51,47 +51,6 @@ class EvaluationArticleServiceTest {
     }
 
     @Test
-    @DisplayName("답변글 추천 - 인증 실패")
-    @WithMockUser(username = "notEmail@gmail.com", roles = "USER")
-    void createEvaluationArticle_authentication_Fail() {
-        // given
-        final Long articleId = 1L;
-        final EvaluationArticle.EvaluationArticleStatus status =
-                EvaluationArticle.EvaluationArticleStatus.EVALUATION_ARTICLE_LIKE;
-
-        final Integer evaluationScore = 300;
-        final String email = "email@gmail.com";
-
-        EvaluationArticle evaluationArticle = createDummyEvaluationArticle(articleId, email, status, evaluationScore);
-        given(articleRepository.findById(anyLong())).willReturn(Optional.of(evaluationArticle.getArticle()));
-        given(articleRepository.save(evaluationArticle.getArticle())).willReturn(new Article());
-
-        // when, then
-        assertThrows(BusinessLogicException.class, () ->
-                evaluationArticleService.createEvaluationArticle(evaluationArticle));
-    }
-
-    @Test
-    @DisplayName("답변글 추천 - 인증정보없음 실패")
-    @WithMockUser(username = "email@gmail.com", roles = "USER")
-    void createEvaluationArticle_nullAuthentication_Fail() {
-        // given
-        final Long articleId = 1L;
-        final EvaluationArticle.EvaluationArticleStatus status =
-                EvaluationArticle.EvaluationArticleStatus.EVALUATION_ARTICLE_LIKE;
-
-        final Integer evaluationScore = 300;
-
-        EvaluationArticle evaluationArticle = createDummyEvaluationArticle(articleId, null, status, evaluationScore);
-        given(articleRepository.findById(anyLong())).willReturn(Optional.of(evaluationArticle.getArticle()));
-        given(articleRepository.save(evaluationArticle.getArticle())).willReturn(new Article());
-
-        // when, then
-        assertThrows(NullPointerException.class, () ->
-                evaluationArticleService.createEvaluationArticle(evaluationArticle));
-    }
-
-    @Test
     @DisplayName("답변글 추천 - 답변글 없음 실패")
     @WithMockUser(username = "email@gmail.com", roles = "USER")
     void createEvaluationArticle_NotExistArticle_Fail() {

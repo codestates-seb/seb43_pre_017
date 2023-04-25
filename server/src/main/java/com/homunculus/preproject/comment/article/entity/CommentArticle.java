@@ -19,7 +19,7 @@ public class CommentArticle extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentArticleId;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @ManyToOne

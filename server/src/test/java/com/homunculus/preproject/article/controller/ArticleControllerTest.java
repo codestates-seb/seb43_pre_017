@@ -214,16 +214,18 @@ class ArticleControllerTest {
         }
 
         Page<Article> articlePage = new PageImpl<>(List.of(new Article(), new Article()));
-        given(articleService.findArticles(anyInt(), anyInt())).willReturn(articlePage);
+        given(articleService.findArticles(anyInt(), anyInt(), anyString())).willReturn(articlePage);
 
         // when
         given(mapper.articlesToArticleResponseDto(any())).willReturn(responseDto);
 
         String page = "1";
         String size = "10";
+        String type = "조회순";
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("page", page);
         queryParams.add("size", size);
+        queryParams.add("type", type);
 
         ResultActions actions =
                 mockMvc.perform(
@@ -248,7 +250,8 @@ class ArticleControllerTest {
                         getResponsePreProcessor(),
                         requestParameters(
                                 parameterWithName("page").description("페이지 번호"),
-                                parameterWithName("size").description("페이지 크기")
+                                parameterWithName("size").description("페이지 크기"),
+                                parameterWithName("type").description("정렬 방식").description("조회순, 평가순, 최신순, 기본 중 하나")
                         ),
                         responseFields(
                                 List.of(

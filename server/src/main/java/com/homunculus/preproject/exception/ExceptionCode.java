@@ -1,6 +1,7 @@
 package com.homunculus.preproject.exception;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 public enum ExceptionCode {
     INVALID_MEMBER(400, "Member is null. Something Wrong !"),
@@ -11,21 +12,21 @@ public enum ExceptionCode {
 
     ARTICLE_MEMBER_NOT_ALLOWED(403, "Article is not authored by the corresponding Member"),
     ARTICLE_NOT_FOUND(404, "Article not found"),
+    ARTICLE_NOT_MATCHED(406, "Article is not linked to Answer. Something wrong !"),
 
     ANSWER_MEMBER_NOT_ALLOWED(403, "Answer is not authored by the corresponding Member"),
     ANSWER_NOT_FOUND(404, "Answer not found"),
-    ANSWER_NOT_ACCEPTABLE(406, "Answer is not linked to Article. Something wrong !"),
+    ANSWER_NOT_MATCHED(406, "Answer is not linked to Article. Something wrong !"),
+    ANSWER_NOT_ACCEPTABLE(406, "Answer is already true. This is working only parameter -false- of accepted field !"),
 
     COMMENT_MEMBER_NOT_ALLOWED(403, "Comment is not authored by the corresponding Member"),
     COMMENT_NOT_FOUND(404, "Comment not found"),
-    COMMENT_ARTICLE_NOT_ACCEPTABLE(406, "Comment is not linked to Article. Something wrong !"),
-    COMMENT_ANSWER_NOT_ACCEPTABLE(406, "Comment is not linked to Answer. Something wrong !"),
+    COMMENT_ARTICLE_NOT_MATCHED(406, "Comment is not linked to Article. Something wrong !"),
+    COMMENT_ANSWER_NOT_MATCHED(406, "Comment is not linked to Answer. Something wrong !"),
 
     EVALUATION_MEMBER_NOT_ALLOWED(403, "Evaluation is not authored by the corresponding Member"),
-    EVALUATION_NOT_FOUND(404, "Evaluation not found"),
-    EVALUATION_ARTICLE_NOT_ACCEPTABLE(406, "Evaluation is not linked to Article. Something wrong !"),
-    EVALUATION_ANSWER_NOT_ACCEPTABLE(406, "Evaluation is not linked to Answer. Something wrong !"),
 
+    REQUESTED_RANGE_NOT_SATISFIABLE(416, "조회 타입이 맞지 않습니다. 가능타입: 조회순, 평가순, 최신순, 기본"),
     NOT_IMPLEMENTATION(501, "Not Implementation"),
     ;
 

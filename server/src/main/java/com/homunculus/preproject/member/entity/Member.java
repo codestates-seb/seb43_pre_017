@@ -4,6 +4,7 @@ import com.homunculus.preproject.audit.Auditable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -21,14 +22,11 @@ public class Member extends Auditable {
     @Column(nullable = false, updatable = false, unique = true)
     private String email;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 300, nullable = false)
     private String password;
 
     @Column(length = 100, nullable = false)
     private String name;
-
-    @Column(length = 13, nullable = false, unique = true)
-    private String phone;
 
     @OneToOne(mappedBy = "member",fetch = FetchType.LAZY)
     private MemberDetails memberDetails;
