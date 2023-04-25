@@ -31,7 +31,7 @@ const Header = () => {
   );
 };
 
-// 로고
+/** 2023/04/16 - Logo 컴포넌트 - by sinyaenok */
 const Logo = () => {
   return (
     <StyledLogo>
@@ -52,7 +52,7 @@ const Logo = () => {
   );
 };
 
-// 서치창
+/** 2023/04/16 - Search 컴포넌트 - by sinyaenok */
 export const Searchbar = () => {
   return (
     <StyledSearchFrom>

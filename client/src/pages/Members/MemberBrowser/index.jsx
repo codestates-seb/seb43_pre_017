@@ -2,7 +2,7 @@ import dummy from "../Data/data.json";
 import { StyledMemberBrowser, StyledMember } from "./style";
 import { Link } from "react-router-dom";
 
-/** 20230424 - member list 컴포넌트 - by sinyaenok*/
+/** 20230424 - 멤버들을 감싸는 컴포넌트 - by sinyaenok*/
 const MemberBrowser = () => {
   return (
     <StyledMemberBrowser>
