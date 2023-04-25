@@ -11,10 +11,11 @@ const Members = () => {
     <StyledMembers>
       <div id="main-bar">
         <h1>Members</h1>
+
         <div id="sub-bar" className="d-flex ai-center js-between">
           {/* 유저 검색창 */}
           <StyledSearchFrom>
-            <div className="search-bar">
+            <div className="search-bar d-flex">
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
                 className="search-icon"

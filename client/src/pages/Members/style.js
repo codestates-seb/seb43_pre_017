@@ -72,34 +72,37 @@ export const StyledMembers = styled.div`
 
   #sub-bar {
     margin-bottom: 30px;
+    height: 40px;
     @media (max-width: 720px) {
-      flex-direction: column;
+      height: 85px;
       align-items: start;
+      flex-direction: column;
     }
   }
 `;
 
 // 서치창
 export const StyledSearchFrom = styled.form`
+  height: 100%;
+
   .search-bar {
     width: 250px;
-    height: 45px;
+    background-color: #fff;
     border-radius: 3px;
     border: solid 1px rgba(0, 0, 0, 0.3);
-    display: flex;
     justify-content: center;
     align-items: center;
     margin: 0 10px 10px 0;
   }
 
   .search-bar-input {
-    width: 300px;
+    width: 100%;
+    height: 100%;
     border: none;
     margin: 10px;
-    height: 25px;
-    //search 기본 디자인 없애는 코드
+    overflow: auto;
+    // 기본 디자인 없애는 코드
     -webkit-appearance: none;
-    /* overflow: auto; */
   }
   input:focus {
     outline: none;

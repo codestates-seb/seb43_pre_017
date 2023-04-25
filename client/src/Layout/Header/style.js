@@ -85,9 +85,6 @@ export const StyledSearchFrom = styled.form`
     border: none;
     margin: 0.7em;
     background-color: #fff;
-
-    //search 기본 디자인 없애는 코드
-    -webkit-appearance: none;
     overflow: auto;
 
     :focus {

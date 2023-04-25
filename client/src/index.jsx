@@ -50,10 +50,11 @@ root.render(
         {/* 라우팅 ( react-router ) */}
         <BrowserRouter>
           {/* 전체 레이아웃 ( 네비게이션, 컨텐츠, 푸터 ) */}
+
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/members/:name/:id" element={<Profile />} />
               <Route path="/members" element={<Members />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />

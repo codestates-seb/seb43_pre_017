@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const StyledProfile = styled.div`
+  height: 100%;
   max-width: 1100px;
   width: calc(100% - 164px);
   background-color: #fff;

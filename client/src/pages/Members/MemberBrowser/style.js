@@ -54,18 +54,10 @@ export const StyledMember = styled.div`
     flex: 1;
   }
 
-  .item-question {
+  .item-createdAt {
     color: ${({ theme }) => theme.colors.gray500};
-    align-items: center;
-    font-size: 1em;
-    flex: 1;
-    display: flex;
-  }
-
-  .item-answer {
-    color: ${({ theme }) => theme.colors.gray500};
-    font-size: 1em;
-    align-items: center;
+    align-items: end;
+    font-size: 0.8em;
     flex: 1;
     display: flex;
   }

@@ -17,10 +17,10 @@ export const StyledImgBox = styled.div`
 export const StyledInfoBox = styled.div`
   #user-name {
     font-size: 30px;
-    flex-grow: 2;
+    flex-grow: 1;
   }
   #user-info {
-    flex-grow: 3;
+    flex-grow: 1;
   }
   .icon-cack {
     padding: 0 5px 0 3px;

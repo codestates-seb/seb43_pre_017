@@ -17,6 +17,7 @@ export const StyledLoginBtn = styled.div`
   font-weight: 300;
   border: 0.5px solid ${({ theme }) => theme.colors.blue700};
   background-color: ${({ theme }) => theme.colors.sky100};
+  white-space: nowrap;
   :hover {
     background-color: ${({ theme }) => theme.colors.blue200};
   }
@@ -39,6 +40,7 @@ export const StyledSignupBtn = styled.div`
   border-radius: 3px;
   border: 0.5px solid ${({ theme }) => theme.colors.blue500};
   background-color: ${({ theme }) => theme.colors.blue500};
+  white-space: nowrap;
   :hover {
     background-color: ${({ theme }) => theme.colors.blue600};
   }
