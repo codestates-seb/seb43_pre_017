@@ -32,7 +32,7 @@ public class EvaluationAnswer {
     private Answer answer;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(length = 20, nullable = false)
+    @Column(length = 50, nullable = false)
     private EvaluationAnswerStatus evaluationAnswerStatus = EvaluationAnswerStatus.EVALUATION_ANSWER_NOTHING;
 
     public enum EvaluationAnswerStatus {
