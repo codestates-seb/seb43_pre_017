@@ -8,7 +8,7 @@ const MemberBrowser = () => {
     <StyledMemberBrowser>
       {dummy.members.map((member) => (
         <StyledMember key={member.id} id="item-container">
-          {/* 이미지 */}
+          {/* 멤버 이미지 */}
           <div className="item-img d-flex ai-center js-center">
             <Link
               to={`/members/${member.name}/${member.id}`}
@@ -19,7 +19,7 @@ const MemberBrowser = () => {
             </Link>
           </div>
 
-          {/* 이름, 질문, 답변수 */}
+          {/* 이름, 생성일 */}
           <div className="item-box d-flex f1">
             <div className="d-flex">
               <Link

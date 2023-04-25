@@ -38,7 +38,7 @@ export const StyledLogo = styled.a`
     cursor: pointer;
 
     //640px보다 작아지면 실행
-    @media (max-width: 640px) {
+    @media (max-width: 720px) {
       display: none;
     }
   }
@@ -47,7 +47,7 @@ export const StyledLogo = styled.a`
     cursor: pointer;
 
     //640px보다 커지면 실행
-    @media (min-width: 640px) {
+    @media (min-width: 720px) {
       display: none;
     }
   }

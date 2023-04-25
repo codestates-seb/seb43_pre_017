@@ -32,7 +32,7 @@ const Members = () => {
             </div>
           </StyledSearchFrom>
 
-          {/* 유저 정렬 탭 */}
+          {/* 멤버 정렬 탭 */}
           <SortTab />
         </div>
         <MemberBrowser />
