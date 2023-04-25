@@ -25,7 +25,7 @@ public interface ArticleMapper {
         resultArticle.setId(article.getArticleId());
         resultArticle.setTitle(article.getTitle());
         resultArticle.setContent(article.getContent());
-        // resultArticle.setEvaluationScore(); todo:추천점수
+        resultArticle.setEvaluationScore(article.getEvaluationScore());
         resultArticle.setCreatedAt(article.getCreatedAt());
         resultArticle.setUpdatedAt(article.getUpdatedAt());
         result.setArticle(resultArticle);

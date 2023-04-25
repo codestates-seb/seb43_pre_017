@@ -58,7 +58,6 @@ public interface AnswerMapper {
         result.setMessage("답변글 조회를 완료했습니다.");
         result.setMessageCount(answers.size());
         result.setArticleId(articleId);
-        //result.setEvaluationScore();  // todo : 추천점수 계산해야함
 
         List<AnswerResponseDto.Answers> resultAnswers = new ArrayList<>();
         {
