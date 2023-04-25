@@ -5,6 +5,7 @@ import com.homunculus.preproject.article.repository.ArticleRepository;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
 import com.homunculus.preproject.member.entity.Member;
+import com.homunculus.preproject.member.service.MemberService;
 import com.homunculus.preproject.response.ErrorResponse;
 import com.homunculus.preproject.utils.CustomBeanUtils;
 import lombok.Getter;
@@ -28,6 +29,7 @@ import java.util.Optional;
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
+    private final MemberService memberService;
 
     private enum TypeOfGetAll {
         ARTICLE_GET_TYPE_EVALUATION("평가순", "evaluationScore"),
@@ -114,12 +116,12 @@ public class ArticleService {
         return findArticle;
     }
 
-    public static void checkAllowedMember(Article article) {
+    public void checkAllowedMember(Article article) {
         // 기존에 사용하고 있던 방식은 기존방식: 전부 Post 가 아님으로 설정(false)
         checkAllowedMember(article, false);
     }
 
-    public static void checkAllowedMember(Article article, boolean isPostArticle) {
+    public void checkAllowedMember(Article article, boolean isPostArticle) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
@@ -134,19 +136,16 @@ public class ArticleService {
 
         // todo : role 추가 시 권한에 따른 등록 방식 추가해야함
 
-        // post 라면 유저 정보를 article 에 포함하고, post 가 아니라면 작성자가 맞는지 체크
-        if (isPostArticle) {
-            Member member = new Member();
-            member.setEmail(userDetails.getUsername());
-            article.setMember(member);
-            return;
-        }
-        else {
+        String email = userDetails.getUsername();
+        Member member = memberService.findVerifiedMemberByEmail(email);
+        article.setMember(member);
+
+        // post 가 아니라면 작성자가 맞는지 체크
+        if (!isPostArticle) {
             if (!article.getMember().getEmail().equals(userDetails.getUsername())) {
                 throw new BusinessLogicException(ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED);
             }
         }
-
     }
 
     // 이미 등록된 질문인지 검증
