@@ -14,9 +14,9 @@ export const StyledHeader = styled.header`
 
 /** 2023/04/17 - 헤더 속 엘레먼트들을 감싸는 컴포넌트 - by sinyaenok*/
 export const StyledContaier = styled.div`
-  height: 100%;
-  width: 83vw;
+  max-width: 1280px;
   margin: 0 auto;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;

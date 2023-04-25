@@ -13,6 +13,7 @@ const Layout = ({ children }) => (
       <SideBar />
       {children}
     </Main>
+
     <Footer />
   </>
 );
