@@ -13,3 +13,4 @@ public class AnswerAcceptanceResponseDto {
     private Boolean isAccepted;
     private String message;
 }
+

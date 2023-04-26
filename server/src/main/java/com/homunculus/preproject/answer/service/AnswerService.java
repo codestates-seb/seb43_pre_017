@@ -32,7 +32,6 @@ public class AnswerService {
     private final MemberService memberService;
     private final AuthenticationUtils authenticationUtils;
 
-
     public Answer createAnswer(Answer answer) {
 
         answer.setArticle(

@@ -60,4 +60,5 @@ public class Answer extends Auditable {
             this.status = status;
         }
     }
+
 }

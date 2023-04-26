@@ -12,3 +12,4 @@ public class AnswerSimpleResponseDto {
     private Long answerId;
     private String message;
 }
+
