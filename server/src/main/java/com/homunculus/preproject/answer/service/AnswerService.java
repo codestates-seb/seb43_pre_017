@@ -10,6 +10,7 @@ import com.homunculus.preproject.member.entity.Member;
 import com.homunculus.preproject.member.service.MemberService;
 import com.homunculus.preproject.utils.CustomBeanUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -23,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Principal;
 import java.util.Objects;
 import java.util.Optional;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AnswerService {
@@ -48,7 +49,15 @@ public class AnswerService {
     public Answer updateAnswer(Answer answer) {
         Answer findAnswer = findVerifiedAnswer(answer);
 
-        checkAllowedMember(findAnswer.getMember(), false);
+        try {
+            checkAllowedMember(findAnswer.getMember(), true, false);
+        } catch (BusinessLogicException e) {
+            if (e.getExceptionCode() == ExceptionCode.MEMBER_NOT_ALLOWED) {
+                throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_ALLOWED);
+            } else {
+                throw new BusinessLogicException(ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED);
+            }
+        }
 
         CustomBeanUtils.copyNonNullProperties(answer, findAnswer);
 
@@ -67,7 +76,7 @@ public class AnswerService {
         Answer deletedAnswer = findVerifiedAnswer(articleId, answerId);
 
         // 삭제 권한 확인
-        checkAllowedMember(deletedAnswer.getMember(), false);
+        checkAllowedMember(deletedAnswer.getMember(), true, true);
 
         answerRepository.deleteById(answerId);
 
@@ -79,20 +88,25 @@ public class AnswerService {
 
     public Member checkAllowedMember (Member member, boolean isArticleChecking, boolean isAnswerPost) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated())
-            throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_ALLOWED);
+        }
 
         Object principal = authentication.getPrincipal();
-        String email = principal.toString();
 
-        // todo : role 추가 시 권한에 따른 등록 방식 추가해야함
+        if (!(principal instanceof UserDetails)) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_ALLOWED);
+        }
 
-        if ( !isAnswerPost ) {
-            if (!member.getEmail().equals(email)) {
-                if (isArticleChecking)
-                    throw new BusinessLogicException(ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED);
-                else
-                    throw new BusinessLogicException(ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED);
+        UserDetails userDetails = (UserDetails) principal;
+        String email = userDetails.getUsername();
+
+        if (!isAnswerPost && member != null && email != null && !member.getEmail().equals(email)) {
+            if (isArticleChecking) {
+                throw new BusinessLogicException(ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED);
+            } else {
+                throw new BusinessLogicException(ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED);
             }
         }
 
@@ -100,33 +114,37 @@ public class AnswerService {
     }
 
     private Answer findVerifiedAnswer(Long articleId, Long answerId) {
-        Answer answer = new Answer();
-        answer.setAnswerId(answerId);
 
-        Article article = new Article();
-        article.setArticleId(articleId);
-        answer.setArticle(article);
+        Optional<Answer> optionalAnswer = answerRepository.findById(answerId);
+
+        if (optionalAnswer.isEmpty()) {
+            throw new BusinessLogicException(ExceptionCode.ANSWER_NOT_FOUND);
+        }
+
+        Answer answer = optionalAnswer.get();
+
+        if (!Objects.equals(answer.getArticle().getArticleId(), articleId)) {
+            throw new BusinessLogicException(ExceptionCode.ARTICLE_NOT_MATCHED);
+        }
 
         return findVerifiedAnswer(answer);
     }
 
     public Answer findVerifiedAnswer(Answer answer) {
+
         Optional<Answer> optionalAnswer = answerRepository.findById(answer.getAnswerId());
+        if (answer == null || optionalAnswer.isEmpty()) {
+            throw new BusinessLogicException(ExceptionCode.ANSWER_NOT_FOUND);
+        }
 
-        Answer findAnswer = optionalAnswer.orElseThrow( () ->
-                new BusinessLogicException(ExceptionCode.ANSWER_NOT_FOUND)
-        );
-
-        if(!Objects.equals(findAnswer.getAnswerId(), answer.getAnswerId()))
-            throw new BusinessLogicException(ExceptionCode.ANSWER_NOT_MATCHED);
-
-        if(!Objects.equals(findAnswer.getArticle().getArticleId(), answer.getArticle().getArticleId()))
+        Answer foundAnswer = optionalAnswer.get();
+        if (!Objects.equals(foundAnswer.getArticle().getArticleId(), answer.getArticle().getArticleId())) {
             throw new BusinessLogicException(ExceptionCode.ARTICLE_NOT_MATCHED);
+        }
 
-        return findAnswer;
+        return foundAnswer;
     }
 
-    @Transactional(readOnly = true)
     public Article findVerifiedArticle(long articleId) {
         Optional<Article> optionalArticle =
                 articleRepository.findById(articleId);
@@ -136,19 +154,23 @@ public class AnswerService {
         return findArticle;
     }
 
-    public Answer acceptAnswer(Long articleId, Long answerId) {
-        // 데이터가 유효한지 검증
+    public Answer acceptAnswer(Long articleId, Long answerId){
+
+        // 질문글이 존재하는지 확인
         findVerifiedArticle(articleId);
         Answer findAnswer = findVerifiedAnswer(articleId, answerId);
-
+        // 현재 사용자가 질문글 작성자인지 확인
         checkAllowedMember(findAnswer.getArticle().getMember(), true);
 
-        // 유효한 데이터를 처리
-        if(findAnswer.getIsAccepted())
+        if (findAnswer == null) {
+            throw new BusinessLogicException(ExceptionCode.ANSWER_NOT_FOUND);
+        }
+        // 답변글이 이미 채택된 경우 예외 발생
+        if (findAnswer.getIsAccepted()) {
             throw new BusinessLogicException(ExceptionCode.ANSWER_NOT_ACCEPTABLE);
-        else
-            findAnswer.setIsAccepted(true);
-
+        }
+        // 답변글 채택 처리
+        findAnswer.setIsAccepted(true);
         return answerRepository.save(findAnswer);
     }
 }
