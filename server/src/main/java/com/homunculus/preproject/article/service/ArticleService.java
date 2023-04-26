@@ -5,8 +5,6 @@ import com.homunculus.preproject.article.repository.ArticleRepository;
 import com.homunculus.preproject.article.utils.ArticleServiceUtils;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
-import com.homunculus.preproject.member.entity.Member;
-import com.homunculus.preproject.member.repository.MemberRepository;
 import com.homunculus.preproject.utils.AuthenticationUtils;
 import com.homunculus.preproject.utils.CustomBeanUtils;
 import lombok.RequiredArgsConstructor;
@@ -23,38 +21,37 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class ArticleService {
-    private final MemberRepository memberRepository;
+//    private final MemberRepository memberRepository;
     private final ArticleRepository articleRepository;
     private final AuthenticationUtils authenticationUtils;
 
     public Article createArticle(Article article) {
 
-//         로그인 한 유저인지만 체크
-//        boolean isPostMethod = true;
-//        article.setMember(
-//                authenticationUtils.findMemberWithCheckAllowed(
-//                        article.getMember(), isPostMethod,
-//                        ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED)
-//        );
+        // 로그인 한 유저인지만 체크
+        boolean isPostMethod = true;
+        article.setMember(
+                authenticationUtils.findMemberWithCheckAllowed(
+                        article.getMember(), isPostMethod,
+                        ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED)
+        );
 
-        Member member = article.getMember();
-
-        if (member.getEmail() != null) { // member가 이미 DB에 저장되어 있는지 확인
-            Optional<Member> optionalMember = memberRepository.findByEmail(member.getEmail());
-            if (optionalMember.isPresent()) {
-                // 이미 저장된 member를 사용
-                article.setMember(optionalMember.get());
-            } else {
-                // member가 DB에 없으면 새로 저장
-                article.setMember(memberRepository.save(member));
-            }
-        } else {
-            // member email이 없으면 새로 저장
-            article.setMember(memberRepository.save(member));
-        }
+//        Member member = article.getMember();
+//
+//        if (member.getEmail() != null) { // member가 이미 DB에 저장되어 있는지 확인
+//            Optional<Member> optionalMember = memberRepository.findByEmail(member.getEmail());
+//            if (optionalMember.isPresent()) {
+//                // 이미 저장된 member를 사용
+//                article.setMember(optionalMember.get());
+//            } else {
+//                // member가 DB에 없으면 새로 저장
+//                article.setMember(memberRepository.save(member));
+//            }
+//        } else {
+//            // member email이 없으면 새로 저장
+//            article.setMember(memberRepository.save(member));
+//        }
 
         return articleRepository.save(article);
-
     }
 
     public Article updateArticle(Article article) {
@@ -65,9 +62,9 @@ public class ArticleService {
                         ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED)
         );
 
-        // Member 객체를 새로 저장
-        Member member = memberRepository.save(findArticle.getMember());
-        findArticle.setMember(member);
+//        // Member 객체를 새로 저장
+//        Member member = memberRepository.save(findArticle.getMember());
+//        findArticle.setMember(member);
 
         CustomBeanUtils.copyNonNullProperties(article, findArticle);
 

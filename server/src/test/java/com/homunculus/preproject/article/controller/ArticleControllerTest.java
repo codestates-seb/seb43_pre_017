@@ -8,7 +8,6 @@ import com.homunculus.preproject.article.dto.ArticleSimpleResponseDto;
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.article.mapper.ArticleMapper;
 import com.homunculus.preproject.article.service.ArticleService;
-import com.homunculus.preproject.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +75,7 @@ class ArticleControllerTest {
         post.setTitle(postTitle);
         post.setContent(postContent);
         String content = gson.toJson(post);
-        given(mapper.articlePostDtoToArticle(any(),any())).willReturn(new Article());
+        given(mapper.articlePostDtoToArticle(any()/*,any()*/)).willReturn(new Article());
 
         ArticleSimpleResponseDto responseDto = new ArticleSimpleResponseDto();
         responseDto.setMessage(responseContent);
@@ -133,7 +132,7 @@ class ArticleControllerTest {
         patch.setContent(patchContent);
         String content = gson.toJson(patch);
 
-        given(mapper.articlePatchDtoToArticle(any(), any())).willReturn(new Article());
+        given(mapper.articlePatchDtoToArticle(any()/*, any()*/)).willReturn(new Article());
 
         ArticleSimpleResponseDto responseDto = new ArticleSimpleResponseDto();
         responseDto.setMessage(responseContent);

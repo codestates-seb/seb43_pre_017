@@ -1,47 +1,45 @@
 package com.homunculus.preproject.article.mapper;
 
-import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.article.dto.ArticleDto;
 import com.homunculus.preproject.article.dto.ArticleResponseDetailsDto;
 import com.homunculus.preproject.article.dto.ArticleResponseDto;
 import com.homunculus.preproject.article.dto.ArticleSimpleResponseDto;
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.member.entity.Member;
-import com.homunculus.preproject.member.service.MemberService;
-import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 @Mapper(componentModel = "spring")
 public interface ArticleMapper {
 
-    default Article articlePostDtoToArticle(ArticleDto.Post articleDtoPost, MemberService memberService) {
+    default Article articlePostDtoToArticle(ArticleDto.Post articleDtoPost/*, MemberService memberService*/) {
         Article result = new Article();
         result.setTitle(articleDtoPost.getTitle());
         result.setContent(articleDtoPost.getContent());
 
         String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        Member member = memberService.findVerifiedMemberByEmail(email);
+//        Member member = memberService.findVerifiedMemberByEmail(email);
+        Member member = new Member();
+        member.setEmail(email);
         result.setMember(member);
 
         return result;
 
     }
 
-    default Article articlePatchDtoToArticle(ArticleDto.Patch articleDtoPatch, MemberService memberService) {
+    default Article articlePatchDtoToArticle(ArticleDto.Patch articleDtoPatch/*, MemberService memberService*/) {
         Article result = new Article();
         result.setArticleId(articleDtoPatch.getArticleId());
         result.setTitle(articleDtoPatch.getTitle());
         result.setContent(articleDtoPatch.getContent());
 
         String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        Member member = memberService.findVerifiedMemberByEmail(email);
+//        Member member = memberService.findVerifiedMemberByEmail(email);
+        Member member = new Member();
+        member.setEmail(email);
         result.setMember(member);
 
         return result;
