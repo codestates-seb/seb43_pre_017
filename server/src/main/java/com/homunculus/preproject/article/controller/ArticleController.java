@@ -8,6 +8,7 @@ import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.article.mapper.ArticleMapper;
 import com.homunculus.preproject.article.mapper.ArticleSimpleResponseMessages;
 import com.homunculus.preproject.article.service.ArticleService;
+import com.homunculus.preproject.member.service.MemberService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,13 +29,14 @@ import java.util.List;
 public class ArticleController {
     private static final String ARTICLE_DEFAULT_URL = "/api/article";
     private static final String ARTICLE_ALL_MAPPING_URL = "/api/articles";
-
+    private final MemberService memberService;
     private final ArticleService articleService;
     private final ArticleMapper mapper;
 
     @PostMapping(ARTICLE_DEFAULT_URL)
     public ResponseEntity postArticle(@Valid @RequestBody ArticleDto.Post articleDtoPost) {
-        Article postArticle = mapper.articlePostDtoToArticle(articleDtoPost);
+        Article postArticle = mapper.articlePostDtoToArticle(articleDtoPost, memberService);
+
         Article createdArticle = articleService.createArticle(postArticle);
 
         return new ResponseEntity<>(
@@ -46,7 +48,7 @@ public class ArticleController {
     public ResponseEntity patchArticle(@PathVariable("articleId") @Positive Long articleId,
                                        @Valid @RequestBody ArticleDto.Patch articleDtoPatch) {
         articleDtoPatch.setArticleId(articleId);
-        Article updatedArticle = articleService.updateArticle(mapper.articlePatchDtoToArticle(articleDtoPatch));
+        Article updatedArticle = articleService.updateArticle(mapper.articlePatchDtoToArticle(articleDtoPatch, memberService));
 
         return new ResponseEntity<>(
                 mapper.articleToArticleSimpleResponseDto(updatedArticle, ArticleSimpleResponseMessages.ARTICLE_MESSAGE_PATCH),
@@ -63,7 +65,7 @@ public class ArticleController {
     }
 
     @GetMapping(ARTICLE_ALL_MAPPING_URL)
-    public ResponseEntity getArticle(@RequestParam @Positive int page,
+    public ResponseEntity getArticles(@RequestParam @Positive int page,
                                      @RequestParam @Positive int size,
                                      @RequestParam String type) {
         Page<Article> pageArticles = articleService.findArticles(page - 1, size, type);

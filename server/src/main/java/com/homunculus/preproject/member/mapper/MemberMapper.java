@@ -11,6 +11,15 @@ import java.util.List;
 public interface MemberMapper {
     Member memberPostDtoToMember(MemberDto.Post memberDtoPost);
     Member memberPatchDtoToMember(MemberDto.Patch memberDtoPatch);
-    MemberResponseDto memberToMemberResponseDto(Member member);
+    default MemberResponseDto memberToMemberResponseDto(Member member){
+        MemberResponseDto response = new MemberResponseDto();
+        response.setMemberId(member.getMemberId());
+        response.setEmail(member.getEmail());
+        response.setName(member.getName());
+        response.setCreatedAt(member.getCreatedAt());
+        response.setUpdatedAt(member.getUpdatedAt());
+
+        return response;
+    };
     List<MemberResponseDto> membersToMemberResponseDtos(List<Member> members);
 }

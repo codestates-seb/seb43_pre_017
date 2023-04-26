@@ -3,7 +3,6 @@ package com.homunculus.preproject.comment.article.entity;
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.audit.Auditable;
 import com.homunculus.preproject.member.entity.Member;
-import com.homunculus.preproject.member.entity.MemberDetails;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,13 +21,9 @@ public class CommentArticle extends Auditable {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBERDETAILS_ID")
-    private MemberDetails memberDetails;
 
     @ManyToOne
     @JoinColumn(name = "ARTICLE_ID")
