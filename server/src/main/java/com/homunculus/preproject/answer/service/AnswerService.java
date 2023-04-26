@@ -7,7 +7,9 @@ import com.homunculus.preproject.article.repository.ArticleRepository;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
 import com.homunculus.preproject.member.entity.Member;
+import com.homunculus.preproject.member.repository.MemberRepository;
 import com.homunculus.preproject.member.service.MemberService;
+import com.homunculus.preproject.utils.AuthenticationUtils;
 import com.homunculus.preproject.utils.CustomBeanUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +33,11 @@ public class AnswerService {
 
     private final ArticleRepository articleRepository;
     private final AnswerRepository answerRepository;
+    private final MemberRepository memberRepository;
+
     private final MemberService memberService;
+    private final AuthenticationUtils authenticationUtils;
+
 
     public Answer createAnswer(Answer answer) {
 
@@ -40,17 +46,38 @@ public class AnswerService {
         );
 
         answer.setMember(
-            checkAllowedMember(answer.getMember(), false, true)
+                authenticationUtils.findMemberWithCheckAllowed(
+                        answer.getMember(), true,
+                        ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED)
         );
+
+        Member member = answer.getMember();
+
+        if (member.getEmail() != null) { // member가 이미 DB에 저장되어 있는지 확인
+            Optional<Member> optionalMember = memberRepository.findByEmail(member.getEmail());
+            if (optionalMember.isPresent()) {
+                // 이미 저장된 member를 사용
+                answer.setMember(optionalMember.get());
+            } else {
+                // member가 DB에 없으면 새로 저장
+                answer.setMember(memberRepository.save(member));
+            }
+        } else {
+            // member email이 없으면 새로 저장
+            answer.setMember(memberRepository.save(member));
+        }
 
         return answerRepository.save(answer);
     }
 
     public Answer updateAnswer(Answer answer) {
+
         Answer findAnswer = findVerifiedAnswer(answer);
 
         try {
-            checkAllowedMember(findAnswer.getMember(), true, false);
+            authenticationUtils.findMemberWithCheckAllowed(
+                    answer.getMember(), false,
+                    ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED);
         } catch (BusinessLogicException e) {
             if (e.getExceptionCode() == ExceptionCode.MEMBER_NOT_ALLOWED) {
                 throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_ALLOWED);
@@ -72,45 +99,16 @@ public class AnswerService {
     }
 
     public Answer deleteAnswer(Long articleId, Long answerId) {
-        // 유효성 확인
+
         Answer deletedAnswer = findVerifiedAnswer(articleId, answerId);
 
-        // 삭제 권한 확인
-        checkAllowedMember(deletedAnswer.getMember(), true, true);
+        authenticationUtils.findMemberWithCheckAllowed(
+                deletedAnswer.getMember(), false,
+                ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED);
 
         answerRepository.deleteById(answerId);
 
         return deletedAnswer;
-    }
-    public void checkAllowedMember (Member member, boolean isArticleChecking) {
-        checkAllowedMember(member, isArticleChecking, false);
-    }
-
-    public Member checkAllowedMember (Member member, boolean isArticleChecking, boolean isAnswerPost) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_ALLOWED);
-        }
-
-        Object principal = authentication.getPrincipal();
-
-        if (!(principal instanceof UserDetails)) {
-            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_ALLOWED);
-        }
-
-        UserDetails userDetails = (UserDetails) principal;
-        String email = userDetails.getUsername();
-
-        if (!isAnswerPost && member != null && email != null && !member.getEmail().equals(email)) {
-            if (isArticleChecking) {
-                throw new BusinessLogicException(ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED);
-            } else {
-                throw new BusinessLogicException(ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED);
-            }
-        }
-
-        return memberService.findVerifiedMemberByEmail(email);
     }
 
     private Answer findVerifiedAnswer(Long articleId, Long answerId) {
@@ -156,20 +154,21 @@ public class AnswerService {
 
     public Answer acceptAnswer(Long articleId, Long answerId){
 
-        // 질문글이 존재하는지 확인
         findVerifiedArticle(articleId);
         Answer findAnswer = findVerifiedAnswer(articleId, answerId);
-        // 현재 사용자가 질문글 작성자인지 확인
-        checkAllowedMember(findAnswer.getArticle().getMember(), true);
+
+        authenticationUtils.findMemberWithCheckAllowed(
+                findAnswer.getMember(), false,
+                ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED);
 
         if (findAnswer == null) {
             throw new BusinessLogicException(ExceptionCode.ANSWER_NOT_FOUND);
         }
-        // 답변글이 이미 채택된 경우 예외 발생
+
         if (findAnswer.getIsAccepted()) {
             throw new BusinessLogicException(ExceptionCode.ANSWER_NOT_ACCEPTABLE);
         }
-        // 답변글 채택 처리
+
         findAnswer.setIsAccepted(true);
         return answerRepository.save(findAnswer);
     }

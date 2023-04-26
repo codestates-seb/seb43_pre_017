@@ -5,6 +5,8 @@ import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.answer.mapper.AnswerMapper;
 import com.homunculus.preproject.answer.mapper.AnswerSimpleResponseMessages;
 import com.homunculus.preproject.answer.service.AnswerService;
+import com.homunculus.preproject.article.service.ArticleService;
+import com.homunculus.preproject.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,8 @@ public class AnswerController {
 
 
     private final AnswerService answerService;
+    private final MemberService memberService;
+    private final ArticleService articleService;
     private final AnswerMapper mapper;
 
 
@@ -35,7 +39,7 @@ public class AnswerController {
     public ResponseEntity postAnswer (@PathVariable("articleId") @Positive Long articleId,
                                       @Valid @RequestBody AnswerDto.Post answerDtoPost) {
         answerDtoPost.setArticleId(articleId);
-        Answer answer = mapper.answerPostDtoToAnswer(answerDtoPost);
+        Answer answer = mapper.answerPostDtoToAnswer(answerDtoPost, memberService, articleService);
         Answer createdAnswer = answerService.createAnswer(answer);
 
         return new ResponseEntity<>(
@@ -59,7 +63,7 @@ public class AnswerController {
                                       @Valid @RequestBody AnswerDto.Patch answerDtoPatch) {
         answerDtoPatch.setArticleId(articleId);
         answerDtoPatch.setAnswerId(answerId);
-        Answer answer = mapper.answerPatchDtoToAnswer(answerDtoPatch);
+        Answer answer = mapper.answerPatchDtoToAnswer(answerDtoPatch, memberService, articleService);
         Answer updatedAnswer = answerService.updateAnswer(answer);
 
         return new ResponseEntity<>(

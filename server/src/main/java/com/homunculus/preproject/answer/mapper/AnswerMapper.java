@@ -6,7 +6,9 @@ import com.homunculus.preproject.answer.dto.AnswerResponseDto;
 import com.homunculus.preproject.answer.dto.AnswerSimpleResponseDto;
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.article.entity.Article;
+import com.homunculus.preproject.article.service.ArticleService;
 import com.homunculus.preproject.member.entity.Member;
+import com.homunculus.preproject.member.service.MemberService;
 import org.mapstruct.Mapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -15,40 +17,39 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface AnswerMapper {
-    default Answer answerPostDtoToAnswer(AnswerDto.Post answerPostDto) {
+    default Answer answerPostDtoToAnswer(AnswerDto.Post answerPostDto, MemberService memberService, ArticleService articleService) {
         Answer result = new Answer();
         result.setContent(answerPostDto.getContent());
 
         Article resultArticle = new Article();
         resultArticle.setArticleId(answerPostDto.getArticleId());
-        result.setArticle(resultArticle);
+        Article article = articleService.findVerifiedArticle(resultArticle.getArticleId());
+        result.setArticle(article);
 
         String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-
-        Member member = new Member();
-        member.setEmail(email);
+        Member member = memberService.findVerifiedMemberByEmail(email);
         result.setMember(member);
 
         return result;
     }
 
-    default Answer answerPatchDtoToAnswer(AnswerDto.Patch answerPatchDto) {
+    default Answer answerPatchDtoToAnswer(AnswerDto.Patch answerPatchDto, MemberService memberService, ArticleService articleService) {
         Answer result = new Answer();
         result.setAnswerId(answerPatchDto.getAnswerId());
         result.setContent(answerPatchDto.getContent());
 
         Article resultArticle = new Article();
         resultArticle.setArticleId(answerPatchDto.getArticleId());
-        result.setArticle(resultArticle);
+        Article article = articleService.findVerifiedArticle(resultArticle.getArticleId());
+        result.setArticle(article);
 
         String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-
-        Member member = new Member();
-        member.setEmail(email);
+        Member member = memberService.findVerifiedMemberByEmail(email);
         result.setMember(member);
 
         return result;
     };
+
     default AnswerResponseDto answersToAnswerResponseDto(Long articleId, List<Answer> answers) {
         AnswerResponseDto result = new AnswerResponseDto();
         result.setMessage("답변글 조회를 완료했습니다.");
