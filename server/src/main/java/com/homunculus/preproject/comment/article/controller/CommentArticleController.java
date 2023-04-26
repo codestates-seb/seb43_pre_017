@@ -1,6 +1,7 @@
 package com.homunculus.preproject.comment.article.controller;
 
 
+import com.homunculus.preproject.article.service.ArticleService;
 import com.homunculus.preproject.comment.article.dto.CommentArticleDto;
 import com.homunculus.preproject.comment.article.dto.CommentArticleResponseDto;
 import com.homunculus.preproject.comment.article.dto.CommentArticleSimpleResponseDto;
@@ -8,6 +9,7 @@ import com.homunculus.preproject.comment.article.entity.CommentArticle;
 import com.homunculus.preproject.comment.article.mapper.CommentArticleMapper;
 import com.homunculus.preproject.comment.article.mapper.CommentArticleSimpleResponseMessages;
 import com.homunculus.preproject.comment.article.service.CommentArticleService;
+import com.homunculus.preproject.member.service.MemberService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,13 +31,15 @@ public class CommentArticleController {
     private static final String COMMENT_ARTICLE_ALL_MAPPING_URL = "/comments";
 
     private final CommentArticleService commentArticleService;
+    private final MemberService memberService;
+    private final ArticleService articleService;
     private final CommentArticleMapper mapper;
 
     @PostMapping(COMMENT_ARTICLE_DEFAULT_URL + "/{articleId}" + COMMENT_ARTICLE_DEFAULT_URL_DETAIL)
     public ResponseEntity postCommentArticle(@Valid @RequestBody CommentArticleDto.Post commentArticleDtoPost,
                                              @PathVariable("articleId") @Positive Long articleId) {
         commentArticleDtoPost.setArticleId(articleId);
-        CommentArticle createdCommentArticle = commentArticleService.createCommentArticle(mapper.commentArticlePostDtoToCommentArticle(commentArticleDtoPost));
+        CommentArticle createdCommentArticle = commentArticleService.createCommentArticle(mapper.commentArticlePostDtoToCommentArticle(commentArticleDtoPost, memberService, articleService));
 
         return new ResponseEntity<>(
                 mapper.commentArticleToCommentArticleSimpleResponseDto(createdCommentArticle,
@@ -49,7 +53,7 @@ public class CommentArticleController {
                                               @PathVariable("commentId") @Positive Long commentId) {
         commentArticleDtoPatch.setCommentId(commentId);
         commentArticleDtoPatch.setArticleId(articleId);
-        CommentArticle commentArticle = mapper.commentArticlePatchDtoToCommentArticle(commentArticleDtoPatch);
+        CommentArticle commentArticle = mapper.commentArticlePatchDtoToCommentArticle(commentArticleDtoPatch, memberService, articleService);
         CommentArticle updatedCommentArticle = commentArticleService.updateCommentArticle(commentArticle);
 
         return new ResponseEntity<>(

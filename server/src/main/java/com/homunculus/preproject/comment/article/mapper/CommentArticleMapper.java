@@ -1,11 +1,13 @@
 package com.homunculus.preproject.comment.article.mapper;
 
 import com.homunculus.preproject.article.entity.Article;
+import com.homunculus.preproject.article.service.ArticleService;
 import com.homunculus.preproject.comment.article.dto.CommentArticleDto;
 import com.homunculus.preproject.comment.article.dto.CommentArticleResponseDto;
 import com.homunculus.preproject.comment.article.dto.CommentArticleSimpleResponseDto;
 import com.homunculus.preproject.comment.article.entity.CommentArticle;
 import com.homunculus.preproject.member.entity.Member;
+import com.homunculus.preproject.member.service.MemberService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,17 +18,17 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CommentArticleMapper {
-    default CommentArticle commentArticlePostDtoToCommentArticle(CommentArticleDto.Post commentDtoPost) {
+    default CommentArticle commentArticlePostDtoToCommentArticle(CommentArticleDto.Post commentDtoPost, MemberService memberService, ArticleService articleService) {
         CommentArticle result = new CommentArticle();
         result.setContent(commentDtoPost.getContent());
 
         Article resultArticle = new Article();
         resultArticle.setArticleId(commentDtoPost.getArticleId());
-        result.setArticle(resultArticle);
+        Article article = articleService.findVerifiedArticle(resultArticle.getArticleId());
+        result.setArticle(article);
 
         String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        Member member = new Member();
-        member.setEmail(email);
+        Member member = memberService.findVerifiedMemberByEmail(email);
         result.setMember(member);
 
         return result;
@@ -34,19 +36,19 @@ public interface CommentArticleMapper {
 
     @Mapping(source = "articleId", target = "article.articleId")
     @Mapping(source = "commentId", target = "commentArticleId")
-    default CommentArticle commentArticlePatchDtoToCommentArticle(CommentArticleDto.Patch commentDtoPatch) {
+    default CommentArticle commentArticlePatchDtoToCommentArticle(CommentArticleDto.Patch commentDtoPatch, MemberService memberService, ArticleService articleService) {
         CommentArticle result = new CommentArticle();
         result.setCommentArticleId(commentDtoPatch.getCommentId());
         result.setContent(commentDtoPatch.getContent());
 
         Article resultArticle = new Article();
         resultArticle.setArticleId(commentDtoPatch.getArticleId());
-        result.setArticle(resultArticle);
+        Article article = articleService.findVerifiedArticle(resultArticle.getArticleId());
+        result.setArticle(article);
 
         String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        Member member = new Member();
-        member.setEmail(email);
-        result.setMember(member);
+        Member member = memberService.findVerifiedMemberByEmail(email);
+        result.setMember(member);;
 
         return result;
     }

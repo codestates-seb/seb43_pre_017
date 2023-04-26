@@ -1,11 +1,13 @@
 package com.homunculus.preproject.comment.answer.mapper;
 
 import com.homunculus.preproject.answer.entity.Answer;
+import com.homunculus.preproject.answer.service.AnswerService;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerDto;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerSimpleResponseDto;
 import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerResponseDto;
 import com.homunculus.preproject.member.entity.Member;
+import com.homunculus.preproject.member.service.MemberService;
 import org.mapstruct.Mapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -15,34 +17,34 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CommentAnswerMapper {
-    default CommentAnswer commentAnswerPostDtoToCommentAnswer(CommentAnswerDto.Post commentDtoPost) {
+    default CommentAnswer commentAnswerPostDtoToCommentAnswer(CommentAnswerDto.Post commentDtoPost, MemberService memberService, AnswerService answerService) {
         CommentAnswer result = new CommentAnswer();
         result.setContent(commentDtoPost.getContent());
 
         Answer resultAnswer = new Answer();
         resultAnswer.setAnswerId(commentDtoPost.getAnswerId());
-        result.setAnswer(resultAnswer);
+        Answer answer = answerService.findVerifiedAnswer(resultAnswer.getAnswerId());
+        result.setAnswer(answer);
 
         String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        Member member = new Member();
-        member.setEmail(email);
+        Member member = memberService.findVerifiedMemberByEmail(email);
         result.setMember(member);
 
         return result;
     };
 
-    default CommentAnswer commentAnswerPatchDtoToCommentAnswer(CommentAnswerDto.Patch commentDtoPatch) {
+    default CommentAnswer commentAnswerPatchDtoToCommentAnswer(CommentAnswerDto.Patch commentDtoPatch, MemberService memberService, AnswerService answerService) {
         CommentAnswer result = new CommentAnswer();
         result.setCommentAnswerId(commentDtoPatch.getCommentId());
         result.setContent(commentDtoPatch.getContent());
 
         Answer resultAnswer = new Answer();
         resultAnswer.setAnswerId(commentDtoPatch.getAnswerId());
-        result.setAnswer(resultAnswer);
+        Answer answer = answerService.findVerifiedAnswer(resultAnswer.getAnswerId());
+        result.setAnswer(answer);
 
         String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        Member member = new Member();
-        member.setEmail(email);
+        Member member = memberService.findVerifiedMemberByEmail(email);
         result.setMember(member);
 
         return result;

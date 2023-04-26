@@ -1,6 +1,7 @@
 package com.homunculus.preproject.comment.answer.controller;
 
 
+import com.homunculus.preproject.answer.service.AnswerService;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerDto;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerResponseDto;
 import com.homunculus.preproject.comment.answer.dto.CommentAnswerSimpleResponseDto;
@@ -8,6 +9,7 @@ import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import com.homunculus.preproject.comment.answer.mapper.CommentAnswerMapper;
 import com.homunculus.preproject.comment.answer.mapper.CommentAnswerSimpleResponseMessages;
 import com.homunculus.preproject.comment.answer.service.CommentAnswerService;
+import com.homunculus.preproject.member.service.MemberService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,13 +31,16 @@ public class CommentAnswerController {
     private static final String COMMENT_ANSWER_ALL_MAPPING_URL = "/comments";
 
     private final CommentAnswerService commentAnswerService;
+    private final MemberService memberService;
+    private final AnswerService answerService;
     private final CommentAnswerMapper mapper;
 
     @PostMapping(COMMENT_ANSWER_DEFAULT_URL + "/{answerId}" + COMMENT_ANSWER_DEFAULT_URL_DETAIL)
     public ResponseEntity postCommentAnswer(@Valid @RequestBody CommentAnswerDto.Post commentAnswerDtoPost,
                                             @PathVariable("answerId") @Positive Long answerId) {
         commentAnswerDtoPost.setAnswerId(answerId);
-        CommentAnswer createdCommentAnswer = commentAnswerService.createCommentAnswer(mapper.commentAnswerPostDtoToCommentAnswer(commentAnswerDtoPost));
+        CommentAnswer commentAnswer = mapper.commentAnswerPostDtoToCommentAnswer(commentAnswerDtoPost, memberService, answerService);
+        CommentAnswer createdCommentAnswer = commentAnswerService.createCommentAnswer(commentAnswer);
 
         return new ResponseEntity<>(
                 mapper.commentAnswerToCommentAnswerSimpleResponseDto(createdCommentAnswer,
@@ -49,7 +54,7 @@ public class CommentAnswerController {
                                              @PathVariable("commentId") @Positive Long commentId) {
         commentAnswerDtoPatch.setCommentId(commentId);
         commentAnswerDtoPatch.setAnswerId(answerId);
-        CommentAnswer commentAnswer = mapper.commentAnswerPatchDtoToCommentAnswer(commentAnswerDtoPatch);
+        CommentAnswer commentAnswer = mapper.commentAnswerPatchDtoToCommentAnswer(commentAnswerDtoPatch, memberService, answerService);
         CommentAnswer updatedCommentAnswer = commentAnswerService.updateCommentAnswer(commentAnswer);
 
         return new ResponseEntity<>(
