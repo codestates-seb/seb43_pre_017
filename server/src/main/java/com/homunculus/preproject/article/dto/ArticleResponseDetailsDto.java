@@ -14,7 +14,6 @@ public class ArticleResponseDetailsDto {
     private String message;
     private Article article;
     private Member member;
-
     private Count count;
 
     @Getter

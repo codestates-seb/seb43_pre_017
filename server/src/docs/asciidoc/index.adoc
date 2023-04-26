@@ -100,7 +100,6 @@ include::{snippets}/get-article/response-fields.adoc[]
 .http-response
 include::{snippets}/get-article/http-response.adoc[]
 
-
 ***
 == AnswerController
 === 답변 등록
