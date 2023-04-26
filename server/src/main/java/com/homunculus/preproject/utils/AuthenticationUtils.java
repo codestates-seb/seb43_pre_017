@@ -33,7 +33,6 @@ public class AuthenticationUtils {
             }
         }
 
-        String email = userDetails.getUsername();
         return memberService.findVerifiedMemberByEmail(email);
     }
 }

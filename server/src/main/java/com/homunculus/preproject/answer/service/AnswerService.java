@@ -6,21 +6,15 @@ import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.article.repository.ArticleRepository;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
-import com.homunculus.preproject.member.entity.Member;
-import com.homunculus.preproject.member.service.MemberService;
+import com.homunculus.preproject.utils.AuthenticationUtils;
 import com.homunculus.preproject.utils.CustomBeanUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -30,7 +24,7 @@ public class AnswerService {
 
     private final ArticleRepository articleRepository;
     private final AnswerRepository answerRepository;
-    private final MemberService memberService;
+    private final AuthenticationUtils authenticationUtils;
 
     public Answer createAnswer(Answer answer) {
 
@@ -38,8 +32,11 @@ public class AnswerService {
                 findVerifiedArticle(answer.getArticle().getArticleId())
         );
 
+        boolean isPostMethod = true;
         answer.setMember(
-            checkAllowedMember(answer.getMember(), false, true)
+            authenticationUtils.findMemberWithCheckAllowed(
+                    answer.getMember(), isPostMethod,
+                    ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED)
         );
 
         return answerRepository.save(answer);
@@ -48,7 +45,10 @@ public class AnswerService {
     public Answer updateAnswer(Answer answer) {
         Answer findAnswer = findVerifiedAnswer(answer);
 
-        checkAllowedMember(findAnswer.getMember(), false);
+        authenticationUtils.findMemberWithCheckAllowed(
+                findAnswer.getMember(), false,
+                ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED
+        );
 
         CustomBeanUtils.copyNonNullProperties(answer, findAnswer);
 
@@ -67,36 +67,14 @@ public class AnswerService {
         Answer deletedAnswer = findVerifiedAnswer(articleId, answerId);
 
         // 삭제 권한 확인
-        checkAllowedMember(deletedAnswer.getMember(), false);
+        authenticationUtils.findMemberWithCheckAllowed(
+                deletedAnswer.getMember(), false,
+                ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED
+        );
 
         answerRepository.deleteById(answerId);
 
         return deletedAnswer;
-    }
-    public void checkAllowedMember (Member member, boolean isArticleChecking) {
-        checkAllowedMember(member, isArticleChecking, false);
-    }
-
-    public Member checkAllowedMember (Member member, boolean isArticleChecking, boolean isAnswerPost) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated())
-            throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
-
-        Object principal = authentication.getPrincipal();
-        String email = principal.toString();
-
-        // todo : role 추가 시 권한에 따른 등록 방식 추가해야함
-
-        if ( !isAnswerPost ) {
-            if (!member.getEmail().equals(email)) {
-                if (isArticleChecking)
-                    throw new BusinessLogicException(ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED);
-                else
-                    throw new BusinessLogicException(ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED);
-            }
-        }
-
-        return memberService.findVerifiedMemberByEmail(email);
     }
 
     private Answer findVerifiedAnswer(Long articleId, Long answerId) {
@@ -130,10 +108,9 @@ public class AnswerService {
     public Article findVerifiedArticle(long articleId) {
         Optional<Article> optionalArticle =
                 articleRepository.findById(articleId);
-        Article findArticle =
-                optionalArticle.orElseThrow(() ->
-                        new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
-        return findArticle;
+
+        return optionalArticle.orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND));
     }
 
     public Answer acceptAnswer(Long articleId, Long answerId) {
@@ -141,7 +118,10 @@ public class AnswerService {
         findVerifiedArticle(articleId);
         Answer findAnswer = findVerifiedAnswer(articleId, answerId);
 
-        checkAllowedMember(findAnswer.getArticle().getMember(), true);
+        authenticationUtils.findMemberWithCheckAllowed(
+                findAnswer.getArticle().getMember(), false,
+                ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED
+        );
 
         // 유효한 데이터를 처리
         if(findAnswer.getIsAccepted())
