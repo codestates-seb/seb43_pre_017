@@ -19,9 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@Service
+
 @Transactional
 @RequiredArgsConstructor
+@Service
 public class ArticleService {
     private final MemberRepository memberRepository;
     private final ArticleRepository articleRepository;
@@ -118,3 +119,5 @@ public class ArticleService {
         return findArticle;
     }
 }
+
+
