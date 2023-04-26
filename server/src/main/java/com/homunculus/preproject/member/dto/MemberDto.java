@@ -34,8 +34,8 @@ public class MemberDto {
     public static class Patch {
         private Long memberId;
 
-        @NotNull    // fixme : 회원 정보 수정할 때는 비밀번호가 필수 !
-        private String password;
+//        @NotNull    // fixme : 회원 정보 수정할 때는 비밀번호가 필수 !
+//        private String password;
 
         @NotSpace(message = "이름은 공백이 아니어야 합니다 !")
         private String name;
