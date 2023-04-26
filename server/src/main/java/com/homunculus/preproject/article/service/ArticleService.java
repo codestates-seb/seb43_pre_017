@@ -65,6 +65,10 @@ public class ArticleService {
                         ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED)
         );
 
+        // Member 객체를 새로 저장
+        Member member = memberRepository.save(findArticle.getMember());
+        findArticle.setMember(member);
+
         CustomBeanUtils.copyNonNullProperties(article, findArticle);
 
         return articleRepository.save(findArticle);

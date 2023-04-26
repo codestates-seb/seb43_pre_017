@@ -22,8 +22,7 @@ public class AuthenticationUtils {
             throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
         }
 
-        UserDetails principal = (UserDetails) authentication.getPrincipal();
-        String email = principal.toString();
+        String email = authentication.getName();
 
         // todo : role 추가 시 권한에 따른 등록 방식 추가해야함
 
@@ -34,7 +33,6 @@ public class AuthenticationUtils {
             }
         }
 
-        String username = principal.getUsername();
-        return memberService.findVerifiedMemberByEmail(username);
+        return memberService.findVerifiedMemberByEmail(email);
     }
 }
