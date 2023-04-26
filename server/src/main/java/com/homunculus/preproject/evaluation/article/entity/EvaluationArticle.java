@@ -34,7 +34,7 @@ public class EvaluationArticle {
     private Article article;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(length = 20, nullable = false)
+    @Column(length = 50, nullable = false)
     private EvaluationArticleStatus evaluationArticleStatus = EvaluationArticleStatus.EVALUATION_ARTICLE_NOTHING;
 
     public enum EvaluationArticleStatus {

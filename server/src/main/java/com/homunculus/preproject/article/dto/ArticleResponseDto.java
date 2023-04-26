@@ -33,8 +33,8 @@ public class ArticleResponseDto {
         @Setter
         @NoArgsConstructor
         public static class Count {
-            private Integer comments;    // todo: 이 질문글에 달린 댓글 갯수 카운팅을 매퍼에서 구현해야함
-            private Integer answers;    // todo: 이 질문글에 달린 답변글 갯수 카운팅을 매퍼에서 구현해야함
+            private Integer comments;
+            private Integer answers;
         }
     }
 

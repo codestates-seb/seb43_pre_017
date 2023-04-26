@@ -35,7 +35,7 @@ public class CommentArticle extends Auditable {
     private Article article;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(length = 20, nullable = false)
+    @Column(length = 50, nullable = false)
     private CommentArticleStatus commentArticleStatus = CommentArticleStatus.COMMENT_ARTICLE_REGISTRY;
 
     public enum CommentArticleStatus {

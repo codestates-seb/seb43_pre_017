@@ -34,9 +34,13 @@ public class AnswerService {
 
     public Answer createAnswer(Answer answer) {
 
-        findVerifiedArticle(answer.getArticle().getArticleId());
+        answer.setArticle(
+                findVerifiedArticle(answer.getArticle().getArticleId())
+        );
 
-        checkAllowedMember(answer.getMember(), false, true);
+        answer.setMember(
+            checkAllowedMember(answer.getMember(), false, true)
+        );
 
         return answerRepository.save(answer);
     }
@@ -54,7 +58,7 @@ public class AnswerService {
     public Page<Answer> findAnswers(Long articleId, Integer page, Integer size) {
         return answerRepository.findAnswersByArticleArticleId(
                 articleId,
-                PageRequest.of(page, size, Sort.by("answerId"))
+                PageRequest.of(page, size, Sort.by("answerId").descending())
         );
     }
 
@@ -73,21 +77,18 @@ public class AnswerService {
         checkAllowedMember(member, isArticleChecking, false);
     }
 
-    public void checkAllowedMember (Member member, boolean isArticleChecking, boolean isAnswerPost) {
+    public Member checkAllowedMember (Member member, boolean isArticleChecking, boolean isAnswerPost) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated())
             throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
 
         Object principal = authentication.getPrincipal();
-        if (!(principal instanceof UserDetails))
-            throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
-
-        UserDetails userDetails = (UserDetails) principal;
+        String email = principal.toString();
 
         // todo : role 추가 시 권한에 따른 등록 방식 추가해야함
 
         if ( !isAnswerPost ) {
-            if (!member.getEmail().equals(userDetails.getUsername())) {
+            if (!member.getEmail().equals(email)) {
                 if (isArticleChecking)
                     throw new BusinessLogicException(ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED);
                 else
@@ -95,7 +96,7 @@ public class AnswerService {
             }
         }
 
-        member = memberService.findVerifiedMemberByEmail(userDetails.getUsername());
+        return memberService.findVerifiedMemberByEmail(email);
     }
 
     private Answer findVerifiedAnswer(Long articleId, Long answerId) {

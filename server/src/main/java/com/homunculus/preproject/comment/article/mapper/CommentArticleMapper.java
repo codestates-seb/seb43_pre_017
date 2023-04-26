@@ -24,9 +24,7 @@ public interface CommentArticleMapper {
         resultArticle.setArticleId(commentDtoPost.getArticleId());
         result.setArticle(resultArticle);
 
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = user.getUsername();
-
+        String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         Member member = new Member();
         member.setEmail(email);
         result.setMember(member);
@@ -45,9 +43,7 @@ public interface CommentArticleMapper {
         resultArticle.setArticleId(commentDtoPatch.getArticleId());
         result.setArticle(resultArticle);
 
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = user.getUsername();
-
+        String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         Member member = new Member();
         member.setEmail(email);
         result.setMember(member);

@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +34,8 @@ public class ArticleController {
 
     @PostMapping(ARTICLE_DEFAULT_URL)
     public ResponseEntity postArticle(@Valid @RequestBody ArticleDto.Post articleDtoPost) {
-        Article createdArticle = articleService.createArticle(mapper.articlePostDtoToArticle(articleDtoPost));
+        Article postArticle = mapper.articlePostDtoToArticle(articleDtoPost);
+        Article createdArticle = articleService.createArticle(postArticle);
 
         return new ResponseEntity<>(
                 mapper.articleToArticleSimpleResponseDto(createdArticle, ArticleSimpleResponseMessages.ARTICLE_MESSAGE_POST),

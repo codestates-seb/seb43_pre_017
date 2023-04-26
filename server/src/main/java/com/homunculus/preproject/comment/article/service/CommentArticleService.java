@@ -32,7 +32,9 @@ public class CommentArticleService {
 
     public CommentArticle createCommentArticle(CommentArticle comment) {
 
-        checkAllowedMember(comment, true);
+        comment.setMember(
+            checkAllowedMember(comment, true)
+        );
 
         return commentArticleRepository.save(comment);
     }
@@ -40,7 +42,9 @@ public class CommentArticleService {
     public CommentArticle updateCommentArticle(CommentArticle comment) {
         CommentArticle findComment = findVerifiedArticle(comment);
 
-        checkAllowedMember(findComment);
+        findComment.setMember(
+            checkAllowedMember(findComment, false)
+        );
 
         return CustomBeanUtils.copyNonNullProperties(comment, findComment);
     }
@@ -48,7 +52,7 @@ public class CommentArticleService {
     public CommentArticle deleteCommentArticle(Long articleId, Long commentId) {
         CommentArticle deletedComment = findVerifiedCommentArticle(articleId, commentId);
 
-        checkAllowedMember(deletedComment);
+        checkAllowedMember(deletedComment, false);
 
         commentArticleRepository.deleteById(commentId);
 
@@ -59,24 +63,17 @@ public class CommentArticleService {
     public Page<CommentArticle> findCommentArticles(Long articleId, Integer page, Integer size) {
         return commentArticleRepository.findCommentArticlesByArticleArticleId(
                 articleId,
-                PageRequest.of(page, size, Sort.by("commentAnswerId"))
+                PageRequest.of(page, size, Sort.by("commentArticleId").descending())
         );
     }
 
-    public void checkAllowedMember (CommentArticle commentArticle) {
-        checkAllowedMember(commentArticle, false);
-    }
-    public void checkAllowedMember (CommentArticle commentArticle, boolean isCommentArticlePost) {
+    public Member checkAllowedMember (CommentArticle commentArticle, boolean isCommentArticlePost) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated())
             throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
 
         Object principal = authentication.getPrincipal();
-        if (principal == null)
-            throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
-
-        UserDetails userDetails = (UserDetails) principal;
-        final String email = userDetails.getUsername();
+        final String email = principal.toString();
 
         if ( !isCommentArticlePost ) {
             if (!commentArticle.getMember().getEmail().equals(email)) {
@@ -84,8 +81,7 @@ public class CommentArticleService {
             }
         }
 
-        Member member = memberService.findVerifiedMemberByEmail(email);
-        commentArticle.setMember(member);
+        return memberService.findVerifiedMemberByEmail(email);
     }
 
     private CommentArticle findVerifiedCommentArticle(Long articleId, Long commentId) {
