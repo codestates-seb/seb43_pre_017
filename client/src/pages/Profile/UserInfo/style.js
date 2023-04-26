@@ -35,12 +35,10 @@ export const StyledInfoBox = styled.div`
 
 /** 20230420 - 유저 정보 수정 버튼 - by sinyaenok*/
 export const StyledEditBtn = styled.div`
-  width: 50%;
-  align-items: end;
-  position: absolute;
-  /* right: 0; */
-  /* justify-content: center; */
+  padding-right: 16px;
+  justify-content: end;
   flex: 1;
+  white-space: nowrap;
   .editBtn {
     border: 1px solid ${({ theme }) => theme.colors.gray400};
     color: ${({ theme }) => theme.colors.gray500};

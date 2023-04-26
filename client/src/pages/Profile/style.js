@@ -4,14 +4,8 @@ const StyledProfile = styled.div`
   height: 100%;
   max-width: 1100px;
   width: calc(100% - 164px);
-  background-color: #fff;
-  border-top-width: 0;
-  border-bottom-width: 0;
-  border-left-width: 1px;
-  border-right-width: 0;
   padding: 24px;
-  box-sizing: border-box;
-  /* position: relative; */
+  background-color: ${({ theme }) => theme.colors.gray50};
 
   /* display */
   .d-flex {

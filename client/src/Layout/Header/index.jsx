@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+// import { useState, useEffect } from "react";
+
 // Nav
 import Nav from "../NavBar";
 

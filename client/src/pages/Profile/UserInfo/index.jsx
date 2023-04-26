@@ -38,7 +38,7 @@ const UserInfo = () => {
         </div>
       </StyledInfoBox>
 
-      <StyledEditBtn className="d-flex di-column">
+      <StyledEditBtn className="d-flex">
         <Link to="/profile">
           <div className="editBtn">Edit Profile</div>
         </Link>
