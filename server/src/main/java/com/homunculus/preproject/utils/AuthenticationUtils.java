@@ -7,6 +7,7 @@ import com.homunculus.preproject.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,8 +22,7 @@ public class AuthenticationUtils {
             throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
         }
 
-        Object principal = authentication.getPrincipal();
-        String email = principal.toString();
+        String email = authentication.getName();
 
         // todo : role 추가 시 권한에 따른 등록 방식 추가해야함
 

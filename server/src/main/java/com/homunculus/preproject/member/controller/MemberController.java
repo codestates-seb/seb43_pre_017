@@ -38,9 +38,9 @@ public class MemberController {
         Member member = mapper.memberPostDtoToMember(memberDtoPost);
         Member createdMember = memberService.createMember(member);
 
-        URI location = UriCreator.createUri("/api/member", member.getMemberId());
+        MemberResponseDto responseDto = mapper.memberToMemberResponseDto(createdMember);
 
-        return new ResponseEntity<>(location, HttpStatus.CREATED);
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @PatchMapping(MEMBER_DEFAULT_URL + "/{memberId}")
