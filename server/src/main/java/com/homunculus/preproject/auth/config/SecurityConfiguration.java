@@ -63,11 +63,10 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .antMatchers("/h2/**").permitAll()
                         .antMatchers(HttpMethod.OPTIONS).permitAll()
-                        .antMatchers(HttpMethod.POST, "/api/signup", "/api/login").permitAll()
-                        .antMatchers(HttpMethod.GET, "/", "/api/article/*", "/api/articles").permitAll()
-                        .antMatchers(HttpMethod.GET, "/api/article/*/answers").permitAll()
-                        .antMatchers(HttpMethod.GET, "/api/article/*/comments").permitAll()
-                        .antMatchers(HttpMethod.GET, "/api/answer/*/comments").permitAll()
+                        .antMatchers(HttpMethod.POST, "/api/signup","/api/login").permitAll()
+                        .antMatchers(HttpMethod.GET, "/","/api/article/*","/api/articles").permitAll()
+                        .antMatchers(HttpMethod.GET, "/api/article/*/answer/*","/api/article/*/answers").permitAll()
+                        .antMatchers(HttpMethod.GET, "/api/article/*/comments","/api/answer/*/comments").permitAll()
                         .anyRequest().hasRole("USER")
                 );
 

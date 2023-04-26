@@ -39,10 +39,10 @@ public class Answer extends Auditable {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @OneToMany(mappedBy = "answer")
+    @OneToMany(mappedBy = "answer", cascade = CascadeType.ALL)
     private List<CommentAnswer> commentAnswers = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private EvaluationAnswer evaluationAnswer;
 
     @Enumerated(value = EnumType.STRING)

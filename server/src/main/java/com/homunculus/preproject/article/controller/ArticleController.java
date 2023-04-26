@@ -5,6 +5,8 @@ import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.article.mapper.ArticleMapper;
 import com.homunculus.preproject.article.mapper.ArticleSimpleResponseMessages;
 import com.homunculus.preproject.article.service.ArticleService;
+import com.homunculus.preproject.exception.BusinessLogicException;
+import com.homunculus.preproject.exception.ExceptionCode;
 import com.homunculus.preproject.member.service.MemberService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -49,6 +51,10 @@ public class ArticleController {
                                        @Valid @RequestBody ArticleDto.Patch articleDtoPatch) {
         articleDtoPatch.setArticleId(articleId);
         Article updatedArticle = articleService.updateArticle(mapper.articlePatchDtoToArticle(articleDtoPatch, memberService));
+
+        if (updatedArticle.getArticleId() != articleId) {
+            throw new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND);
+        }
 
         return new ResponseEntity<>(
                 mapper.articleToArticleSimpleResponseDto(updatedArticle, ArticleSimpleResponseMessages.ARTICLE_MESSAGE_PATCH),
