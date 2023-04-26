@@ -30,13 +30,12 @@ public class ArticleService {
 
     public Article createArticle(Article article) {
 
-//         로그인 한 유저인지만 체크
-//        boolean isPostMethod = true;
-//        article.setMember(
-//                authenticationUtils.findMemberWithCheckAllowed(
-//                        article.getMember(), isPostMethod,
-//                        ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED)
-//        );
+        boolean isPostMethod = true;
+        article.setMember(
+                authenticationUtils.findMemberWithCheckAllowed(
+                        article.getMember(), isPostMethod,
+                        ExceptionCode.ARTICLE_MEMBER_NOT_ALLOWED)
+        );
 
         Member member = article.getMember();
 
@@ -109,7 +108,6 @@ public class ArticleService {
 
 
     // 이미 등록된 질문인지 검증
-    @Transactional(readOnly = true)
     public Article findVerifiedArticle(long articleId) {
         Optional<Article> optionalArticle =
                 articleRepository.findById(articleId);

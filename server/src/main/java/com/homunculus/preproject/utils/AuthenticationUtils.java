@@ -29,7 +29,7 @@ public class AuthenticationUtils {
         // post 가 아니라면 작성자가 맞는지 체크
         if (!isPostMethod) {
             if (!member.getEmail().equals(email)) {
-                throw new BusinessLogicException(ec);
+                throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_ALLOWED);
             }
         }
 
