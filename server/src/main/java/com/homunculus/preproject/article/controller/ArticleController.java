@@ -35,6 +35,7 @@ public class ArticleController {
     @PostMapping(ARTICLE_DEFAULT_URL)
     public ResponseEntity postArticle(@Valid @RequestBody ArticleDto.Post articleDtoPost) {
         Article postArticle = mapper.articlePostDtoToArticle(articleDtoPost);
+
         Article createdArticle = articleService.createArticle(postArticle);
 
         return new ResponseEntity<>(
@@ -63,7 +64,7 @@ public class ArticleController {
     }
 
     @GetMapping(ARTICLE_ALL_MAPPING_URL)
-    public ResponseEntity getArticle(@RequestParam @Positive int page,
+    public ResponseEntity getArticles(@RequestParam @Positive int page,
                                      @RequestParam @Positive int size,
                                      @RequestParam String type) {
         Page<Article> pageArticles = articleService.findArticles(page - 1, size, type);
