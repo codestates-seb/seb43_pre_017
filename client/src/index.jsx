@@ -19,7 +19,9 @@ import "react-toastify/dist/ReactToastify.css";
 import Layout from "./Layout";
 
 // component
+import ToastMessage from "./components/ToastMessage";
 import Home from "./pages/Home";
+import ArticlePage from "./pages/Article";
 import Profile from "./pages/Profile";
 import Members from "./pages/Members";
 import Login from "./pages/Login";
@@ -47,6 +49,8 @@ root.render(
           pauseOnFocusLoss={false}
         />
 
+        <ToastMessage />
+
         {/* 라우팅 ( react-router ) */}
         <BrowserRouter>
           {/* 전체 레이아웃 ( 네비게이션, 컨텐츠, 푸터 ) */}
@@ -54,6 +58,8 @@ root.render(
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/members/:name/:id" element={<Profile />} />
+              <Route path="/questions/:questionId" element={<ArticlePage />} />
               <Route path="/members/:name/:id" element={<Profile />} />
               <Route path="/members" element={<Members />} />
               <Route path="/login" element={<Login />} />

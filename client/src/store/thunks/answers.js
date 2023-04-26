@@ -2,17 +2,20 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
 // api
-import { userApiService } from "../apis";
+// import { answersApiService } from "../apis";
+import { fetchDummyAnswersOfArticle } from "../../_dummy";
 
-/** 2023/04/12 - 유저들 생성 요청 thunk - by 1-blue */
-const fetchUsersThunk = createAsyncThunk(
+/** 2023/04/20 - 특정 answer 패치 요청 thunk - by 1-blue */
+const fetchAnswersThunk = createAsyncThunk(
   // 액션 타입 결정
-  "create/post",
+  "fetch/answers",
 
   // promise를 반환하는 액션 작성
   async (body, { rejectWithValue }) => {
     try {
-      const { data } = await userApiService.apiFetchUsers(body);
+      // FIXME: 가짜 데이터
+      // const { data } = await answersApiService.apiFetchAnswersOfArticle(body);
+      const data = await fetchDummyAnswersOfArticle();
 
       return data;
     } catch (error) {
@@ -29,7 +32,7 @@ const fetchUsersThunk = createAsyncThunk(
   },
 );
 
-/** 2023/04/12 - 유저 thunk 메서드들을 갖는 객체 - by 1-blue */
-export const userThunkService = {
-  fetchUsersThunk,
+/** 2023/04/20 - answer thunk 메서드들을 갖는 객체 - by 1-blue */
+export const answersThunkService = {
+  fetchAnswersThunk,
 };

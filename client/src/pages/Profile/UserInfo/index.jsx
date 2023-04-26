@@ -16,6 +16,7 @@ import dummy from "../../Members/Data/data.json";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCakeCandles } from "@fortawesome/free-solid-svg-icons";
 
+/** 20230420 - 멤버 상세정보 페이지(이름, 날짜, 수정버튼) - by sinyaenok*/
 const UserInfo = () => {
   const { id } = useParams();
   const member = dummy.members.find((member) => member.id === parseInt(id));
@@ -37,7 +38,7 @@ const UserInfo = () => {
         </div>
       </StyledInfoBox>
 
-      <StyledEditBtn className="d-flex di-column fwn">
+      <StyledEditBtn className="d-flex di-column">
         <Link to="/profile">
           <div className="editBtn">Edit Profile</div>
         </Link>

@@ -20,9 +20,6 @@ const StyledProfile = styled.div`
   .d-grid {
     display: grid;
   }
-  .fwn {
-    flex-wrap: nowrap;
-  }
 
   /* flex-direction */
   .di-column {

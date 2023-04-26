@@ -37,6 +37,10 @@ export const StyledInfoBox = styled.div`
 export const StyledEditBtn = styled.div`
   width: 50%;
   align-items: end;
+  position: absolute;
+  /* right: 0; */
+  /* justify-content: center; */
+  flex: 1;
   .editBtn {
     border: 1px solid ${({ theme }) => theme.colors.gray400};
     color: ${({ theme }) => theme.colors.gray500};
