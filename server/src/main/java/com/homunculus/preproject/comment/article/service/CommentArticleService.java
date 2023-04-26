@@ -1,12 +1,14 @@
 package com.homunculus.preproject.comment.article.service;
 
 import com.homunculus.preproject.article.entity.Article;
+import com.homunculus.preproject.article.service.ArticleService;
 import com.homunculus.preproject.comment.article.entity.CommentArticle;
 import com.homunculus.preproject.comment.article.repository.CommentArticleRepository;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
 import com.homunculus.preproject.member.entity.Member;
 import com.homunculus.preproject.member.service.MemberService;
+import com.homunculus.preproject.utils.AuthenticationUtils;
 import com.homunculus.preproject.utils.CustomBeanUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,12 +30,20 @@ import java.util.Optional;
 public class CommentArticleService {
 
     private final CommentArticleRepository commentArticleRepository;
-    private final MemberService memberService;
+    private final AuthenticationUtils authenticationUtils;
+    private final ArticleService articleService;
 
     public CommentArticle createCommentArticle(CommentArticle comment) {
 
         comment.setMember(
-            checkAllowedMember(comment, true)
+                authenticationUtils.findMemberWithCheckAllowed(
+                        comment.getMember(), true,
+                        ExceptionCode.COMMENT_MEMBER_NOT_ALLOWED)
+        );
+
+        comment.setArticle(
+                articleService.findVerifiedArticle(
+                        comment.getArticle().getArticleId())
         );
 
         return commentArticleRepository.save(comment);
@@ -43,7 +53,9 @@ public class CommentArticleService {
         CommentArticle findComment = findVerifiedArticle(comment);
 
         findComment.setMember(
-            checkAllowedMember(findComment, false)
+            authenticationUtils.findMemberWithCheckAllowed(
+                    findComment.getMember(), false,
+                    ExceptionCode.COMMENT_MEMBER_NOT_ALLOWED)
         );
 
         return CustomBeanUtils.copyNonNullProperties(comment, findComment);
@@ -52,7 +64,9 @@ public class CommentArticleService {
     public CommentArticle deleteCommentArticle(Long articleId, Long commentId) {
         CommentArticle deletedComment = findVerifiedCommentArticle(articleId, commentId);
 
-        checkAllowedMember(deletedComment, false);
+        authenticationUtils.findMemberWithCheckAllowed(
+                deletedComment.getMember(), false,
+                ExceptionCode.COMMENT_MEMBER_NOT_ALLOWED);
 
         commentArticleRepository.deleteById(commentId);
 
@@ -65,23 +79,6 @@ public class CommentArticleService {
                 articleId,
                 PageRequest.of(page, size, Sort.by("commentArticleId").descending())
         );
-    }
-
-    public Member checkAllowedMember (CommentArticle commentArticle, boolean isCommentArticlePost) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated())
-            throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
-
-        Object principal = authentication.getPrincipal();
-        final String email = principal.toString();
-
-        if ( !isCommentArticlePost ) {
-            if (!commentArticle.getMember().getEmail().equals(email)) {
-                throw new BusinessLogicException(ExceptionCode.COMMENT_MEMBER_NOT_ALLOWED);
-            }
-        }
-
-        return memberService.findVerifiedMemberByEmail(email);
     }
 
     private CommentArticle findVerifiedCommentArticle(Long articleId, Long commentId) {

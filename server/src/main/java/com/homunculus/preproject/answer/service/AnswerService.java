@@ -19,6 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AnswerService {
 
@@ -28,22 +29,22 @@ public class AnswerService {
 
     public Answer createAnswer(Answer answer) {
 
-        answer.setArticle(
-                findVerifiedArticle(answer.getArticle().getArticleId())
-        );
-
         boolean isPostMethod = true;
         answer.setMember(
-            authenticationUtils.findMemberWithCheckAllowed(
-                    answer.getMember(), isPostMethod,
-                    ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED)
+                authenticationUtils.findMemberWithCheckAllowed(
+                        answer.getMember(), isPostMethod,
+                        ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED)
+        );
+
+        answer.setArticle(
+                findVerifiedArticle(answer.getArticle().getArticleId())
         );
 
         return answerRepository.save(answer);
     }
 
     public Answer updateAnswer(Answer answer) {
-        Answer findAnswer = findVerifiedAnswer(answer);
+        Answer findAnswer = findVerifiedAnswer(answer, true);
 
         authenticationUtils.findMemberWithCheckAllowed(
                 findAnswer.getMember(), false,
@@ -55,6 +56,7 @@ public class AnswerService {
         return answerRepository.save(findAnswer);
     }
 
+    @Transactional(readOnly = true)
     public Page<Answer> findAnswers(Long articleId, Integer page, Integer size) {
         return answerRepository.findAnswersByArticleArticleId(
                 articleId,
@@ -85,10 +87,10 @@ public class AnswerService {
         article.setArticleId(articleId);
         answer.setArticle(article);
 
-        return findVerifiedAnswer(answer);
+        return findVerifiedAnswer(answer, true);
     }
 
-    public Answer findVerifiedAnswer(Answer answer) {
+    public Answer findVerifiedAnswer(Answer answer, boolean isCheckVerifyArticle) {
         Optional<Answer> optionalAnswer = answerRepository.findById(answer.getAnswerId());
 
         Answer findAnswer = optionalAnswer.orElseThrow( () ->
@@ -98,9 +100,10 @@ public class AnswerService {
         if(!Objects.equals(findAnswer.getAnswerId(), answer.getAnswerId()))
             throw new BusinessLogicException(ExceptionCode.ANSWER_NOT_MATCHED);
 
-        if(!Objects.equals(findAnswer.getArticle().getArticleId(), answer.getArticle().getArticleId()))
-            throw new BusinessLogicException(ExceptionCode.ARTICLE_NOT_MATCHED);
-
+        if(isCheckVerifyArticle) {
+            if (!Objects.equals(findAnswer.getArticle().getArticleId(), answer.getArticle().getArticleId()))
+                throw new BusinessLogicException(ExceptionCode.ARTICLE_NOT_MATCHED);
+        }
         return findAnswer;
     }
 
