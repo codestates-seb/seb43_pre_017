@@ -9,6 +9,7 @@ import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.article.service.ArticleService;
 import com.homunculus.preproject.member.entity.Member;
 import com.homunculus.preproject.member.service.MemberService;
+import com.homunculus.preproject.response.details.AnswerResponseDetails;
 import org.mapstruct.Mapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -49,6 +50,8 @@ public interface AnswerMapper {
 
         return result;
     };
+
+    AnswerResponseDto answerToAnswerResponseDto(Answer answer);
 
     default AnswerResponseDto answersToAnswerResponseDto(Long articleId, List<Answer> answers) {
         AnswerResponseDto result = new AnswerResponseDto();

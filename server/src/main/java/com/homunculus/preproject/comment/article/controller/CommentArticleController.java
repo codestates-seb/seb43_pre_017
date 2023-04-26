@@ -61,6 +61,16 @@ public class CommentArticleController {
                         CommentArticleSimpleResponseMessages.COMMENT_ARTICLE_MESSAGE_PATCH),
                 HttpStatus.OK);
     }
+    @GetMapping(COMMENT_ARTICLE_DEFAULT_URL + "/{articleId}" + COMMENT_ARTICLE_DEFAULT_URL_DETAIL + "/{commentId}")
+    public ResponseEntity getCommentArticle(@PathVariable("articleId") @Positive Long articleId,
+                                            @PathVariable("commentId") @Positive Long commentId) {
+
+        CommentArticle commentArticle = commentArticleService.findCommentArticle(commentId);
+
+        return new ResponseEntity<>(
+                mapper.commentArticleToCommentArticleSimpleResponseDto(commentArticle, CommentArticleSimpleResponseMessages.COMMENT_ARTICLE_MESSAGE_DELETE),
+                HttpStatus.OK);
+    }
 
     @GetMapping(COMMENT_ARTICLE_DEFAULT_URL + "/{articleId}" + COMMENT_ARTICLE_ALL_MAPPING_URL)
     public ResponseEntity getAllCommentArticles(@PathVariable("articleId") @Positive Long articleId,

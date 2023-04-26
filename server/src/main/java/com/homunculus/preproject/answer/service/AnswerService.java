@@ -16,14 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
 import java.util.Objects;
 import java.util.Optional;
 @Slf4j
@@ -130,17 +124,22 @@ public class AnswerService {
 
     public Answer findVerifiedAnswer(Answer answer) {
 
-        Optional<Answer> optionalAnswer = answerRepository.findById(answer.getAnswerId());
-        if (answer == null || optionalAnswer.isEmpty()) {
-            throw new BusinessLogicException(ExceptionCode.ANSWER_NOT_FOUND);
+        if (answer == null || answer.getAnswerId() == null) {
+            throw new IllegalArgumentException("answer or answerId cannot be null");
         }
 
-        Answer foundAnswer = optionalAnswer.get();
-        if (!Objects.equals(foundAnswer.getArticle().getArticleId(), answer.getArticle().getArticleId())) {
-            throw new BusinessLogicException(ExceptionCode.ARTICLE_NOT_MATCHED);
+        Answer foundAnswer = answerRepository.findById(answer.getAnswerId())
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ANSWER_NOT_FOUND));
+
+        if (foundAnswer.getArticle() == null || answer.getArticle() == null || !Objects.equals(foundAnswer.getArticle().getArticleId(), answer.getArticle().getArticleId())) {
+            throw new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND);
         }
 
         return foundAnswer;
+    }
+
+    public Answer findVerifiedAnswer(Long answerId) {
+        return answerRepository.findById(answerId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ANSWER_NOT_FOUND));
     }
 
     public Article findVerifiedArticle(long articleId) {

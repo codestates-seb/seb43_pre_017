@@ -58,6 +58,11 @@ public class CommentAnswerService {
 
         return deletedComment;
     }
+    @Transactional(readOnly = true)
+    public CommentAnswer findCommentAnswer(Long commentAnswerId){
+        return commentAnswerRepository.findById(commentAnswerId).orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
+    }
 
     @Transactional(readOnly = true)
     public Page<CommentAnswer> findCommentAnswers(Long answerId, Integer page, Integer size) {

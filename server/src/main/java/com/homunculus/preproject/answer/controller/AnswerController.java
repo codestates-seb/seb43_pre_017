@@ -6,6 +6,8 @@ import com.homunculus.preproject.answer.mapper.AnswerMapper;
 import com.homunculus.preproject.answer.mapper.AnswerSimpleResponseMessages;
 import com.homunculus.preproject.answer.service.AnswerService;
 import com.homunculus.preproject.article.service.ArticleService;
+import com.homunculus.preproject.exception.BusinessLogicException;
+import com.homunculus.preproject.exception.ExceptionCode;
 import com.homunculus.preproject.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -66,8 +68,23 @@ public class AnswerController {
         Answer answer = mapper.answerPatchDtoToAnswer(answerDtoPatch, memberService, articleService);
         Answer updatedAnswer = answerService.updateAnswer(answer);
 
+        if (answerDtoPatch.getAnswerId() != answerId) {
+            throw new BusinessLogicException(ExceptionCode.ANSWER_NOT_FOUND);
+        }
+
         return new ResponseEntity<>(
                 mapper.answerToAnswerSimpleResponseDto(updatedAnswer, AnswerSimpleResponseMessages.ANSWER_MESSAGE_PATCH),
+                HttpStatus.OK);
+    }
+
+    @GetMapping(ANSWER_DEFAULT_URL + "/{articleId}" + ANSWER_DEFAULT_URL_DETAIL + "/{answerId}")
+    public ResponseEntity getAnswer(@PathVariable("articleId") @Positive Long articleId,
+                                    @PathVariable("answerId") @Positive Long answerId) {
+
+        Answer answer = answerService.findVerifiedAnswer(answerId);
+
+        return new ResponseEntity<>(
+                mapper.answerToAnswerResponseDto(answer),
                 HttpStatus.OK);
     }
 

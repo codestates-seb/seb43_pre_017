@@ -58,7 +58,12 @@ public class CommentArticleService {
 
         return deletedComment;
     }
-
+    @Transactional(readOnly = true)
+    public CommentArticle findCommentArticle(Long commentArticleId) {
+        return commentArticleRepository.findById(commentArticleId).orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND
+        ));
+    }
     @Transactional(readOnly = true)
     public Page<CommentArticle> findCommentArticles(Long articleId, Integer page, Integer size) {
         return commentArticleRepository.findCommentArticlesByArticleArticleId(

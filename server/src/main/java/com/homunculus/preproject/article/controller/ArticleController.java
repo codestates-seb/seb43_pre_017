@@ -52,7 +52,7 @@ public class ArticleController {
         articleDtoPatch.setArticleId(articleId);
         Article updatedArticle = articleService.updateArticle(mapper.articlePatchDtoToArticle(articleDtoPatch, memberService));
 
-        if (updatedArticle.getArticleId() != articleId) {
+        if (articleDtoPatch.getArticleId() != articleId) {
             throw new BusinessLogicException(ExceptionCode.ARTICLE_NOT_FOUND);
         }
 
