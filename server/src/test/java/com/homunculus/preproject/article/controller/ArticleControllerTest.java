@@ -8,7 +8,7 @@ import com.homunculus.preproject.article.dto.ArticleSimpleResponseDto;
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.article.mapper.ArticleMapper;
 import com.homunculus.preproject.article.service.ArticleService;
-import com.homunculus.preproject.member.service.MemberService;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -41,8 +42,9 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.is;
+
 
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(ArticleController.class)
@@ -52,10 +54,8 @@ class ArticleControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private ArticleService articleService;
-
     @MockBean
     private ArticleMapper mapper;
 
@@ -64,7 +64,6 @@ class ArticleControllerTest {
 
     @Test
     @DisplayName("Article 등록 테스트")
-    @WithMockUser(username = "유저이름", roles = "USER")
     void postArticleTest() throws Exception {
         // given
         final String postTitle = "등록할 질문글 제목";
@@ -79,8 +78,8 @@ class ArticleControllerTest {
         given(mapper.articlePostDtoToArticle(any(),any())).willReturn(new Article());
 
         ArticleSimpleResponseDto responseDto = new ArticleSimpleResponseDto();
-        responseDto.setMessage(responseContent);
         responseDto.setArticleId(articleId);
+        responseDto.setMessage(responseContent);
         given(mapper.articleToArticleSimpleResponseDto(any(), any())).willReturn(responseDto);
 
         given(articleService.createArticle(any())).willReturn(new Article());
@@ -120,7 +119,7 @@ class ArticleControllerTest {
 
     @Test
     @DisplayName("Article 수정 테스트")
-    @WithMockUser(username = "유저이름", roles = "USER")
+    @WithMockUser(username = "testuser", roles = "USER")
     void patchArticle() throws Exception {
         // given
         final String patchTitle = "수정할 질문글 제목";

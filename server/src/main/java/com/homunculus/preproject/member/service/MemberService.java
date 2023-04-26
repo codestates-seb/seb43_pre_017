@@ -20,9 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@Service
-@Transactional
 @Slf4j
+@Transactional
+@Service
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -117,3 +117,5 @@ public class MemberService {
 
 
 }
+
+

@@ -1,21 +1,17 @@
 package com.homunculus.preproject.article.controller;
 
 import com.homunculus.preproject.article.dto.ArticleDto;
-import com.homunculus.preproject.article.dto.ArticleResponseDetailsDto;
-import com.homunculus.preproject.article.dto.ArticleResponseDto;
-import com.homunculus.preproject.article.dto.ArticleSimpleResponseDto;
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.article.mapper.ArticleMapper;
 import com.homunculus.preproject.article.mapper.ArticleSimpleResponseMessages;
 import com.homunculus.preproject.article.service.ArticleService;
 import com.homunculus.preproject.member.service.MemberService;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +20,6 @@ import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
-@RequiredArgsConstructor
 @Validated
 public class ArticleController {
     private static final String ARTICLE_DEFAULT_URL = "/api/article";
@@ -32,6 +27,11 @@ public class ArticleController {
     private final MemberService memberService;
     private final ArticleService articleService;
     private final ArticleMapper mapper;
+    public ArticleController(MemberService memberService, ArticleService articleService, ArticleMapper mapper) {
+        this.memberService = memberService;
+        this.articleService = articleService;
+        this.mapper = mapper;
+    }
 
     @PostMapping(ARTICLE_DEFAULT_URL)
     public ResponseEntity postArticle(@Valid @RequestBody ArticleDto.Post articleDtoPost) {
