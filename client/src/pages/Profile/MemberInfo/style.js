@@ -1,8 +1,7 @@
 import styled from "styled-components";
 
-export const StyledUserInfo = styled.div`
-  /* border: 1px solid rgba(0, 0, 0, 0.2); */
-  height: calc(100% - 600px);
+export const StyledMemberInfo = styled.div`
+  /* height: calc(100% - 600px); */
 `;
 
 /** 20230420 - 유저 이미지 - by sinyaenok*/
@@ -45,5 +44,8 @@ export const StyledEditBtn = styled.div`
     font-size: 14px;
     border-radius: 3px;
     padding: 10px 16px 10px;
+    :hover {
+      background-color: ${({ theme }) => theme.colors.gray200};
+    }
   }
 `;

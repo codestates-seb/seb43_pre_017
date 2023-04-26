@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
 const StyledProfile = styled.div`
-  height: 100%;
   max-width: 1100px;
   width: calc(100% - 164px);
+  height: 100%;
   padding: 24px;
   background-color: ${({ theme }) => theme.colors.gray50};
 

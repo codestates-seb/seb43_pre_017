@@ -1,6 +1,6 @@
 //component
-import UserInfo from "./UserInfo/index";
-import UserQAs from "./UserQAs/index";
+import MemberInfo from "./MemberInfo/index";
+import MemberQAs from "./MemberQAs/index";
 
 //style
 import StyledProfile from "./style";
@@ -9,8 +9,8 @@ import StyledProfile from "./style";
 const Profile = () => {
   return (
     <StyledProfile>
-      <UserInfo />
-      <UserQAs />
+      <MemberInfo />
+      <MemberQAs />
     </StyledProfile>
   );
 };

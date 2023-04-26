@@ -1,6 +1,6 @@
 //style
 import {
-  StyledUserInfo,
+  StyledMemberInfo,
   StyledImgBox,
   StyledInfoBox,
   StyledEditBtn,
@@ -17,12 +17,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCakeCandles } from "@fortawesome/free-solid-svg-icons";
 
 /** 20230420 - 멤버 상세정보 페이지(이름, 날짜, 수정버튼) - by sinyaenok*/
-const UserInfo = () => {
+const MemberInfo = () => {
   const { id } = useParams();
   const member = dummy.members.find((member) => member.id === parseInt(id));
 
   return (
-    <StyledUserInfo className="d-flex mb10">
+    <StyledMemberInfo className="d-flex mb10">
       <StyledImgBox className="d-flex ai-center">
         <Link to="/profile">
           <img width="128" height="128" src={member.img} alt="유저 정보" />
@@ -43,8 +43,8 @@ const UserInfo = () => {
           <div className="editBtn">Edit Profile</div>
         </Link>
       </StyledEditBtn>
-    </StyledUserInfo>
+    </StyledMemberInfo>
   );
 };
 
-export default UserInfo;
+export default MemberInfo;
