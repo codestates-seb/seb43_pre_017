@@ -8,7 +8,6 @@ import com.homunculus.preproject.comment.answer.dto.CommentAnswerResponseDto;
 import com.homunculus.preproject.member.entity.Member;
 import org.mapstruct.Mapper;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,7 @@ public interface CommentAnswerMapper {
         result.setMember(member);
 
         return result;
-    };
+    }
 
     default CommentAnswer commentAnswerPatchDtoToCommentAnswer(CommentAnswerDto.Patch commentDtoPatch) {
         CommentAnswer result = new CommentAnswer();
@@ -63,7 +62,7 @@ public interface CommentAnswerMapper {
 
                 CommentAnswerResponseDto.Comments.Member member = new CommentAnswerResponseDto.Comments.Member();
                 member.setId(src.getMember().getMemberId());
-                member.setName(src.getMember().getName());
+                member.setName(src.getMember().getUserName());
                 comment.setMember(member);
 
                 comment.setCreatedAt(src.getCreatedAt());

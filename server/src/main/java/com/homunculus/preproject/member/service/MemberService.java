@@ -64,8 +64,8 @@ public class MemberService {
 
         Optional.ofNullable(member.getEmail())
                 .ifPresent(findMember::setEmail);
-        Optional.ofNullable(member.getName())
-                .ifPresent(findMember::setName);
+        Optional.ofNullable(member.getUserName())
+                .ifPresent(findMember::setUserName);
         Optional.ofNullable(member.getMemberStatus())
                 .ifPresent(findMember::setMemberStatus);
 
@@ -98,6 +98,8 @@ public class MemberService {
     public Member findVerifiedMemberByEmail(String email) {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         Member findMember = optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        log.info("member: id[{}], email[{}], names[{}]", findMember.getMemberId(), findMember.getEmail(), findMember.getUserName());
+
         return findMember;
     }
 

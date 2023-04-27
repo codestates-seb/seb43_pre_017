@@ -66,7 +66,7 @@ public interface CommentArticleMapper {
 
                 CommentArticleResponseDto.Comments.Member member = new CommentArticleResponseDto.Comments.Member();
                 member.setId(src.getMember().getMemberId());
-                member.setName(src.getMember().getName());
+                member.setName(src.getMember().getUserName());
                 comment.setMember(member);
 
                 comment.setCreatedAt(src.getCreatedAt());

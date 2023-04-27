@@ -18,11 +18,11 @@ public class EvaluationArticle {
     private Long evaluationId;
     private String evaluationArticleScore;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.DETACH})
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
     @JoinColumn(name = "ARTICLE_ID")
     private Article article;
 

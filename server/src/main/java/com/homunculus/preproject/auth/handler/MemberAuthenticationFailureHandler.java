@@ -27,7 +27,6 @@ public class MemberAuthenticationFailureHandler implements AuthenticationFailure
 
         sendErrorResponse(response, exception);
     }
-
     private void sendErrorResponse(HttpServletResponse response,
                                    AuthenticationException exception) throws IOException{
 

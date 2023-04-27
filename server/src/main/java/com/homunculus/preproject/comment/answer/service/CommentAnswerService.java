@@ -1,21 +1,17 @@
 package com.homunculus.preproject.comment.answer.service;
 
 import com.homunculus.preproject.answer.entity.Answer;
+import com.homunculus.preproject.answer.service.AnswerService;
 import com.homunculus.preproject.comment.answer.entity.CommentAnswer;
 import com.homunculus.preproject.comment.answer.repository.CommentAnswerRepository;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
-import com.homunculus.preproject.member.entity.Member;
-import com.homunculus.preproject.member.service.MemberService;
+import com.homunculus.preproject.utils.AuthenticationUtils;
 import com.homunculus.preproject.utils.CustomBeanUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,12 +24,21 @@ import java.util.Optional;
 public class CommentAnswerService {
 
     private final CommentAnswerRepository commentAnswerRepository;
-    private final MemberService memberService;
+    private final AuthenticationUtils authenticationUtils;
+    private final AnswerService answerService;
+    private final CustomBeanUtils customBeanUtils;
 
     public CommentAnswer createCommentAnswer(CommentAnswer comment) {
 
         comment.setMember(
-            checkAllowedMember(comment, true)
+                authenticationUtils.findMemberWithCheckAllowed(
+                        comment.getMember(), true,
+                        ExceptionCode.COMMENT_MEMBER_NOT_ALLOWED)
+        );
+
+        comment.setAnswer(
+                answerService.findVerifiedAnswer(
+                        comment.getAnswer(), false)
         );
 
         return commentAnswerRepository.save(comment);
@@ -42,17 +47,23 @@ public class CommentAnswerService {
     public CommentAnswer updateCommentAnswer(CommentAnswer comment) {
         CommentAnswer findComment = findVerifiedAnswer(comment);
 
-        findComment.setMember(
-            checkAllowedMember(findComment, false)
+        comment.setMember(
+                authenticationUtils.findMemberWithCheckAllowed(
+                        findComment.getMember(), false,
+                        ExceptionCode.COMMENT_MEMBER_NOT_ALLOWED)
         );
 
-        return CustomBeanUtils.copyNonNullProperties(comment, findComment);
+        Optional.ofNullable(comment.getContent()).ifPresent(findComment::setContent);
+
+        return commentAnswerRepository.save(findComment);
     }
 
     public CommentAnswer deleteCommentAnswer(Long answerId, Long commentId) {
         CommentAnswer deletedComment = findVerifiedCommentAnswer(answerId, commentId);
 
-        checkAllowedMember(deletedComment, false);
+        authenticationUtils.findMemberWithCheckAllowed(
+                deletedComment.getMember(), false,
+                ExceptionCode.COMMENT_MEMBER_NOT_ALLOWED);
 
         commentAnswerRepository.deleteById(commentId);
 
@@ -67,23 +78,6 @@ public class CommentAnswerService {
         );
     }
 
-    public Member checkAllowedMember (CommentAnswer commentAnswer, boolean isCommentAnswerPost) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated())
-            throw new BusinessLogicException(ExceptionCode.INVALID_MEMBER);
-
-        Object principal = authentication.getPrincipal();
-        final String email = principal.toString();
-
-        if ( !isCommentAnswerPost ) {
-            if (!commentAnswer.getMember().getEmail().equals(email)) {
-                throw new BusinessLogicException(ExceptionCode.COMMENT_MEMBER_NOT_ALLOWED);
-            }
-        }
-
-        return memberService.findVerifiedMemberByEmail(email);
-    }
-
     private CommentAnswer findVerifiedCommentAnswer(Long answerId, Long commentId) {
         CommentAnswer comment = new CommentAnswer();
         comment.setCommentAnswerId(commentId);
@@ -95,7 +89,6 @@ public class CommentAnswerService {
         return findVerifiedAnswer(comment);
     }
 
-    @Transactional(readOnly = true)
     public CommentAnswer findVerifiedAnswer(CommentAnswer comment) {
         Optional<CommentAnswer> optionalComment = commentAnswerRepository.findById(comment.getCommentAnswerId());
 
@@ -108,5 +101,4 @@ public class CommentAnswerService {
 
         return findComment;
     }
-
 }

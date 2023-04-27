@@ -66,7 +66,7 @@ public interface AnswerMapper {
 
                 AnswerResponseDto.Answers.Member member = new AnswerResponseDto.Answers.Member();
                 member.setId(src.getMember().getMemberId());
-                member.setName(src.getMember().getName());
+                member.setName(src.getMember().getUserName());
                 answer.setMember(member);
 
                 AnswerResponseDto.Answers.Count count = new AnswerResponseDto.Answers.Count();
