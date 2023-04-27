@@ -58,16 +58,11 @@ const Signup = () => {
       password: password,
     };
     axios
-      .post(
-        "http://ec2-54-180-96-72.ap-northeast-2.compute.amazonaws.com:8080/api/signup",
-        reqbody,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: "true",
+      .post(`${process.env.REACT_APP_BASE_URL}/api/signup`, reqbody, {
+        headers: {
+          "Content-Type": "application/json",
         },
-      )
+      })
       .then((res) => {
         dispatch(signupAction());
         toast.success("성공");
@@ -114,7 +109,7 @@ const Signup = () => {
           ) : null}
           <StyledTitle>password</StyledTitle>
           <StyledSignupInput
-            ype="password"
+            type="password"
             name="password"
             value={password}
             onChange={handlePasswordChange}
