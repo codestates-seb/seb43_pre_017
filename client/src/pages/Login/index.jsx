@@ -62,7 +62,6 @@ const login = () => {
     axios
       .post(`${process.env.REACT_APP_BASE_URL}/api/login`, reqbody, headers)
       .then((res) => {
-        console.log(res.data);
         const accessToken = res.headers.get("Authorization");
         const refreshToken = res.headers.get("refresh");
         localStorage.setItem("Authorization", accessToken);
@@ -77,7 +76,7 @@ const login = () => {
       })
       // 새로고침했을때 로컬스토리지에 있는 토큰을 꺼내서  axios.defaults.headers.common에 넣는 기능, axios 인터셉트
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         toast.error("실패");
         setEmail("");
         setPassword("");

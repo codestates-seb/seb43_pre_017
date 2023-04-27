@@ -5,12 +5,8 @@ import Pagination from "./Paigination";
 import StyledAllcontent, { StyledListContainer } from "./style";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { useStore } from "../../store/reducers";
-function Home() {
-  // 페이지네이션
-  const result = useStore();
-  console.log(result);
 
+function Home() {
   const [lists, setLists] = useState([]);
   const [limit, setLimit] = useState(15);
   const [page, setPage] = useState(1);
@@ -38,7 +34,7 @@ function Home() {
         toast.error(error);
       });
   }, [sort]);
-  console.log(lists);
+
   return (
     <StyledAllcontent>
       <StyledListContainer>

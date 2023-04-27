@@ -2,11 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
 // api
-// import { evaluationApiService } from "../apis";
-import {
-  uploadDummyEvalutionOfAnswer,
-  uploadDummyEvalutionOfArticle,
-} from "../../_dummy";
+import { evaluationApiService } from "../apis";
 
 /** 2023/04/23 - 특정 article의 evaluation 추가 요청 thunk - by 1-blue */
 const uploadEvaluationOfArticleThunk = createAsyncThunk(
@@ -16,9 +12,7 @@ const uploadEvaluationOfArticleThunk = createAsyncThunk(
   // promise를 반환하는 액션 작성
   async (body, { rejectWithValue }) => {
     try {
-      // FIXME: 가짜 데이터
-      // const { data } = await evaluationApiService.apiEvaluationOfArticle(body);
-      const data = await uploadDummyEvalutionOfArticle();
+      const { data } = await evaluationApiService.apiEvaluationOfArticle(body);
 
       return data;
     } catch (error) {
@@ -43,9 +37,7 @@ const uploadEvaluationOfAnswerThunk = createAsyncThunk(
   // promise를 반환하는 액션 작성
   async (body, { rejectWithValue }) => {
     try {
-      // FIXME: 가짜 데이터
-      // const { data } = await evaluationApiService.apiEvaluationOfAnswer(body);
-      const data = await uploadDummyEvalutionOfAnswer();
+      const { data } = await evaluationApiService.apiEvaluationOfAnswer(body);
 
       return data;
     } catch (error) {

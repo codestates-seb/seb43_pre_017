@@ -2,15 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
 // api
-// import { commentApiService } from "../apis";
-import {
-  createDummyCommentOfAnswer,
-  createDummyCommentOfArticle,
-  deleteDummyCommentOfAnswer,
-  deleteDummyCommentOfArticle,
-  updateDummyCommentOfAnswer,
-  updateDummyCommentOfArticle,
-} from "../../_dummy";
+import { commentApiService } from "../apis";
 
 /** 2023/04/20 - 특정 article의 댓글 패치 요청 thunk - by 1-blue */
 const createCommentOfArticleThunk = createAsyncThunk(
@@ -20,9 +12,7 @@ const createCommentOfArticleThunk = createAsyncThunk(
   // promise를 반환하는 액션 작성
   async (body, { rejectWithValue }) => {
     try {
-      // FIXME:
-      // const { data } = await commentApiService.apiCreateCommentOfArticle(body);
-      const data = await createDummyCommentOfArticle();
+      const { data } = await commentApiService.apiCreateCommentOfArticle(body);
 
       return data;
     } catch (error) {
@@ -46,8 +36,7 @@ const updateCommentOfArticleThunk = createAsyncThunk(
   // promise를 반환하는 액션 작성
   async (body, { rejectWithValue }) => {
     try {
-      // const { data } = await commentApiService.apiUpdateCommentOfArticle(body);
-      const data = await updateDummyCommentOfArticle();
+      const { data } = await commentApiService.apiUpdateCommentOfArticle(body);
 
       return data;
     } catch (error) {
@@ -71,8 +60,7 @@ const deleteCommentOfArticleThunk = createAsyncThunk(
   // promise를 반환하는 액션 작성
   async (body, { rejectWithValue }) => {
     try {
-      // const { data } = await commentApiService.apiDeleteCommentOfArticle(body);
-      const data = await deleteDummyCommentOfArticle();
+      const { data } = await commentApiService.apiDeleteCommentOfArticle(body);
 
       return data;
     } catch (error) {
@@ -97,8 +85,7 @@ const createCommentOfAnswerThunk = createAsyncThunk(
   // promise를 반환하는 액션 작성
   async (body, { rejectWithValue }) => {
     try {
-      // const { data } = await commentApiService.apiCreateCommentOfAnswer(body);
-      const data = await createDummyCommentOfAnswer();
+      const { data } = await commentApiService.apiCreateCommentOfAnswer(body);
 
       return data;
     } catch (error) {
@@ -122,8 +109,7 @@ const updateCommentOfAnswerThunk = createAsyncThunk(
   // promise를 반환하는 액션 작성
   async (body, { rejectWithValue }) => {
     try {
-      // const { data } = await commentApiService.apiUpdateCommentOfAnswer(body);
-      const data = await updateDummyCommentOfAnswer();
+      const { data } = await commentApiService.apiUpdateCommentOfAnswer(body);
 
       return data;
     } catch (error) {
@@ -147,8 +133,7 @@ const deleteCommentOfAnswerThunk = createAsyncThunk(
   // promise를 반환하는 액션 작성
   async (body, { rejectWithValue }) => {
     try {
-      // const { data } = await commentApiService.apiDeleteCommentOfAnswer(body);
-      const data = await deleteDummyCommentOfAnswer();
+      const { data } = await commentApiService.apiDeleteCommentOfAnswer(body);
 
       return data;
     } catch (error) {

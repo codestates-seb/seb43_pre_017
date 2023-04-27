@@ -2,11 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
 // api
-// import { commentsApiService } from "../apis";
-import {
-  fetchDummyCommentOfAnswer,
-  fetchDummyCommentOfArticle,
-} from "../../_dummy";
+import { commentsApiService } from "../apis";
 
 /** 2023/04/20 - 특정 article의 댓글들 패치 요청 thunk - by 1-blue */
 const fetchCommentsOfArticleThunk = createAsyncThunk(
@@ -16,9 +12,7 @@ const fetchCommentsOfArticleThunk = createAsyncThunk(
   // promise를 반환하는 액션 작성
   async (body, { rejectWithValue }) => {
     try {
-      // FIXME: 가짜 데이터
-      // const { data } = await commentsApiService.apiFetchCommentsOfArticle(body);
-      const data = await fetchDummyCommentOfArticle();
+      const { data } = await commentsApiService.apiFetchCommentsOfArticle(body);
 
       return data;
     } catch (error) {
@@ -43,9 +37,7 @@ const fetchCommentsOfAnswerThunk = createAsyncThunk(
   // promise를 반환하는 액션 작성
   async (body, { rejectWithValue }) => {
     try {
-      // FIXME: 가짜 데이터
-      // const { data } = await commentsApiService.apiFetchCommentsOfAnswer(body);
-      const data = await fetchDummyCommentOfAnswer();
+      const { data } = await commentsApiService.apiFetchCommentsOfAnswer(body);
 
       return data;
     } catch (error) {

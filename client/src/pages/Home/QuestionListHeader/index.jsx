@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { useStore } from "../../../store/reducers";
+
 import StyledQuestionHeader, {
   StyledInfo,
   StyledPageMove,
@@ -10,8 +12,10 @@ import StyledQuestionHeader, {
 } from "./style";
 
 function QuestionListHeader({ totalQNum, setSort }) {
+  const {
+    Userdata: { email },
+  } = useStore();
   const [clicked, setClicked] = useState("Newest");
-  const token = localStorage.getItem("accessToken");
 
   const handleBtnClick = (e) => {
     setClicked(e.target.innerText);
@@ -21,12 +25,11 @@ function QuestionListHeader({ totalQNum, setSort }) {
       setSort("questionId");
     }
   };
-
   return (
     <StyledQuestionHeader>
       <StyledInfo>
         All Questions
-        <StyledPageMove to={token ? "/questions/ask" : "/login"}>
+        <StyledPageMove to={email ? "/questions/ask" : "/login"}>
           <StyledAskBtn>Ask Question</StyledAskBtn>
         </StyledPageMove>
       </StyledInfo>

@@ -3,10 +3,6 @@ import { AxiosError } from "axios";
 
 // api
 import { answerApiService } from "../apis";
-import {
-  createDummyAnswerOfArticle,
-  deleteDummyAnswerOfArticle,
-} from "../../_dummy";
 
 /** 2023/04/20 - 특정 article에 answer 생성 요청 thunk - by 1-blue */
 const createAnswerThunk = createAsyncThunk(
@@ -15,8 +11,7 @@ const createAnswerThunk = createAsyncThunk(
   // promise를 반환하는 액션 작성
   async (body, { rejectWithValue }) => {
     try {
-      // const { data } = await answerApiService.apiCreateAnswerOfArticle(body);
-      const data = await createDummyAnswerOfArticle(body);
+      const { data } = await answerApiService.apiCreateAnswerOfArticle(body);
 
       return data;
     } catch (error) {
@@ -64,8 +59,7 @@ const deleteAnswerThunk = createAsyncThunk(
   // promise를 반환하는 액션 작성
   async (body, { rejectWithValue }) => {
     try {
-      // const { data } = await answerApiService.apiDeleteAnswerOfArticle(body);
-      const data = await deleteDummyAnswerOfArticle();
+      const { data } = await answerApiService.apiDeleteAnswerOfArticle(body);
 
       return data;
     } catch (error) {

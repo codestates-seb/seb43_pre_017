@@ -63,14 +63,13 @@ const Signup = () => {
           "Content-Type": "application/json",
         },
       })
-      .then((res) => {
+      .then(() => {
         dispatch(signupAction());
         toast.success("성공");
         navigate("/login");
-        console.log(res);
       })
       .catch((err) => {
-        console.log(err.data);
+        console.error(err.data);
         toast.error("실패");
         setEmail("");
         setPassword("");

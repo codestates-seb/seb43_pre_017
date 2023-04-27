@@ -371,7 +371,7 @@ const ariticleSlice = createSlice({
         state.deleteAnswerOfArticleDone = action.payload.message;
 
         state.article.answers = state.article.answers.filter(
-          (answer) => answer.id !== +action.payload.answerId,
+          (answer) => answer.id !== +action.meta.arg.answerId,
         );
       },
     );
@@ -511,6 +511,7 @@ const ariticleSlice = createSlice({
           createdAt: "2023-04-19T21:00:00",
           updatedAt: "2023-04-19T21:00:00",
         });
+        state.article.answers[targetIndex].count.comments += 1;
       },
     );
     builder.addCase(
@@ -581,6 +582,8 @@ const ariticleSlice = createSlice({
           state.article.answers[targetAnswerIndex].comments.filter(
             (comment) => comment.id !== +action.meta.arg.commentId,
           );
+
+        state.article.answers[targetAnswerIndex].count.comments -= 1;
       },
     );
     builder.addCase(
