@@ -14,12 +14,15 @@ export const StyledImgBox = styled.div`
 
 /** 20230420 - 유저 이름, 생성일 - by sinyaenok*/
 export const StyledInfoBox = styled.div`
-  #user-name {
+  #member-name {
     font-size: 30px;
     flex-grow: 1;
   }
-  #user-info {
+  #member-info {
     flex-grow: 1;
+  }
+  #member-info > div {
+    color: ${({ theme }) => theme.colors.gray500};
   }
   .icon-cack {
     padding: 0 5px 0 3px;

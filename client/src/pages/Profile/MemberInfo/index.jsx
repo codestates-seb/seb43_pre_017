@@ -29,10 +29,10 @@ const MemberInfo = () => {
         </Link>
       </StyledImgBox>
       <StyledInfoBox className="d-flex di-column ">
-        <div id="user-name" className="d-flex ai-end mb10">
+        <div id="member-name" className="d-flex ai-end mb10">
           {member.name}
         </div>
-        <div id="user-info" className="d-flex fw">
+        <div id="member-info" className="d-flex fw">
           <FontAwesomeIcon icon={faCakeCandles} className="icon-cack" />
           <div>member created for {member.createdAt}</div>
         </div>

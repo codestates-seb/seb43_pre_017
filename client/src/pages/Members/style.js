@@ -3,7 +3,6 @@ import styled from "styled-components";
 export const StyledMembers = styled.div`
   max-width: 1100px;
   width: calc(100% - 164px);
-  background-color: #fff;
   border-top-width: 0;
   border-bottom-width: 0;
   border-left-width: 1px;
@@ -87,7 +86,7 @@ export const StyledSearchFrom = styled.form`
 
   .search-bar {
     width: 250px;
-    background-color: #fff;
+    /* background-color: #fff; */
     border-radius: 3px;
     border: solid 1px rgba(0, 0, 0, 0.3);
     justify-content: center;
@@ -96,6 +95,7 @@ export const StyledSearchFrom = styled.form`
   }
 
   .search-bar-input {
+    background-color: transparent;
     width: 100%;
     height: 100%;
     border: none;
