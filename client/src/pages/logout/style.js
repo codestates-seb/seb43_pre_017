@@ -8,6 +8,7 @@ const StyledLogoutContainer = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  margin-top: 140px;
 `;
 
 /** 2023/04/23 로그아웃 페이지 로그아웃 폼 -by JHH0906 */

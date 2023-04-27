@@ -7,6 +7,7 @@ const StyledLogin = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top: 140px;
   cursor: pointer;
   .passwordError {
     width: 240px;
