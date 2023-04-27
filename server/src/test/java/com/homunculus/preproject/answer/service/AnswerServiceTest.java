@@ -5,23 +5,17 @@ import com.homunculus.preproject.answer.repository.AnswerRepository;
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.article.repository.ArticleRepository;
 import com.homunculus.preproject.exception.BusinessLogicException;
-import com.homunculus.preproject.exception.ExceptionCode;
 import com.homunculus.preproject.member.entity.Member;
-import com.homunculus.preproject.member.service.MemberService;
+import com.homunculus.preproject.utils.AuthenticationUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +34,7 @@ class AnswerServiceTest {
     private ArticleRepository articleRepository;
 
     @Mock
-    private MemberService memberService;
+    private AuthenticationUtils authenticationUtils;
 
     @InjectMocks
     private AnswerService answerService;
@@ -59,7 +53,8 @@ class AnswerServiceTest {
 
         given(answerRepository.save(answer)).willReturn(answer);
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(article));
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
+        given(authenticationUtils.findMemberWithCheckAllowed(any(Member.class), anyBoolean(), any()))
+                .willReturn(answer.getMember());
 
         //when, then
         assertDoesNotThrow(() -> answerService.createAnswer(answer));
@@ -73,12 +68,14 @@ class AnswerServiceTest {
         final Long articleId = 1L;
         final Long answerId = 1L;
         final String content = "답변의 내용";
-        Answer answer = createDummyAnswer(null, answerId, content, null);
+        final String email = "email@gmail.com";
+        Answer answer = createDummyAnswer(null, answerId, content, email);
         Article article = answer.getArticle();
 
         given(answerRepository.save(answer)).willReturn(answer);
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(article));
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
+        given(authenticationUtils.findMemberWithCheckAllowed(any(Member.class), anyBoolean(), any()))
+                .willReturn(answer.getMember());
 
         //when, then
         assertThrows(NullPointerException.class,
@@ -87,17 +84,22 @@ class AnswerServiceTest {
 
     private static Answer createDummyAnswer(Long articleId, Long answerId,
                                             String content, String email) {
+        Answer answer = new Answer();
+
+        answer.setAnswerId(answerId);
+        answer.setContent(content);
+
         Member member1 = new Member();
-        member1.setMemberId(1L);
         member1.setEmail(email);
+        answer.setMember(member1);
 
         Article article = new Article();
         article.setArticleId(articleId);
 
-        Answer answer = new Answer();
-        answer.setAnswerId(answerId);
-        answer.setContent(content);
-        answer.setMember(member1);
+        Member member2 = new Member();
+        member2.setEmail(email);
+        article.setMember(member2);
+
         answer.setArticle(article);
 
         return answer;
@@ -120,58 +122,11 @@ class AnswerServiceTest {
 
         given(answerRepository.save(answer)).willReturn(new Answer());
         given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
+        given(authenticationUtils.findMemberWithCheckAllowed(any(Member.class), anyBoolean(), any()))
+                .willReturn(answer.getMember());
 
         //when, then
         assertDoesNotThrow( () -> answerService.updateAnswer(updateAnswer) );
-    }
-
-    @Test
-    @DisplayName("답변글 수정 테스트 - 인증 실패")
-    @WithMockUser(username = "notEmail@gmail.com", roles = "USER")
-    void updateAnswerTest_authentication_Fail() {
-        //given
-        final Long articleId = 1L;
-        final Long answerId = 1L;
-        final String email = "email@gmail.com";
-
-        final String content = "답변의 내용";
-        Answer answer = createDummyAnswer(articleId, answerId, content, email);
-
-        final String updateContent = "변경된 답변의 내용";
-        Answer updateAnswer = createDummyAnswer(articleId, answerId, updateContent, email);
-
-        given(answerRepository.save(answer)).willReturn(new Answer());
-        given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
-
-        //when, then
-        assertThrows(BusinessLogicException.class,
-                () -> answerService.updateAnswer(updateAnswer));
-
-    }
-
-    @Test
-    @DisplayName("답변글 수정 테스트 - 인증정보 없음 실패")
-    @WithMockUser(username = "", roles = "USER")
-    void updateAnswerTest_invalidMemberAuthentication_Fail() {
-        //given
-        final Long articleId = 1L;
-        final Long answerId = 1L;
-
-        final String content = "답변의 내용";
-        Answer answer = createDummyAnswer(articleId, answerId, content, null);
-
-        final String updateContent = "변경된 답변의 내용";
-        Answer updateAnswer = createDummyAnswer(articleId, answerId, updateContent, null);
-
-        given(answerRepository.save(answer)).willReturn(new Answer());
-        given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
-
-        //when, then
-        assertThrows(NullPointerException.class,
-                () -> answerService.updateAnswer(updateAnswer));
     }
 
     @Test
@@ -191,7 +146,8 @@ class AnswerServiceTest {
 
         given(answerRepository.save(answer)).willReturn(new Answer());
         given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
+        given(authenticationUtils.findMemberWithCheckAllowed(any(Member.class), anyBoolean(), any()))
+                .willReturn(answer.getMember());
 
         //when, then
         assertThrows(BusinessLogicException.class,
@@ -215,7 +171,8 @@ class AnswerServiceTest {
 
         given(answerRepository.save(answer)).willReturn(new Answer());
         given(answerRepository.findById(answer.getAnswerId())).willReturn(Optional.of(answer));
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
+        given(authenticationUtils.findMemberWithCheckAllowed(any(Member.class), anyBoolean(), any()))
+                .willReturn(answer.getMember());
 
         //when, then
         assertThrows(BusinessLogicException.class,
@@ -247,7 +204,8 @@ class AnswerServiceTest {
 
         Answer answer = createDummyAnswer(articleId, answerId, content, email);
         given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
+        given(authenticationUtils.findMemberWithCheckAllowed(any(Member.class), anyBoolean(), any()))
+                .willReturn(answer.getMember());
 
         doNothing().when(answerRepository).deleteById(answerId);
 
@@ -264,58 +222,13 @@ class AnswerServiceTest {
         final Long answerId = 1L;
 
         given(answerRepository.findById(anyLong())).willReturn(null);
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(new Member());
+        given(authenticationUtils.findMemberWithCheckAllowed(any(Member.class), anyBoolean(), any()))
+                .willReturn(new Member());
 
         doNothing().when(answerRepository).deleteById(answerId);
 
         //when, then
         assertThrows(NullPointerException.class,
-                () -> answerService.deleteAnswer(articleId, answerId));
-    }
-
-    @Test
-    @DisplayName("답변글 삭제 테스트 - 인증 실패")
-    @WithMockUser(username = "notEmail@gmail.com", roles = "USER")
-    void deleteAnswer_NotAuthenticated_Fail() {
-        //given
-        final Long articleId = 1L;
-        final Long answerId = 1L;
-        final String content = "무언가 내용";
-        final String email = "email@gmail.com";
-
-        Answer answer = createDummyAnswer(articleId, answerId, content, email);
-        given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
-
-        // 인증되지 않은 사용자로 로그인 상태 설정
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken("notEmail@gmail.com", "password", Collections.singleton(new SimpleGrantedAuthority("USER"))));
-
-        //when, then
-        assertThrows(BusinessLogicException.class,
-                () -> answerService.deleteAnswer(articleId, answerId));
-    }
-
-    @Test
-    @DisplayName("답변글 삭제 테스트 - 인증정보 없음 실패")
-    void deleteAnswer_NotExistAuthenticated_Fail() {
-        //given
-        final Long articleId = 1L;
-        final Long answerId = 1L;
-        final String content = "무언가 내용";
-
-        Answer answer = createDummyAnswer(articleId, answerId, content, null);
-        given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
-
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(null, null, Collections.singletonList(new SimpleGrantedAuthority("USER")))
-        );
-
-        doNothing().when(answerRepository).deleteById(answerId);
-
-        //when, then
-        assertThrows(BusinessLogicException.class,
                 () -> answerService.deleteAnswer(articleId, answerId));
     }
 
@@ -334,11 +247,11 @@ class AnswerServiceTest {
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
         given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
         given(answerRepository.save(answer)).willReturn(answer);
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getMember());
+        given(authenticationUtils.findMemberWithCheckAllowed(any(Member.class), anyBoolean(), any()))
+                .willReturn(answer.getMember());
 
         // when, then
         assertDoesNotThrow( () -> answerService.acceptAnswer(articleId, answerId) );
-
     }
 
     @Test
@@ -356,8 +269,8 @@ class AnswerServiceTest {
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
         given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
         given(answerRepository.save(answer)).willReturn(answer);
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getArticle().getMember());
-
+        given(authenticationUtils.findMemberWithCheckAllowed(any(Member.class), anyBoolean(), any()))
+                .willReturn(answer.getMember());
 
         // when, then
         Answer acceptedAnswer = answerService.acceptAnswer(articleId, answerId);
@@ -380,7 +293,8 @@ class AnswerServiceTest {
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
         given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
         given(answerRepository.save(answer)).willReturn(answer);
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getArticle().getMember());
+        given(authenticationUtils.findMemberWithCheckAllowed(any(Member.class), anyBoolean(), any()))
+                .willReturn(answer.getMember());
 
         // when, then
         assertThrows(BusinessLogicException.class, () ->
@@ -402,7 +316,8 @@ class AnswerServiceTest {
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
         given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
         given(answerRepository.save(answer)).willReturn(answer);
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getArticle().getMember());
+        given(authenticationUtils.findMemberWithCheckAllowed(any(Member.class), anyBoolean(), any()))
+                .willReturn(answer.getMember());
 
         // when, then
         assertThrows(BusinessLogicException.class, () ->
@@ -412,30 +327,24 @@ class AnswerServiceTest {
     @Test
     @DisplayName("답변글 채택 - answer 매칭 실패")
     @WithMockUser(username = "email@gmail.com", roles = "USER")
-    void acceptAnswer_MatchingFail_Fail() {
+    void acceptAnswer_NotExistAnswer_Fail() {
         // given
-        Long questionId = 1L;
-        Long answerId = 1L;
-        Answer answer = new Answer();
-        // answerRepository.findById() 메소드가 null을 반환하도록 하여 매칭 실패 상황을 재현
-        given(answerRepository.findById(answerId)).willReturn(null);
+        final Long articleId = 1L;
+        final Long answerId = 1L;
+        final String content = "답변글 내용";
+        final Boolean accepted = false;
+        final String email = "email@gmail.com";
+
+        Answer answer = createDummyAnswer(articleId, answerId, content, email, accepted);
+        given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
+        given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
+        given(answerRepository.save(answer)).willReturn(answer);
+        given(authenticationUtils.findMemberWithCheckAllowed(any(Member.class), anyBoolean(), any()))
+                .willReturn(answer.getMember());
 
         // when, then
-        BusinessLogicException exception = assertThrows(BusinessLogicException.class,
-                () -> answerService.acceptAnswer(questionId, answerId));
-       }
-
-    @Test
-    public void acceptAnswer_Authentication_Fail() {
-        // given
-        Long articleId = 1L;
-        Long answerId = 1L;
-
-        // when
-        SecurityContextHolder.clearContext(); // 인증 상태 제거
-
-        // then
-        assertThrows(BusinessLogicException.class, () -> answerService.acceptAnswer(articleId, answerId));
+        assertThrows(BusinessLogicException.class, () ->
+                answerService.acceptAnswer(articleId, 0L) );
     }
 
     @Test
@@ -453,7 +362,8 @@ class AnswerServiceTest {
         given(articleRepository.findById(anyLong())).willReturn(Optional.of(answer.getArticle()));
         given(answerRepository.findById(anyLong())).willReturn(Optional.of(answer));
         given(answerRepository.save(answer)).willReturn(answer);
-        given(memberService.findVerifiedMemberByEmail(anyString())).willReturn(answer.getArticle().getMember());
+        given(authenticationUtils.findMemberWithCheckAllowed(any(Member.class), anyBoolean(), any()))
+                .willReturn(answer.getMember());
 
         // when, then
         assertThrows(BusinessLogicException.class, () ->

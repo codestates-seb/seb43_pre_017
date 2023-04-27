@@ -2,13 +2,10 @@ package com.homunculus.preproject.comment.article.controller;
 
 
 import com.homunculus.preproject.comment.article.dto.CommentArticleDto;
-import com.homunculus.preproject.comment.article.dto.CommentArticleResponseDto;
-import com.homunculus.preproject.comment.article.dto.CommentArticleSimpleResponseDto;
 import com.homunculus.preproject.comment.article.entity.CommentArticle;
 import com.homunculus.preproject.comment.article.mapper.CommentArticleMapper;
 import com.homunculus.preproject.comment.article.mapper.CommentArticleSimpleResponseMessages;
 import com.homunculus.preproject.comment.article.service.CommentArticleService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
