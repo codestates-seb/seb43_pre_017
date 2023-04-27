@@ -2,6 +2,7 @@ package com.homunculus.preproject.evaluation.article.service;
 
 import com.homunculus.preproject.article.entity.Article;
 import com.homunculus.preproject.article.repository.ArticleRepository;
+import com.homunculus.preproject.article.service.ArticleService;
 import com.homunculus.preproject.evaluation.article.entity.EvaluationArticle;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
@@ -18,12 +19,17 @@ import java.util.Optional;
 public class EvaluationArticleService {
 
     private final ArticleRepository articleRepository;
+    private final ArticleService articleService;
 
     public EvaluationArticle createEvaluationArticle(EvaluationArticle evaluationArticle) {
 
-        EvaluationArticle findEvaluationArticle = findVerifiedEvaluationArticle(evaluationArticle);
-        findEvaluationArticle.addEvaluationScore(evaluationArticle.getEvaluationArticleStatus());
-        articleRepository.save(findEvaluationArticle.getArticle());
+        evaluationArticle.setArticle(
+                articleService.findVerifiedArticle(
+                        evaluationArticle.getArticle().getArticleId())
+        );
+
+        evaluationArticle.addEvaluationScore();
+        articleRepository.save(evaluationArticle.getArticle());
 
         return evaluationArticle;
     }
