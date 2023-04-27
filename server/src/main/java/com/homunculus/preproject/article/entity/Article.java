@@ -34,17 +34,17 @@ public class Article extends Auditable {
     @Column(nullable = false)
     private Integer viewCount = 0;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Answer> answers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<EvaluationArticle> evaluationArticles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<CommentArticle> commentArticles = new ArrayList<>();
 
     @Enumerated(value = EnumType.STRING)

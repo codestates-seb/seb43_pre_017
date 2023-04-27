@@ -98,6 +98,8 @@ public class MemberService {
     public Member findVerifiedMemberByEmail(String email) {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         Member findMember = optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        log.info("member: id[{}], email[{}]", findMember.getMemberId(), findMember.getEmail());
+
         return findMember;
     }
 
