@@ -26,6 +26,7 @@ public class CommentArticleService {
     private final CommentArticleRepository commentArticleRepository;
     private final AuthenticationUtils authenticationUtils;
     private final ArticleService articleService;
+    private final CustomBeanUtils customBeanUtils;
 
     public CommentArticle createCommentArticle(CommentArticle comment) {
 
@@ -52,7 +53,9 @@ public class CommentArticleService {
                     ExceptionCode.COMMENT_MEMBER_NOT_ALLOWED)
         );
 
-        return CustomBeanUtils.copyNonNullProperties(comment, findComment);
+        Optional.ofNullable(comment.getContent()).ifPresent(findComment::setContent);
+
+        return commentArticleRepository.save(findComment);
     }
 
     public CommentArticle deleteCommentArticle(Long articleId, Long commentId) {

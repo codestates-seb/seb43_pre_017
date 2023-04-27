@@ -32,7 +32,7 @@ public class Member extends Auditable {
     private String password;
 
     @Column(length = 100, nullable = false)
-    private String name;
+    private String userName;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Article> articles = new ArrayList<>();

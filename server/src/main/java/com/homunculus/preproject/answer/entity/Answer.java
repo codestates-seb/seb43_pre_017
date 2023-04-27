@@ -31,18 +31,18 @@ public class Answer extends Auditable {
     @Column(nullable = false)
     private Boolean isAccepted = false;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
     @JoinColumn(name = "ARTICLE_ID")
     private Article article;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.DETACH})
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @OneToMany(mappedBy = "answer")
+    @OneToMany(mappedBy = "answer", cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REMOVE})
     private List<CommentAnswer> commentAnswers = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REMOVE})
     private EvaluationAnswer evaluationAnswer;
 
     @Enumerated(value = EnumType.STRING)

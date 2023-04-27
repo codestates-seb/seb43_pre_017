@@ -26,6 +26,7 @@ public class CommentAnswerService {
     private final CommentAnswerRepository commentAnswerRepository;
     private final AuthenticationUtils authenticationUtils;
     private final AnswerService answerService;
+    private final CustomBeanUtils customBeanUtils;
 
     public CommentAnswer createCommentAnswer(CommentAnswer comment) {
 
@@ -52,7 +53,9 @@ public class CommentAnswerService {
                         ExceptionCode.COMMENT_MEMBER_NOT_ALLOWED)
         );
 
-        return CustomBeanUtils.copyNonNullProperties(comment, findComment);
+        Optional.ofNullable(comment.getContent()).ifPresent(findComment::setContent);
+
+        return commentAnswerRepository.save(findComment);
     }
 
     public CommentAnswer deleteCommentAnswer(Long answerId, Long commentId) {

@@ -26,6 +26,7 @@ public class AnswerService {
     private final ArticleRepository articleRepository;
     private final AnswerRepository answerRepository;
     private final AuthenticationUtils authenticationUtils;
+    private final CustomBeanUtils customBeanUtils;
 
     public Answer createAnswer(Answer answer) {
 
@@ -51,7 +52,7 @@ public class AnswerService {
                 ExceptionCode.ANSWER_MEMBER_NOT_ALLOWED
         );
 
-        CustomBeanUtils.copyNonNullProperties(answer, findAnswer);
+        Optional.ofNullable(answer.getContent()).ifPresent(findAnswer::setContent);
 
         return answerRepository.save(findAnswer);
     }

@@ -36,7 +36,7 @@ public class CustomBeanUtils {
 //        }
 //    }
 
-    public static <T> T copyNonNullProperties(T source, T destination) {
+    public <T> T copyNonNullProperties(T source, T destination) {
         if (source == null || destination == null || source.getClass() != destination.getClass()) {
             return null;
         }

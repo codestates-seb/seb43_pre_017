@@ -15,13 +15,12 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ArticleMapper {
 
-    default Article articlePostDtoToArticle(ArticleDto.Post articleDtoPost/*, MemberService memberService*/) {
+    default Article articlePostDtoToArticle(ArticleDto.Post articleDtoPost) {
         Article result = new Article();
         result.setTitle(articleDtoPost.getTitle());
         result.setContent(articleDtoPost.getContent());
 
         String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-//        Member member = memberService.findVerifiedMemberByEmail(email);
         Member member = new Member();
         member.setEmail(email);
         result.setMember(member);
@@ -30,14 +29,13 @@ public interface ArticleMapper {
 
     }
 
-    default Article articlePatchDtoToArticle(ArticleDto.Patch articleDtoPatch/*, MemberService memberService*/) {
+    default Article articlePatchDtoToArticle(ArticleDto.Patch articleDtoPatch) {
         Article result = new Article();
         result.setArticleId(articleDtoPatch.getArticleId());
         result.setTitle(articleDtoPatch.getTitle());
         result.setContent(articleDtoPatch.getContent());
 
         String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-//        Member member = memberService.findVerifiedMemberByEmail(email);
         Member member = new Member();
         member.setEmail(email);
         result.setMember(member);
@@ -60,7 +58,7 @@ public interface ArticleMapper {
 
         ArticleResponseDetailsDto.Member resultMember = new ArticleResponseDetailsDto.Member();
         resultMember.setId(article.getMember().getMemberId());
-        resultMember.setName(article.getMember().getName());
+        resultMember.setName(article.getMember().getUserName());
         result.setMember(resultMember);
 
         ArticleResponseDetailsDto.Count count = new ArticleResponseDetailsDto.Count();
@@ -91,7 +89,7 @@ public interface ArticleMapper {
 
                 ArticleResponseDto.Member member = new ArticleResponseDto.Member();
                 member.setId(src.getMember().getMemberId());
-                member.setName(src.getMember().getName());
+                member.setName(src.getMember().getUserName());
                 article.setMember(member);
 
                 ArticleResponseDto.Articles.Count count = new ArticleResponseDto.Articles.Count();
