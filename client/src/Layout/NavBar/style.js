@@ -10,32 +10,29 @@ export const StyledNavBar = styled.nav`
 
 // 로그인 버튼
 export const StyledLoginBtn = styled.div`
-  display: none;
-  /* display: flex; */
+  display: flex;
   justify-content: center;
   width: 60px;
   font-size: 14px;
   border-radius: 3px;
-  font-weight: 300;
-  border: 0.5px solid ${({ theme }) => theme.colors.blue700};
+  border: 1px solid ${({ theme }) => theme.colors.cyan600};
   background-color: ${({ theme }) => theme.colors.sky100};
   white-space: nowrap;
   :hover {
-    background-color: ${({ theme }) => theme.colors.blue200};
+    background-color: ${({ theme }) => theme.colors.sky200};
   }
   .loginink {
     padding: 8px 10px;
-    color: ${({ theme }) => theme.colors.blue800};
+    color: ${({ theme }) => theme.colors.cyan600};
     :hover {
-      color: ${({ theme }) => theme.colors.blue700};
+      color: ${({ theme }) => theme.colors.cyan700};
     }
   }
 `;
 
 // 회원가입 버튼
 export const StyledSignupBtn = styled.div`
-  display: none;
-  /* display: flex; */
+  display: flex;
   margin-left: 5px;
   justify-content: center;
   width: 70px;
@@ -58,7 +55,6 @@ export const StyledSignupBtn = styled.div`
 
 //로그아웃 버튼
 export const StyledLogoutBtn = styled.div`
-  /* display: none; */
   display: flex;
   margin-left: 5px;
   justify-content: center;

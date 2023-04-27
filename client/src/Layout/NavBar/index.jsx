@@ -12,14 +12,17 @@ import dummy from "../../pages/Members/Data/data.json";
 
 import { Link } from "react-router-dom";
 
+// import { useState, useEffect } from "react";
+
+import { useStore } from "../../store/reducers/index";
+
 /** 2023/04/12 - NarBar 컴포넌트 - by 1-blue */
 const NavBar = () => {
+  const { Userdata } = useStore();
   return (
     <StyledNavBar>
-      <LoginBtn />
-      <SignupBtn />
-      <MemberBtn />
-      <LogoutBtn />
+      {Userdata.email ? <MemberBtn /> : <LoginBtn />}
+      {Userdata.email ? <LogoutBtn /> : <SignupBtn />}
     </StyledNavBar>
   );
 };
