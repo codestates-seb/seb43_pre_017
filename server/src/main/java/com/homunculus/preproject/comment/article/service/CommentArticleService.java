@@ -86,7 +86,6 @@ public class CommentArticleService {
         return findVerifiedArticle(comment);
     }
 
-    @Transactional(readOnly = true)
     public CommentArticle findVerifiedArticle(CommentArticle comment) {
         Optional<CommentArticle> optionalComment = commentArticleRepository.findById(comment.getCommentArticleId());
 

@@ -48,7 +48,7 @@ public class ArticleController {
     public ResponseEntity patchArticle(@PathVariable("articleId") @Positive Long articleId,
                                        @Valid @RequestBody ArticleDto.Patch articleDtoPatch) {
         articleDtoPatch.setArticleId(articleId);
-        Article updatedArticle = articleService.updateArticle(mapper.articlePatchDtoToArticle(articleDtoPatch/*, memberService*/));
+        Article updatedArticle = articleService.updateArticle(mapper.articlePatchDtoToArticle(articleDtoPatch));
 
         return new ResponseEntity<>(
                 mapper.articleToArticleSimpleResponseDto(updatedArticle, ArticleSimpleResponseMessages.ARTICLE_MESSAGE_PATCH),
