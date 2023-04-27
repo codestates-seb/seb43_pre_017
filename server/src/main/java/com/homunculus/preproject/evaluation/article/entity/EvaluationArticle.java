@@ -42,9 +42,11 @@ public class EvaluationArticle {
         }
     }
 
-    public void addEvaluationScore(EvaluationArticle.EvaluationArticleStatus status) {
+    public void addEvaluationScore() {
+        String status = this.getEvaluationArticleStatus().getStatus();
+
         Article article = this.getArticle();
-        int additionalScore = Integer.parseInt(status.getStatus());
+        int additionalScore = Integer.parseInt(status);
         int score = article.getEvaluationScore() + additionalScore;
         article.setEvaluationScore(score);
     }
