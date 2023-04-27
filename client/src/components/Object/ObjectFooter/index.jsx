@@ -29,12 +29,12 @@ const ObjectFooter = ({ articleId, member, onDeleteObject, updatedAt }) => (
 
     {/* author */}
     <div className="author">
-      <Link to={`/users/${member.id}`}>
+      <Link to={`/members/${member.name}/${member.id}`}>
         <div className="avatar" />
       </Link>
       <div>
-        <Link to={`/users/${member.id}`}>{member.name}</Link>
-        <time>{dateOrTimeFormat(updatedAt)}</time>
+        <Link to={`/members/${member.name}/${member.id}`}>{member.name}</Link>
+        <time>{dateOrTimeFormat(updatedAt, "YYYY-MM-DD-hh-mm-ss")}</time>
       </div>
     </div>
   </StyledObjectFooter>

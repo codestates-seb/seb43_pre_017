@@ -13,8 +13,8 @@ serverInstance.interceptors.request.use(
   (config) => {
     if (!config.headers) return config;
 
-    let accessToken = localStorage.getItem("accessToken");
-    let refreshToken = localStorage.getItem("refreshToken");
+    let accessToken = localStorage.getItem("Authorization");
+    let refreshToken = localStorage.getItem("refresh");
 
     if (accessToken !== null) {
       config.headers.Authorization = `Bearer ${accessToken}`;

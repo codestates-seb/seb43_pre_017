@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 
 /** 2023/03/24 - 하단 네비게이션 바 스타일 컴포넌트 - by 1-blue */
 const StyledSideBar = styled.nav`
+  display: none;
   position: relative;
   width: 141px;
   height: 100%;
@@ -14,6 +15,10 @@ const StyledSideBar = styled.nav`
     padding: 1em 0;
 
     border-right: 1px solid ${({ theme }) => theme.colors.gray400};
+  }
+
+  @media ${({ theme }) => theme.mediaSize.xl} {
+    display: inline-block;
   }
 `;
 

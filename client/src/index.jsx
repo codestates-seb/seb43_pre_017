@@ -21,6 +21,7 @@ import Layout from "./Layout";
 // component
 import ToastMessage from "./components/ToastMessage";
 import Home from "./pages/Home";
+import Ask from "./pages/Ask";
 import ArticlePage from "./pages/Article";
 import Profile from "./pages/Profile";
 import Members from "./pages/Members";
@@ -59,6 +60,7 @@ root.render(
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/members/:name/:id" element={<Profile />} />
+              <Route path="/questions/ask" element={<Ask />} />
               <Route path="/questions/:questionId" element={<ArticlePage />} />
               <Route path="/members/:name/:id" element={<Profile />} />
               <Route path="/members" element={<Members />} />

@@ -26,15 +26,12 @@ const ObjectCommentForm = ({ type, articleId, answerId }) => {
 
     // article의 댓글
     if (type === "article") {
-      console.log("article 댓글 생성 >> ", articleId, content);
-
       dispatch(
         commentThunkService.createCommentOfArticleThunk({ articleId, content }),
       );
     }
     // answer의 댓글
     if (type === "answer") {
-      console.log("answer 댓글 생성 >> ", answerId, content);
       dispatch(
         commentThunkService.createCommentOfAnswerThunk({ answerId, content }),
       );

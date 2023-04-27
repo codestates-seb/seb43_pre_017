@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+// util
+import { dateOrTimeFormat } from "../../../utils";
+
 // hook
 import useResizeHeight from "../../../hooks/useResizeHeight";
 
@@ -12,6 +15,7 @@ const ObjectComment = ({
   commentId,
   content,
   member,
+  updatedAt,
   onUpdateComment,
   onDeleteComment,
 }) => {
@@ -58,8 +62,7 @@ const ObjectComment = ({
       <div>
         <Link to={`/users/${member.id}`}>{member.name}</Link>
 
-        {/* FIXME: */}
-        <time>7분전</time>
+        <time>{dateOrTimeFormat(updatedAt, "YYYY-MM-DD-hh-mm-ss")}</time>
 
         {/* FIXME: 유저가 있다면 */}
         <button type="button" onClick={onClickUpdate}>

@@ -9,9 +9,9 @@ const rootReducer = combineReducers({
 });
 export const useStore = create((set) => ({
   Userdata: {
-    email: localStorage.getItem("username"),
+    email: null,
   },
-  setUserdata: (data) => set({ Userdata: data }),
+  setUserdata: (email) => set({ Userdata: { email } }),
 }));
 /** 2023/04/23 - Action reducer - by 1-blue */
 export const LOG_IN = "LOG_IN";

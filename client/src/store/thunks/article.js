@@ -2,8 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
 // api
-// import { articleApiService } from "../apis";
-import { deleteDummyArticle, fetchDummyArticle } from "../../_dummy";
+import { articleApiService } from "../apis";
 
 /** 2023/04/19 - 특정 article 패치 요청 thunk - by 1-blue */
 const fetchArticleThunk = createAsyncThunk(
@@ -13,9 +12,7 @@ const fetchArticleThunk = createAsyncThunk(
   // promise를 반환하는 액션 작성
   async (body, { rejectWithValue }) => {
     try {
-      // FIXME: 가짜 데이터 제거하기
-      // const { data } = await articleApiService.apiFetchArticle(body);
-      const data = await fetchDummyArticle();
+      const { data } = await articleApiService.apiFetchArticle(body);
 
       return data;
     } catch (error) {
@@ -40,9 +37,7 @@ const deleteArticleThunk = createAsyncThunk(
   // promise를 반환하는 액션 작성
   async (body, { rejectWithValue }) => {
     try {
-      // FIXME: 가짜 데이터 제거하기
-      // const { data } = await articleApiService.apiDeleteArticle(body);
-      const data = await deleteDummyArticle(body);
+      const { data } = await articleApiService.apiDeleteArticle(body);
 
       return data;
     } catch (error) {

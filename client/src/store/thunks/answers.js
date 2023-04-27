@@ -2,8 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
 // api
-// import { answersApiService } from "../apis";
-import { fetchDummyAnswersOfArticle } from "../../_dummy";
+import { answersApiService } from "../apis";
 
 /** 2023/04/20 - 특정 answer 패치 요청 thunk - by 1-blue */
 const fetchAnswersThunk = createAsyncThunk(
@@ -13,9 +12,7 @@ const fetchAnswersThunk = createAsyncThunk(
   // promise를 반환하는 액션 작성
   async (body, { rejectWithValue }) => {
     try {
-      // FIXME: 가짜 데이터
-      // const { data } = await answersApiService.apiFetchAnswersOfArticle(body);
-      const data = await fetchDummyAnswersOfArticle();
+      const { data } = await answersApiService.apiFetchAnswersOfArticle(body);
 
       return data;
     } catch (error) {

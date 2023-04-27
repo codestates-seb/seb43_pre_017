@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 // redux
 import {
@@ -28,12 +29,11 @@ const Article = ({
   count,
   updatedAt,
 }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   /** 2023/04/21 - 댓글 수정 - by 1-blue */
   const onUpdateComment = useCallback(({ commentId, content }) => {
-    console.log("article 댓글 수정 >> ", articleId, commentId, content);
-
     dispatch(
       commentThunkService.updateCommentOfArticleThunk({
         articleId,
@@ -45,8 +45,6 @@ const Article = ({
 
   /** 2023/04/21 - 댓글 제거 - by 1-blue */
   const onDeleteComment = useCallback(({ commentId }) => {
-    console.log("article 댓글 제거 >> ", articleId, commentId);
-
     dispatch(
       commentThunkService.deleteCommentOfArticleThunk({
         articleId,
@@ -57,17 +55,14 @@ const Article = ({
 
   /** 2023/04/21 - 댓글들 더 불러오기 - by 1-blue */
   const fetchComment = () => {
-    console.log("article 댓글 더 불러오기 >> ", articleId);
-
-    // FIXME: page, size
     dispatch(commentsThunkService.fetchCommentsOfArticleThunk({ articleId }));
   };
 
   /** 2023/04/21 - article 제거 - by 1-blue */
   const onDeleteArticle = useCallback(() => {
-    dispatch(articleThunkService.deleteArticleThunk());
+    dispatch(articleThunkService.deleteArticleThunk({ articleId }));
 
-    console.log("실행 후 메인 페이지로 이동");
+    navigate("/");
   }, []);
 
   /** 2023/04/21 - 더 가져올 수 있는 댓글의 개수 - by 1-blue */
@@ -105,6 +100,7 @@ const Article = ({
               commentId={comment.id}
               member={comment.member}
               content={comment.content}
+              updatedAt={comment.updatedAt}
               onUpdateComment={onUpdateComment}
               onDeleteComment={onDeleteComment}
             />

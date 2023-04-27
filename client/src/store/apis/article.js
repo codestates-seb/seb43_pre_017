@@ -4,6 +4,9 @@ import { serverInstance } from ".";
 const apiFetchArticle = async ({ articleId }) =>
   serverInstance.get(`/article/${articleId}`);
 
+/** 2023/04/24 - article 생성 요청 - by 1-blue */
+const apiUploadArticle = async (body) => serverInstance.post(`/article`, body);
+
 /** 2023/04/21 - 특정 article 제거 요청 - by 1-blue */
 const apiDeleteArticle = async ({ articleId }) =>
   serverInstance.delete(`/article/${articleId}`);
@@ -11,5 +14,6 @@ const apiDeleteArticle = async ({ articleId }) =>
 /** 2023/04/19 - article api 요청 메서드들을 갖는 객체 - by 1-blue */
 export const articleApiService = {
   apiFetchArticle,
+  apiUploadArticle,
   apiDeleteArticle,
 };

@@ -36,16 +36,13 @@ const ArticlePage = () => {
 
   /** 2023/04/19 - article 상세 데이터 요청 - by 1-blue */
   useEffect(() => {
-    // FIXME: article 가져오기
     dispatch(articleThunkService.fetchArticleThunk({ articleId: questionId }));
 
-    // FIXME: answer들 가져오기
-    dispatch(
-      answersThunkService.fetchAnswersThunk({
-        articleId: questionId,
-        page: searchParams.get("page"),
-      }),
-    );
+    setTimeout(() => {
+      dispatch(
+        answersThunkService.fetchAnswersThunk({ articleId: questionId }),
+      );
+    }, 200);
   }, [dispatch, questionId, searchParams]);
 
   /** 2023/04/20 - 위지윅 훅 - by 1-blue */
@@ -58,9 +55,6 @@ const ArticlePage = () => {
     const content = getContents();
 
     if (content.trim().length <= 11) return toast.error("내용을 입력해주세요!");
-
-    // FIXME: 최종 제거
-    console.log(questionId, content);
 
     // answer 생성
     dispatch(
@@ -76,13 +70,19 @@ const ArticlePage = () => {
       <section className="top-wrapper">
         <h1>{article.article.title}</h1>
 
-        <Link to="/question/ask">Ask Question</Link>
+        <Link to="/questions/ask">Ask Question</Link>
       </section>
 
       {/* time */}
       <section className="sub-top-wrapper">
-        <time>작성일 {dateOrTimeFormat(article.article.createdAt)}</time>
-        <time>수정 {dateOrTimeFormat(article.article.updatedAt)}</time>
+        <time>
+          작성일{" "}
+          {dateOrTimeFormat(article.article.createdAt, "YYYY-MM-DD-hh-mm-ss")}
+        </time>
+        <time>
+          수정{" "}
+          {dateOrTimeFormat(article.article.updatedAt, "YYYY-MM-DD-hh-mm-ss")}
+        </time>
         <span>조회수 {5}</span>
       </section>
 
