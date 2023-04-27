@@ -16,8 +16,11 @@ import StyledLogin, {
   StyledGoggleLogo,
 } from "./style";
 
+import { useStore } from "../../store/reducers";
+
 /** 2023/04/18 - 로그인 페이지 작성  - by JHH0906 */
 const login = () => {
+  const { setUserdata } = useStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailMessage, setEmailMessage] = useState("");
@@ -67,6 +70,7 @@ const login = () => {
         localStorage.setItem("Authorization", accessToken);
         localStorage.setItem("refresh", refreshToken);
         localStorage.setItem("username", email);
+        setUserdata(email);
 
         //API 요청하는 콜마다 헤더에 accessToken을 담아 보내도록 설정
         axios.defaults.headers.common[

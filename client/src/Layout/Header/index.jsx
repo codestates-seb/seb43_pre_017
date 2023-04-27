@@ -19,9 +19,17 @@ import {
 // image
 import LogoImg from "./images/Logo-stackoverflow.png";
 import MinLogoImg from "./images/MinLogo-stackoverflow.png";
+import { useStore } from "../../store/reducers";
+import { useEffect } from "react";
 
 /** 2023/04/16 - 헤더를 감싸는 컴포넌트 - by sinyaenok */
 const Header = () => {
+  const { setUserdata } = useStore();
+
+  useEffect(() => {
+    setUserdata(localStorage.getItem("username"));
+  }, []);
+
   return (
     <StyledHeader>
       <StyledContaier>

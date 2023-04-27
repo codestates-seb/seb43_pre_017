@@ -27,7 +27,7 @@ const Layout = ({ children }) => {
         console.error("axios interceptors >> ", error);
       },
     );
-  });
+  }, []);
   return (
     <>
       <Header />
