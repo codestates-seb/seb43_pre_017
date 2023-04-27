@@ -1,0 +1,43 @@
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+      path: /h2
+  datasource:
+    url: jdbc:h2:mem:test
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+        color-codes: true
+        use_sql_comments: true
+        type:
+          descriptor:
+            sql: trace
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+        type:
+          descriptor:
+            sql:
+              BasicBinder: trace
+
+jwt:
+  key: ${JWT_SECRET_KEY}
+  access-token-expiration-minutes: 600
+  refresh-token-expiration-minutes: 180
+
+mail:
+  address:
+    admin: admin@gmail.com
