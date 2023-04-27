@@ -2,9 +2,17 @@ import styled from "styled-components";
 
 /** 2023/04/12 - 푸터를 감싸는 컴포넌트의 스타일 - by 1-blue */
 const StyledFoorter = styled.footer`
+  position: relative;
+  z-index: 1;
+
   width: 100%;
-  height: 320px;
   background-color: ${({ theme }) => theme.colors.zinc800};
+`;
+export const StyledFoorterWrapper = styled.div`
+  max-width: 1280px;
+  margin: 0 auto;
+  height: 320px;
+
   display: flex;
   @media (max-width: 980px) {
     width: 100%;

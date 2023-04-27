@@ -10,31 +10,41 @@ import StyledSideBar, { StyledLink } from "./style";
 const SideBar = () => {
   const { pathname } = useLocation();
 
-  if (pathname === "/login") return null;
+  if (pathname === "/Login") return null;
   if (pathname === "/signup") return null;
   if (pathname === "/logout") return null;
+  if (pathname.includes("/questions/ask")) return null;
+
   return (
     <StyledSideBar>
-      <>
-        <StyledLink to="/" match={pathname === "/" ? "true" : undefined}>
+      <ul>
+        <StyledLink
+          to="/"
+          match={
+            pathname === "/" || pathname.includes("/questions/")
+              ? "true"
+              : undefined
+          }
+        >
           <button type="button">
-            <Icon shape="earth" fill={pathname === "/"} />
+            <Icon
+              shape="earth"
+              fill={pathname === "/" || pathname.includes("/questions/")}
+            />
           </button>
           <span>Questions</span>
         </StyledLink>
-      </>
-      <>
+
         <StyledLink
-          to="/users"
-          match={pathname === "/users" ? "true" : undefined}
+          to="/members"
+          match={pathname === "/members" ? "true" : undefined}
         >
           <button type="button">
-            <Icon shape="users" fill={pathname === "/users"} />
+            <Icon shape="users" fill={pathname === "/members"} />
           </button>
-          <span>Users</span>
+          <span>Members</span>
         </StyledLink>
-      </>
-      <>
+
         <StyledLink
           to="/tags"
           match={pathname === "/tags" ? "true" : undefined}
@@ -44,7 +54,7 @@ const SideBar = () => {
           </button>
           <span>Tags</span>
         </StyledLink>
-      </>
+      </ul>
     </StyledSideBar>
   );
 };

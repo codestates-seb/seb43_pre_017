@@ -6,6 +6,12 @@ const StyledMain = styled.main`
   margin: 0 auto;
 
   display: flex;
+
+  min-height: calc(100vh - 50px - 320px);
+
+  @media (max-width: 980px) {
+    min-height: calc(100vh - 50px - 428px);
+  }
 `;
 
 export default StyledMain;
