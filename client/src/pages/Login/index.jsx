@@ -1,8 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginAction } from "../../store/reducers";
-import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 import StyledLogin, {
   StyledLoginContainer,
@@ -24,7 +23,6 @@ const login = () => {
   const [emailMessage, setEmailMessage] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   /** 2023/04/19 이메일 유효성 검사 이벤트  -by JHH0906 */
   const handleEmailChange = (e) => {
@@ -52,32 +50,34 @@ const login = () => {
     }
 
     const reqbody = JSON.stringify({
-      email,
+      username: email,
       password,
     });
+    const headers = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
     // POST 요청
-    axios.defaults.withCredentials = true;
     axios
-      .post("http://localhost:8080/api/login", reqbody, {
-        withCredentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      .post(`${process.env.REACT_APP_BASE_URL}/api/login`, reqbody, headers)
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
         const accessToken = res.headers.get("Authorization");
+        const refreshToken = res.headers.get("refresh");
         localStorage.setItem("Authorization", accessToken);
-        dispatch(loginAction(res.data));
-        navigate("/");
+        localStorage.setItem("refresh", refreshToken);
+        localStorage.setItem("username", email);
         //API 요청하는 콜마다 헤더에 accessToken을 담아 보내도록 설정
         axios.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${accessToken}`;
+        navigate("/");
       })
+      // 새로고침했을때 로컬스토리지에 있는 토큰을 꺼내서  axios.defaults.headers.common에 넣는 기능, axios 인터셉트
       .catch((err) => {
         console.log(err);
-        alert("실패");
+        toast.error("실패");
         setEmail("");
         setPassword("");
       });

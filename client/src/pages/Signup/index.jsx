@@ -1,5 +1,8 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { signupAction } from "../../store/reducers";
 import StyledSignup, {
   StyledSignupContainer,
   StyledGoggleLogo,
@@ -12,6 +15,7 @@ import StyledSignup, {
   StyledSignupLink,
   StyledLogin,
 } from "./style";
+import { useNavigate } from "react-router-dom";
 
 /** 2023/04/21 - 회원가입 페이지 작성  - by JHH0906 */
 const Signup = () => {
@@ -20,6 +24,8 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
   const [name, setName] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch("");
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -46,33 +52,29 @@ const Signup = () => {
     } else {
       setPasswordMessage(null);
     }
-    const reqbody = JSON.stringify({
+    const reqbody = {
       name: name,
       email: email,
       password: password,
-    });
+    };
     axios
-      .post("http://localhost:8080/api/signup", reqbody, {
+      .post(`${process.env.REACT_APP_BASE_URL}/api/signup`, reqbody, {
         headers: {
           "Content-Type": "application/json",
         },
-        withCredentials: "include",
       })
       .then((res) => {
-        if (res.status === 201) {
-          alert("성공");
-          window.location.href = "/login";
-          console.log(res);
-        }
+        dispatch(signupAction());
+        toast.success("성공");
+        navigate("/login");
+        console.log(res);
       })
       .catch((err) => {
-        if (err.status === 409) {
-          console.log(err.data);
-          alert("이미 등록된 계정입니다!");
-          setEmail("");
-          setPassword("");
-          setName("");
-        }
+        console.log(err.data);
+        toast.error("실패");
+        setEmail("");
+        setPassword("");
+        setName("");
       });
   };
   return (
@@ -107,7 +109,7 @@ const Signup = () => {
           ) : null}
           <StyledTitle>password</StyledTitle>
           <StyledSignupInput
-            ype="password"
+            type="password"
             name="password"
             value={password}
             onChange={handlePasswordChange}
@@ -126,7 +128,7 @@ const Signup = () => {
       </StyledSignupContainer>
       <StyledLogin>
         Already have an account?
-        <StyledSignupLink href="/Login"> Log in</StyledSignupLink>
+        <StyledSignupLink href="/login"> Log in</StyledSignupLink>
       </StyledLogin>
     </StyledSignup>
   );
