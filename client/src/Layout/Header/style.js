@@ -10,6 +10,7 @@ export const StyledHeader = styled.header`
   position: sticky;
   left: 0;
   top: 0;
+  z-index: 1;
 `;
 
 /** 2023/04/17 - 헤더 속 엘레먼트들을 감싸는 컴포넌트 - by sinyaenok*/
@@ -37,7 +38,7 @@ export const StyledLogo = styled.a`
     cursor: pointer;
 
     //640px보다 작아지면 실행
-    @media (max-width: 640px) {
+    @media (max-width: 720px) {
       display: none;
     }
   }
@@ -46,7 +47,7 @@ export const StyledLogo = styled.a`
     cursor: pointer;
 
     //640px보다 커지면 실행
-    @media (min-width: 640px) {
+    @media (min-width: 720px) {
       display: none;
     }
   }
@@ -57,9 +58,10 @@ export const StyledSearchFrom = styled.form`
   padding: 7px 10px;
   display: flex;
   height: 100%;
-  /* flex-grow: 1; */
   align-items: center;
   width: 87em;
+  background-color: ${({ theme }) => theme.colors.gray50};
+
   //input을 감싸는 div
   .search-bar {
     width: 100%;
@@ -68,6 +70,7 @@ export const StyledSearchFrom = styled.form`
     border: 1px solid rgba(0, 0, 0, 0.3);
     display: flex;
     align-items: center;
+    background-color: #fff;
   }
 
   //아이콘
@@ -81,9 +84,7 @@ export const StyledSearchFrom = styled.form`
     width: 100%;
     border: none;
     margin: 0.7em;
-
-    //search 기본 디자인 없애는 코드
-    -webkit-appearance: none;
+    background-color: #fff;
     overflow: auto;
 
     :focus {

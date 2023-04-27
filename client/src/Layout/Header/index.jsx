@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+// import { useState, useEffect } from "react";
+
 // Nav
 import Nav from "../NavBar";
 
@@ -30,28 +33,28 @@ const Header = () => {
   );
 };
 
-// 로고
+/** 2023/04/16 - Logo 컴포넌트 - by sinyaenok */
 const Logo = () => {
   return (
     <StyledLogo>
       {/* 큰 로고 */}
-      <a href="/">
+      <Link to="/">
         <img src={LogoImg} alt="스택오버플로우 로고" className="Logo-img" />
-      </a>
+      </Link>
 
       {/* 작은 로고 */}
-      <a href="/">
+      <Link to="/">
         <img
           src={MinLogoImg}
           alt="스택오버플로우 로고"
           className="MinLogo-img"
         />
-      </a>
+      </Link>
     </StyledLogo>
   );
 };
 
-// 서치창
+/** 2023/04/16 - Search 컴포넌트 - by sinyaenok */
 export const Searchbar = () => {
   return (
     <StyledSearchFrom>

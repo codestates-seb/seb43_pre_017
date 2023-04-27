@@ -1,20 +1,34 @@
+//style
 import { StyledMembers, StyledSearchFrom } from "./style";
+
+//icon
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+
 //component
 import SortTab from "./SortTab";
 import MemberBrowser from "./MemberBrowser";
 
-/** 20230421 - 유저 목록 페이지 - by sinyaenok */
+import { useState } from "react";
+
+import dummy from "./Data/data.json";
+/** 20230421 - 멤버 조회 페이지 - by sinyaenok */
+
 const Members = () => {
+  const data = dummy.members;
+  const [searchQuery, setSearchQuery] = useState("");
+  const filteredMembers = data.filter((member) =>
+    member.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
   return (
     <StyledMembers>
       <div id="main-bar">
+        {/* 멤버 타이틀 */}
         <h1>Members</h1>
         <div id="sub-bar" className="d-flex ai-center js-between">
-          {/* 유저 검색창 */}
+          {/* 멤버 검색창 */}
           <StyledSearchFrom>
-            <div className="search-bar">
+            <div className="search-bar d-flex">
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
                 className="search-icon"
@@ -23,14 +37,16 @@ const Members = () => {
                 className="search-bar-input"
                 type="text"
                 placeholder="Filter by member"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
           </StyledSearchFrom>
 
-          {/* 유저 정렬 탭 */}
+          {/* 멤버 정렬 탭 */}
           <SortTab />
         </div>
-        <MemberBrowser />
+        <MemberBrowser filteredMembers={filteredMembers} />
       </div>
     </StyledMembers>
   );

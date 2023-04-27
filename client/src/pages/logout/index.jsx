@@ -16,6 +16,7 @@ import Checkbox from "./checkbox";
 import { useNavigate } from "react-router-dom";
 import { logoutAction } from "../../store/reducers";
 import { useDispatch } from "react-redux";
+// import NavBar from "../../Layout/NavBar/index";
 
 /** 2023/04/23 로그아웃 페이지 -by JHH0906 */
 const Logout = () => {

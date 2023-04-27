@@ -68,6 +68,7 @@ const login = () => {
         localStorage.setItem("Authorization", accessToken);
         localStorage.setItem("refresh", refreshToken);
         localStorage.setItem("username", email);
+
         //API 요청하는 콜마다 헤더에 accessToken을 담아 보내도록 설정
         axios.defaults.headers.common[
           "Authorization"

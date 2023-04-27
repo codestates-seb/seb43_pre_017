@@ -1,8 +1,7 @@
 import styled from "styled-components";
 
-export const StyledUserInfo = styled.div`
-  /* border: 1px solid rgba(0, 0, 0, 0.2); */
-  height: calc(100% - 600px);
+export const StyledMemberInfo = styled.div`
+  /* height: calc(100% - 600px); */
 `;
 
 /** 20230420 - 유저 이미지 - by sinyaenok*/
@@ -15,12 +14,15 @@ export const StyledImgBox = styled.div`
 
 /** 20230420 - 유저 이름, 생성일 - by sinyaenok*/
 export const StyledInfoBox = styled.div`
-  #user-name {
+  #member-name {
     font-size: 30px;
-    flex-grow: 2;
+    flex-grow: 1;
   }
-  #user-info {
-    flex-grow: 3;
+  #member-info {
+    flex-grow: 1;
+  }
+  #member-info > div {
+    color: ${({ theme }) => theme.colors.gray500};
   }
   .icon-cack {
     padding: 0 5px 0 3px;
@@ -35,13 +37,18 @@ export const StyledInfoBox = styled.div`
 
 /** 20230420 - 유저 정보 수정 버튼 - by sinyaenok*/
 export const StyledEditBtn = styled.div`
-  width: 50%;
-  align-items: end;
+  padding-right: 16px;
+  justify-content: end;
+  flex: 1;
+  white-space: nowrap;
   .editBtn {
     border: 1px solid ${({ theme }) => theme.colors.gray400};
     color: ${({ theme }) => theme.colors.gray500};
     font-size: 14px;
     border-radius: 3px;
     padding: 10px 16px 10px;
+    :hover {
+      background-color: ${({ theme }) => theme.colors.gray200};
+    }
   }
 `;
