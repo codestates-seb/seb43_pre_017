@@ -16,10 +16,10 @@ public interface EvaluationAnswerMapper {
         answer.setAnswerId(evaluationDtoPost.getAnswerId());
         result.setAnswer(answer);
 
-        result.setEvaluationAnswerStatus(
-                EvaluationAnswer.EvaluationAnswerStatus.valueOf(
-                        evaluationDtoPost.getEvaluationScore()
-                ));
+        for( EvaluationAnswer.EvaluationAnswerStatus status : EvaluationAnswer.EvaluationAnswerStatus.values() ) {
+            if( evaluationDtoPost.getEvaluationScore().equals(status.getStatus()) )
+                result.setEvaluationAnswerStatus(status);
+        }
 
         return result;
     }

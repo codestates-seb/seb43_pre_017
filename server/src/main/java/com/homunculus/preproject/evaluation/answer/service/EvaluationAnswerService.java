@@ -2,6 +2,7 @@ package com.homunculus.preproject.evaluation.answer.service;
 
 import com.homunculus.preproject.answer.entity.Answer;
 import com.homunculus.preproject.answer.repository.AnswerRepository;
+import com.homunculus.preproject.answer.service.AnswerService;
 import com.homunculus.preproject.evaluation.answer.entity.EvaluationAnswer;
 import com.homunculus.preproject.exception.BusinessLogicException;
 import com.homunculus.preproject.exception.ExceptionCode;
@@ -20,12 +21,17 @@ import java.util.Optional;
 public class EvaluationAnswerService {
 
     private final AnswerRepository answerRepository;
+    private final AnswerService answerService;
 
     public EvaluationAnswer createEvaluationAnswer(EvaluationAnswer evaluationAnswer) {
 
-        EvaluationAnswer findEvaluationAnswer = findVerifiedEvaluationAnswer(evaluationAnswer);
-        findEvaluationAnswer.addEvaluationScore(evaluationAnswer.getEvaluationAnswerStatus());
-        answerRepository.save(findEvaluationAnswer.getAnswer());
+        evaluationAnswer.setAnswer(
+            answerService.findVerifiedAnswer(
+                    evaluationAnswer.getAnswer(), false)
+        );
+
+        evaluationAnswer.addEvaluationScore();
+        answerRepository.save(evaluationAnswer.getAnswer());
 
         return evaluationAnswer;
     }

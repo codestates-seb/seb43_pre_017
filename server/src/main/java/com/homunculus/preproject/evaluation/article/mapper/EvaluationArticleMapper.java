@@ -1,6 +1,7 @@
 package com.homunculus.preproject.evaluation.article.mapper;
 
 import com.homunculus.preproject.article.entity.Article;
+import com.homunculus.preproject.evaluation.answer.entity.EvaluationAnswer;
 import com.homunculus.preproject.evaluation.article.dto.EvaluationArticleDto;
 import com.homunculus.preproject.evaluation.article.entity.EvaluationArticle;
 import com.homunculus.preproject.evaluation.article.dto.EvaluationArticleSimpleResponseDto;
@@ -16,10 +17,10 @@ public interface EvaluationArticleMapper {
         article.setArticleId(evaluationDtoPost.getArticleId());
         result.setArticle(article);
 
-        result.setEvaluationArticleStatus(
-                EvaluationArticle.EvaluationArticleStatus.valueOf(
-                        evaluationDtoPost.getEvaluationScore()
-                ));
+        for( EvaluationArticle.EvaluationArticleStatus status : EvaluationArticle.EvaluationArticleStatus.values() ) {
+            if( evaluationDtoPost.getEvaluationScore().equals(status.getStatus()) )
+                result.setEvaluationArticleStatus(status);
+        }
 
         return result;
     }
